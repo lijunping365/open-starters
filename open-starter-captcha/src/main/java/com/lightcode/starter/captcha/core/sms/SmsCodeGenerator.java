@@ -1,0 +1,27 @@
+package com.lightcode.starter.captcha.core.sms;
+
+import com.lightcode.starter.captcha.generator.CaptchaGenerator;
+import com.lightcode.starter.captcha.generator.ValidateCodeGenerator;
+import com.lightcode.starter.captcha.properties.CaptchaProperties;
+import org.apache.commons.lang3.RandomStringUtils;
+
+/**
+ * @author : lijunping
+ * @weixin : ilwq18242076871
+ * @Description: 注意验证码+ 超时时间可以进行配置
+ */
+@CaptchaGenerator("sms")
+public class SmsCodeGenerator implements ValidateCodeGenerator<ValidateCode> {
+
+    private final CaptchaProperties captchaProperties;
+
+    public SmsCodeGenerator(CaptchaProperties captchaProperties) {
+        this.captchaProperties = captchaProperties;
+    }
+
+    @Override
+    public ValidateCode generate() {
+        String code = RandomStringUtils.randomNumeric(captchaProperties.getCode().getSms().getLength());
+        return new ValidateCode(code, captchaProperties.getCode().getSms().getExpireTime());
+    }
+}
