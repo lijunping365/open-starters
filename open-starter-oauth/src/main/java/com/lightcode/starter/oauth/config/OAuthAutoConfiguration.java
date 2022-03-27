@@ -7,13 +7,11 @@ import com.lightcode.starter.oauth.component.DefaultAuthenticationSuccessHandler
 import com.lightcode.starter.oauth.core.password.PasswordAuthenticationProcessor;
 import com.lightcode.starter.oauth.core.sms.SmsMobileAuthenticationProcessor;
 import com.lightcode.starter.oauth.properties.OAuthProperties;
-import com.lightcode.starter.oauth.service.DefaultUserConnectionService;
-import com.lightcode.starter.oauth.service.DefaultUserDetailService;
-import com.lightcode.starter.oauth.service.UserConnectionService;
 import com.lightcode.starter.oauth.service.UserDetailService;
 import com.lightcode.starter.oauth.token.TokenStore;
 import com.lightcode.starter.oauth.token.support.jwt.JwtTokenStore;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -47,18 +45,6 @@ public class OAuthAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public UserDetailService userDetailService(){
-        return new DefaultUserDetailService();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public UserConnectionService userConnectionService(){
-        return new DefaultUserConnectionService();
-    }
-
-    @Bean
     @ConditionalOnExpression
     public TokenStore jwtTokenStore(){
         return new JwtTokenStore(oAuthProperties);
@@ -71,6 +57,7 @@ public class OAuthAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean(UserDetailService.class)
     public PasswordAuthenticationProcessor smsMobileAuthenticationProcessor(AuthenticationSuccessHandler authenticationSuccessHandler,
                                                                             AuthenticationFailureHandler authenticationFailureHandler,
                                                                             UserDetailService userDetailService,
@@ -80,6 +67,7 @@ public class OAuthAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean(UserDetailService.class)
     public SmsMobileAuthenticationProcessor smsMobileAuthenticationProcessor(AuthenticationSuccessHandler authenticationSuccessHandler,
                                                                              AuthenticationFailureHandler authenticationFailureHandler,
                                                                              UserDetailService userDetailService,

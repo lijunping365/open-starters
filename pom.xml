@@ -10,6 +10,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>open-starter-captcha</module>
+        <module>open-starter-security</module>
+        <module>open-starter-oauth</module>
     </modules>
 
     <properties>
