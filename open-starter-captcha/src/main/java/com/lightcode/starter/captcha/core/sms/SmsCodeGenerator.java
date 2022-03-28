@@ -21,7 +21,7 @@ public class SmsCodeGenerator implements ValidateCodeGenerator<ValidateCode> {
 
     @Override
     public ValidateCode generate() {
-        String code = RandomStringUtils.randomNumeric(captchaProperties.getCode().getSms().getLength());
-        return new ValidateCode(code, captchaProperties.getCode().getSms().getExpireTime());
+        String code = RandomStringUtils.randomNumeric(captchaProperties.getSms().getLength());
+        return new ValidateCode(code, captchaProperties.getSms().getExpireTime());
     }
 }

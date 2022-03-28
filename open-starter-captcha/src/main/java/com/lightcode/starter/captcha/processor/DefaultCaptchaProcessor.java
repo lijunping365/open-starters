@@ -37,6 +37,7 @@ public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaP
 
   @Override
   public void create(CaptchaGenerateRequest request, ValidateCodeSend validateCodeSend) throws Exception {
+    request.checkConstraints();
     C validateCode = validateCodeGeneratorMap.get(request.getType()).generate();
     save(request.getRequestId(), validateCode);
     validateCodeSend.send(validateCode);
@@ -57,6 +58,7 @@ public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaP
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void afterPropertiesSet() {
     Map<String, Object> beans = applicationContext.getBeansWithAnnotation(CaptchaGenerator.class);
     beans.forEach((k,v)->{

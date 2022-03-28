@@ -36,7 +36,7 @@ public class ScanCodeGenerator implements ValidateCodeGenerator<ScanValidateCode
   public ScanValidateCode generate() throws WriterException {
     String str = UUID.randomUUID().toString();
     String uuid = str.replaceAll("-", "");
-    ScanCodeProperties scanCodeProperties = captchaProperties.getCode().getScan();
+    ScanCodeProperties scanCodeProperties = captchaProperties.getScan();
 
     Hashtable<EncodeHintType, Object> hintTypes = new Hashtable<>();
 
@@ -54,6 +54,6 @@ public class ScanCodeGenerator implements ValidateCodeGenerator<ScanValidateCode
       }
     }
 
-    return new ScanValidateCode(bufferedImage, uuid, scanCodeProperties.getExpireTime());
+    return new ScanValidateCode(bufferedImage, uuid, captchaProperties.getImage().getExpireTime());
   }
 }

@@ -48,9 +48,9 @@ public class CaptchaAutoConfiguration {
     //边框厚度，合法值>0,默认值为1
     properties.put(KAPTCHA_BORDER_THICKNESS, "2");
     //图片宽度，默认值200
-    properties.put(KAPTCHA_IMAGE_WIDTH, String.valueOf(captchaProperties.getCode().getImage().getWidth()));
+    properties.put(KAPTCHA_IMAGE_WIDTH, String.valueOf(captchaProperties.getImage().getWidth()));
     //图片高度，默认值50
-    properties.put(KAPTCHA_IMAGE_HEIGHT, String.valueOf(captchaProperties.getCode().getImage().getHeight()));
+    properties.put(KAPTCHA_IMAGE_HEIGHT, String.valueOf(captchaProperties.getImage().getHeight()));
     //图片实现类，默认值com.google.code.kaptcha.impl.DefaultKaptcha
     //properties.put(KAPTCHA_PRODUCER_IMPL, com.google.code.kaptcha.impl.DefaultKaptcha);
     //文本实现类,默认值com.google.code.kaptcha.impl.DefaultTextCreator
@@ -58,7 +58,7 @@ public class CaptchaAutoConfiguration {
     //文本集合，验证码值从此集合中获取,默认值abcde2345678gfynmnpwx
     properties.put(KAPTCHA_TEXTPRODUCER_CHAR_STRING, "1234567890");
     //验证码长度,默认值为5
-    properties.put(KAPTCHA_TEXTPRODUCER_CHAR_LENGTH, String.valueOf(captchaProperties.getCode().getImage().getLength()));
+    properties.put(KAPTCHA_TEXTPRODUCER_CHAR_LENGTH, String.valueOf(captchaProperties.getImage().getLength()));
     //字体,默认值Arial, Courier(如果使用中文验证码，则必须使用中文的字体，否则出现乱码)
     properties.put(KAPTCHA_TEXTPRODUCER_FONT_NAMES, "Arial");
     //字体大小，默认值为40px

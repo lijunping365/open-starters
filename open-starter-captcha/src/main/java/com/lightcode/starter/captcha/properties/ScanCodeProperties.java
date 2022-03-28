@@ -18,7 +18,4 @@ public class ScanCodeProperties {
 
     /** 二维码外边距，0到4 **/
     private int margin = 1;
-
-    /** 二维码有效期 /s**/
-    private int expireTime = 120;
 }

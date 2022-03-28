@@ -13,7 +13,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "com.lightcode.captcha")
 public class CaptchaProperties {
 
-  /***验证码相关的属性---可能包含图形验证码，短信验证码等，所以对其进行了又一次封装*/
-  private ValidateCodeProperties code = new ValidateCodeProperties();
+  /**封装图片验证吗相关的属性*/
+  private ImageCodeProperties image = new ImageCodeProperties();
+
+  /**封装短信验证吗相关的属性*/
+  private SmsCodeProperties sms = new SmsCodeProperties();
+
+  /***封装扫码登陆相关的配置*/
+  private ScanCodeProperties scan = new ScanCodeProperties();
 
 }

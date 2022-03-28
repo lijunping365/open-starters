@@ -28,6 +28,6 @@ public class ImageCodeGenerator implements ValidateCodeGenerator<ImageValidateCo
   public ImageValidateCode generate() {
     String text = producer.createText();
     BufferedImage image = producer.createImage(text);
-    return new ImageValidateCode(image, text, captchaProperties.getCode().getImage().getExpireTime());
+    return new ImageValidateCode(image, text, captchaProperties.getImage().getExpireTime());
   }
 }
