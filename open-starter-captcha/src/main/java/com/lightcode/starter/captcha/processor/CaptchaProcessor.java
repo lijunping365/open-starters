@@ -13,16 +13,11 @@ public interface CaptchaProcessor {
 
     /**
      * 创建校验码
-     * @param captchaGenerateRequest
-     * @throws Exception
      */
     void create(CaptchaGenerateRequest request, ValidateCodeSend validateCodeSend) throws Exception;
 
     /**
      * 校验验证码
-     *
-     * @param captchaVerifyRequest
-     * @throws Exception
      */
     void validate(CaptchaVerifyRequest request);
 }

@@ -8,7 +8,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.CharacterSetECI;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.lightcode.starter.captcha.generator.CaptchaGenerator;
 import com.lightcode.starter.captcha.generator.ValidateCodeGenerator;
 import com.lightcode.starter.captcha.properties.CaptchaProperties;
 import com.lightcode.starter.captcha.properties.ScanCodeProperties;
@@ -21,9 +20,7 @@ import java.util.UUID;
 /**
  * @author : lijunping
  * @weixin : ilwq18242076871
- * @Description: 注意验证码+ 超时时间可以进行配置
  */
-@CaptchaGenerator("scan")
 public class ScanCodeGenerator implements ValidateCodeGenerator<ScanValidateCode> {
 
   private final CaptchaProperties captchaProperties;

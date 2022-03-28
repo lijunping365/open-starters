@@ -2,7 +2,6 @@ package com.lightcode.starter.captcha.processor;
 
 import com.lightcode.starter.captcha.core.sms.ValidateCode;
 import com.lightcode.starter.captcha.exception.ValidateCodeException;
-import com.lightcode.starter.captcha.generator.CaptchaGenerator;
 import com.lightcode.starter.captcha.generator.ValidateCodeGenerator;
 import com.lightcode.starter.captcha.repository.CaptchaRepository;
 import com.lightcode.starter.captcha.request.CaptchaGenerateRequest;
@@ -45,6 +44,7 @@ public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaP
 
   @Override
   public void validate(CaptchaVerifyRequest request) {
+    request.checkConstraints();
     String validateCode = captchaRepository.get(request.getRequestId());
     String codeInRequest = request.getCode();
 
@@ -58,10 +58,12 @@ public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaP
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void afterPropertiesSet() {
-    Map<String, Object> beans = applicationContext.getBeansWithAnnotation(CaptchaGenerator.class);
-    beans.forEach((k,v)->{
+    Map<String, ValidateCodeGenerator> codeGeneratorMap = applicationContext.getBeansOfType(ValidateCodeGenerator.class);
+
+
+    String type = StringUtils.substringBefore(getClass().getSimpleName(), "CodeProcessor");
+    codeGeneratorMap.forEach((k,v)->{
       CaptchaGenerator annotation = v.getClass().getAnnotation(CaptchaGenerator.class);
       validateCodeGeneratorMap.put(annotation.value(), (ValidateCodeGenerator<C>) v);
     });

@@ -1,7 +1,10 @@
 package com.lightcode.starter.captcha.request;
 
+import com.lightcode.starter.captcha.exception.ValidateCodeException;
+import com.lightcode.starter.captcha.utils.ValidatorUtils;
 import lombok.Data;
 
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
@@ -19,4 +22,17 @@ public class CaptchaVerifyRequest implements Serializable {
 
     @NotBlank(message = "验证码不能为空")
     private String code;
+
+    /**
+     * 在请求前检查自身的约束状况
+     *
+     * @throws ValidateCodeException .
+     */
+    public void checkConstraints() throws ValidateCodeException {
+        try {
+            ValidatorUtils.validate(this);
+        } catch (ValidationException e) {
+            throw new ValidateCodeException(e.getMessage());
+        }
+    }
 }

@@ -8,11 +8,9 @@ import java.io.Serializable;
  *  @author : lijunping
  *  @weixin : ilwq18242076871
  * 该类默认就是短信验证码
- * Description: 存放到redis里的对象必须是序列化的，所以这里要实现Serializable接口
  */
 @Data
-public class ValidateCode implements Serializable {
-  private static final long serialVersionUID = -5882129757498488074L;
+public class ValidateCode{
 
   /**
    * 随机验证码
