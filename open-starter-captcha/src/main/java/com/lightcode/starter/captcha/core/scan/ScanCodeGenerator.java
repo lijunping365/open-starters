@@ -1,6 +1,5 @@
 package com.lightcode.starter.captcha.core.scan;
 
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -21,7 +20,7 @@ import java.util.UUID;
  * @author : lijunping
  * @weixin : ilwq18242076871
  */
-public class ScanCodeGenerator implements ValidateCodeGenerator<ScanValidateCode> {
+public class ScanCodeGenerator implements ValidateCodeGenerator {
 
   private final CaptchaProperties captchaProperties;
 

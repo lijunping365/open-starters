@@ -18,6 +18,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.Map;
 import java.util.Properties;
 import static com.google.code.kaptcha.Constants.*;
 import static com.google.code.kaptcha.Constants.KAPTCHA_BACKGROUND_CLR_TO;
@@ -93,8 +95,8 @@ public class CaptchaAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public CaptchaProcessor captchaProcessor(CaptchaRepository captchaRepository){
-    return new DefaultCaptchaProcessor<>(captchaRepository);
+  public CaptchaProcessor captchaProcessor(Map<String, ValidateCodeGenerator> validateCodeGeneratorMap, CaptchaRepository captchaRepository){
+    return new DefaultCaptchaProcessor<>(validateCodeGeneratorMap,captchaRepository);
   }
 
   @Bean

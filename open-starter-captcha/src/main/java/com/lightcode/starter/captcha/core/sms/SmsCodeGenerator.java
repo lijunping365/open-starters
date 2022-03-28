@@ -8,7 +8,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @author : lijunping
  * @weixin : ilwq18242076871
  */
-public class SmsCodeGenerator implements ValidateCodeGenerator<ValidateCode> {
+public class SmsCodeGenerator implements ValidateCodeGenerator {
 
     private final CaptchaProperties captchaProperties;
 

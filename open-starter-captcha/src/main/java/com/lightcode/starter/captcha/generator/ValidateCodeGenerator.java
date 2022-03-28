@@ -7,10 +7,10 @@ import com.lightcode.starter.captcha.core.sms.ValidateCode;
  * @author : lijunping
  * @weixin : ilwq18242076871
  */
-public interface ValidateCodeGenerator<C extends ValidateCode>{
+public interface ValidateCodeGenerator{
 
     /**
      * 生成验证码
      */
-    C generate() throws Exception;
+    ValidateCode generate() throws Exception;
 }

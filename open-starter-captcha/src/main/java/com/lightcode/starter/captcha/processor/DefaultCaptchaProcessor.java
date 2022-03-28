@@ -9,35 +9,38 @@ import com.lightcode.starter.captcha.request.CaptchaVerifyRequest;
 import com.lightcode.starter.captcha.send.ValidateCodeSend;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
 
 /**
  * @author : lijunping
  * @weixin : ilwq18242076871
  *
- * Description: 验证码抽象处理器，包含验证码的生成处理，保存处理，发送处理，验证处理
+ * Description: 验证码抽象处理器，包含验证码的生成处理，保存处理，验证处理
  */
 @Slf4j
-public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaProcessor, ApplicationContextAware, InitializingBean {
+public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaProcessor{
 
-  private final Map<String, ValidateCodeGenerator<C>> validateCodeGeneratorMap = new ConcurrentHashMap<>();
+  private static final String GENERATOR_SUFFIX = "CodeGenerator";
+  private final Map<String, ValidateCodeGenerator> validateCodeGeneratorMap;
   private final CaptchaRepository captchaRepository;
-  private ApplicationContext applicationContext;
 
-  public DefaultCaptchaProcessor(CaptchaRepository captchaRepository) {
+  public DefaultCaptchaProcessor(Map<String, ValidateCodeGenerator> validateCodeGeneratorMap, CaptchaRepository captchaRepository) {
+    this.validateCodeGeneratorMap = validateCodeGeneratorMap;
     this.captchaRepository = captchaRepository;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void create(CaptchaGenerateRequest request, ValidateCodeSend validateCodeSend) throws Exception {
     request.checkConstraints();
-    C validateCode = validateCodeGeneratorMap.get(request.getType()).generate();
+    String generatorName = request.getType() + GENERATOR_SUFFIX;
+    ValidateCodeGenerator validateCodeGenerator = validateCodeGeneratorMap.get(generatorName);
+    if (Objects.isNull(validateCodeGenerator)){
+      throw new ValidateCodeException("验证码生成器" + generatorName + "不存在");
+    }
+    C validateCode = (C) validateCodeGenerator.generate();
     save(request.getRequestId(), validateCode);
     validateCodeSend.send(validateCode);
   }
@@ -55,23 +58,6 @@ public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaP
     if (!StringUtils.equals(validateCode, codeInRequest)) {
       throw new ValidateCodeException("验证码输入错误");
     }
-  }
-
-  @Override
-  public void afterPropertiesSet() {
-    Map<String, ValidateCodeGenerator> codeGeneratorMap = applicationContext.getBeansOfType(ValidateCodeGenerator.class);
-
-
-    String type = StringUtils.substringBefore(getClass().getSimpleName(), "CodeProcessor");
-    codeGeneratorMap.forEach((k,v)->{
-      CaptchaGenerator annotation = v.getClass().getAnnotation(CaptchaGenerator.class);
-      validateCodeGeneratorMap.put(annotation.value(), (ValidateCodeGenerator<C>) v);
-    });
-  }
-
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    this.applicationContext = applicationContext;
   }
 
   private void save(String requestId, C validateCode) {
