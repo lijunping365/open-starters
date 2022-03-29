@@ -100,16 +100,19 @@ public class CaptchaAutoConfiguration {
   }
 
   @Bean
+  @ConditionalOnMissingBean
   public ImageCodeGenerator imageCodeGenerator(CaptchaProperties properties, Producer producer) {
     return new ImageCodeGenerator(properties, producer);
   }
 
   @Bean
+  @ConditionalOnMissingBean
   public ScanCodeGenerator scanCodeGenerator(CaptchaProperties properties) {
     return new ScanCodeGenerator(properties);
   }
 
   @Bean
+  @ConditionalOnMissingBean
   public SmsCodeGenerator smsCodeGenerator(CaptchaProperties properties) {
     return new SmsCodeGenerator(properties);
   }

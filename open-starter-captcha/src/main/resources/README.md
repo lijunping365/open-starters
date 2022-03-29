@@ -91,14 +91,13 @@ public class OpenJobLoginController {
 
 ## 扩展示例
 
-### 1. 扩展验证码生成方式（ValidateCodeGenerator）
+### 1. 替换原有的验证码生成方式
 
-实现 ValidateCodeGenerator 接口
+比如要替换掉原来的短信验证码生成方式
 
 ```java
 
-@AllArgsConstructor
-@Component
+@Component("smsCodeGenerator")
 public class XxxCodeGenerator implements ValidateCodeGenerator {
 
     private final CaptchaProperties captchaProperties;
@@ -109,17 +108,19 @@ public class XxxCodeGenerator implements ValidateCodeGenerator {
 
     @Override
     public XxxValidateCode generate() throws Exception {
-        return new XxxValidateCode(image, text, captchaProperties.getImage().getExpireTime());
+        String code = RandomStringUtils.randomNumeric(captchaProperties.getSms().getLength());
+        return new ValidateCode(code, captchaProperties.getSms().getExpireTime());
     }
 }
 ```
 
-```java
-@Data
-public class XxxValidateCode extends ValidateCode{
-  
-
-}
-```
 
 ### 1. 扩展验证码生成方式（ValidateCodeGenerator）
+
+
+## 疑惑点
+
+### 1. 为什么不把发送逻辑也默认实现了
+
+> 1. 发送图片验证码需要 HttpServletResponse，这个写在这里面是发不出的
+> 2. 短信服务商需要根据自身去决定
