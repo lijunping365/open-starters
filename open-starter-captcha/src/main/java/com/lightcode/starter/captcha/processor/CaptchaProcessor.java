@@ -10,12 +10,12 @@ import com.lightcode.starter.captcha.send.ValidateCodeSend;
  * @weixin : ilwq18242076871
  * Description:校验码处理器，封装不同校验码的处理逻辑
  */
-public interface CaptchaProcessor<C extends ValidateCode> {
+public interface CaptchaProcessor {
 
     /**
      * 创建校验码
      */
-    void create(CaptchaGenerateRequest request, ValidateCodeSend<C> validateCodeSend) throws Exception;
+    <C extends ValidateCode> void create(CaptchaGenerateRequest request, ValidateCodeSend<C> validateCodeSend) throws Exception;
 
     /**
      * 校验验证码
