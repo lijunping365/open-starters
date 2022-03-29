@@ -20,7 +20,7 @@ import java.util.Objects;
  * Description: 验证码抽象处理器，包含验证码的生成处理，保存处理，验证处理
  */
 @Slf4j
-public class DefaultCaptchaProcessor implements CaptchaProcessor{
+public class DefaultCaptchaProcessor<C extends ValidateCode> implements CaptchaProcessor<C>{
 
   private static final String GENERATOR_SUFFIX = "CodeGenerator";
   private final Map<String, ValidateCodeGenerator> validateCodeGeneratorMap;
@@ -31,8 +31,9 @@ public class DefaultCaptchaProcessor implements CaptchaProcessor{
     this.captchaRepository = captchaRepository;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void create(CaptchaGenerateRequest request, ValidateCodeSend validateCodeSend) throws Exception {
+  public void create(CaptchaGenerateRequest request, ValidateCodeSend<C> validateCodeSend) throws Exception {
     request.checkConstraints();
     String generatorName = request.getType() + GENERATOR_SUFFIX;
     ValidateCodeGenerator validateCodeGenerator = validateCodeGeneratorMap.get(generatorName);
@@ -41,7 +42,7 @@ public class DefaultCaptchaProcessor implements CaptchaProcessor{
     }
     ValidateCode validateCode = validateCodeGenerator.generate();
     captchaRepository.save(request.getRequestId(), validateCode);
-    validateCodeSend.send(validateCode);
+    validateCodeSend.send((C)validateCode);
   }
 
   @Override
