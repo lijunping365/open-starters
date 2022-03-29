@@ -37,10 +37,10 @@ public class DefaultCaptchaProcessor implements CaptchaProcessor{
     String generatorName = request.getType() + GENERATOR_SUFFIX;
     ValidateCodeGenerator validateCodeGenerator = validateCodeGeneratorMap.get(generatorName);
     if (Objects.isNull(validateCodeGenerator)){
-      throw new ValidateCodeException("验证码生成器" + generatorName + "不存在");
+      throw new ValidateCodeException(String.format("未找到[%s]类型验证码生成器", generatorName));
     }
     ValidateCode validateCode = validateCodeGenerator.generate();
-    save(request.getRequestId(), validateCode);
+    captchaRepository.save(request.getRequestId(), validateCode);
     validateCodeSend.send(validateCode);
   }
 
@@ -57,10 +57,5 @@ public class DefaultCaptchaProcessor implements CaptchaProcessor{
     if (!StringUtils.equals(validateCode, codeInRequest)) {
       throw new ValidateCodeException("验证码输入错误");
     }
-  }
-
-  private void save(String requestId, ValidateCode validateCode) {
-    ValidateCode code = new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
-    captchaRepository.save(requestId, code);
   }
 }

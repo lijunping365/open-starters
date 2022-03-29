@@ -13,7 +13,7 @@ public interface CaptchaRepository {
      * @param requestId
      * @param code
      */
-    void save(String requestId, ValidateCode code);
+    <C extends ValidateCode> void save(String requestId, C code);
     /**
      * 获取验证码
      * @param requestId

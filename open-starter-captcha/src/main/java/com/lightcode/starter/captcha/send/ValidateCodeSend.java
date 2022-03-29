@@ -8,5 +8,5 @@ import com.lightcode.starter.captcha.core.sms.ValidateCode;
 @FunctionalInterface
 public interface ValidateCodeSend {
 
-    void send(ValidateCode validateCode);
+    <C extends ValidateCode> void send(C validateCode);
 }

@@ -20,8 +20,8 @@ public class RedisCaptchaRepository implements CaptchaRepository {
   }
 
   @Override
-  public void save(String requestId, ValidateCode validateCode) {
-    stringRedisTemplate.opsForValue().set(requestId, validateCode.getCode(), validateCode.getExpireTime(), TimeUnit.MINUTES);
+  public <C extends ValidateCode> void save(String requestId, C code) {
+    stringRedisTemplate.opsForValue().set(requestId, code.getCode(), code.getExpireTime(), TimeUnit.MINUTES);
   }
 
   @Override
