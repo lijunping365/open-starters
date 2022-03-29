@@ -96,7 +96,7 @@ public class CaptchaAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean
   public CaptchaProcessor captchaProcessor(Map<String, ValidateCodeGenerator> validateCodeGeneratorMap, CaptchaRepository captchaRepository){
-    return new DefaultCaptchaProcessor<>(validateCodeGeneratorMap,captchaRepository);
+    return new DefaultCaptchaProcessor(validateCodeGeneratorMap,captchaRepository);
   }
 
   @Bean
