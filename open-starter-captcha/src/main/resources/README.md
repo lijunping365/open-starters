@@ -115,12 +115,30 @@ public class XxxCodeGenerator implements ValidateCodeGenerator {
 ```
 
 
-### 1. 扩展验证码生成方式（ValidateCodeGenerator）
+### 2. 扩展验证码存储方式（CaptchaRepository）
+
+```java
+@Component
+public class XxxCaptchaRepository implements CaptchaRepository {
+
+  @Override
+  public <C extends ValidateCode> void save(String requestId, C code) {
+    // TODO
+  }
+
+  @Override
+  public String get(String requestId) {
+    // TODO
+    return null;
+  }
+}
+```
 
 
-## 疑惑点
+## 注意点
 
 ### 1. 为什么不把发送逻辑也默认实现了
 
 > 1. 发送图片验证码需要 HttpServletResponse，这个写在这里面是发不出的
+
 > 2. 短信服务商需要根据自身去决定
