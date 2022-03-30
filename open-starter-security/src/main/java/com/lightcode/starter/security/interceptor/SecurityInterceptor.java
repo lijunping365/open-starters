@@ -7,6 +7,7 @@ import com.lightcode.starter.security.domain.Authentication;
 import com.lightcode.starter.security.service.AuthorityService;
 import com.lightcode.starter.security.service.TokenService;
 import com.lightcode.starter.security.exception.SecurityException;
+import com.lightcode.starter.security.utils.JSON;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;

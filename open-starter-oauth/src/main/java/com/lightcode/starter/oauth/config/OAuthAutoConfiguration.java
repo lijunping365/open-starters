@@ -57,16 +57,18 @@ public class OAuthAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     @ConditionalOnBean(UserDetailService.class)
-    public PasswordAuthenticationProcessor smsMobileAuthenticationProcessor(AuthenticationSuccessHandler authenticationSuccessHandler,
-                                                                            AuthenticationFailureHandler authenticationFailureHandler,
-                                                                            UserDetailService userDetailService,
-                                                                            PasswordEncoder passwordEncoder,
-                                                                            TokenStore tokenStore){
+    public PasswordAuthenticationProcessor passwordAuthenticationProcessor(AuthenticationSuccessHandler authenticationSuccessHandler,
+                                                                           AuthenticationFailureHandler authenticationFailureHandler,
+                                                                           UserDetailService userDetailService,
+                                                                           PasswordEncoder passwordEncoder,
+                                                                           TokenStore tokenStore){
         return new PasswordAuthenticationProcessor(authenticationSuccessHandler, authenticationFailureHandler, tokenStore, userDetailService, passwordEncoder);
     }
 
     @Bean
+    @ConditionalOnMissingBean
     @ConditionalOnBean(UserDetailService.class)
     public SmsMobileAuthenticationProcessor smsMobileAuthenticationProcessor(AuthenticationSuccessHandler authenticationSuccessHandler,
                                                                              AuthenticationFailureHandler authenticationFailureHandler,

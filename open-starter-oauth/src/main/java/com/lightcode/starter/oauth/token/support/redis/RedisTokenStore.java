@@ -8,6 +8,7 @@ import com.lightcode.starter.oauth.properties.OAuthProperties;
 import com.lightcode.starter.oauth.properties.token.TokenProperties;
 import com.lightcode.starter.oauth.token.AccessToken;
 import com.lightcode.starter.oauth.token.TokenStore;
+import com.lightcode.starter.oauth.utils.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
