@@ -4,7 +4,6 @@ import com.lightcode.starter.oauth.authentication.Authentication;
 import com.lightcode.starter.oauth.token.AbstractTokenStore;
 import com.lightcode.starter.oauth.token.AccessToken;
 import com.lightcode.starter.oauth.token.TokenEnhancer;
-import com.lightcode.starter.oauth.token.TokenStore;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,14 +19,8 @@ public class JdbcTokenStore extends AbstractTokenStore {
     }
 
     @Override
-    public Authentication readAuthentication(String accessToken) {
-        return null;
-    }
-
-    @Override
     public AccessToken doGenerateToken(Authentication authentication) {
         return null;
     }
-
 
 }

@@ -2,14 +2,11 @@ package com.lightcode.starter.oauth.token.support.jwt;
 
 
 import com.lightcode.starter.oauth.authentication.Authentication;
-import com.lightcode.starter.oauth.domain.UserDetails;
-import com.lightcode.starter.oauth.exception.AuthenticationException;
 import com.lightcode.starter.oauth.properties.OAuthProperties;
 import com.lightcode.starter.oauth.properties.token.TokenProperties;
 import com.lightcode.starter.oauth.token.AbstractTokenStore;
 import com.lightcode.starter.oauth.token.AccessToken;
 import com.lightcode.starter.oauth.token.TokenEnhancer;
-import com.lightcode.starter.oauth.token.TokenStore;
 import com.lightcode.starter.oauth.utils.JSON;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -50,19 +47,5 @@ public class JwtTokenStore extends AbstractTokenStore {
         token.setExpiredTime(String.valueOf(expiredDate.getTime()));
         token.setAccessToken(accessToken);
         return token;
-    }
-
-    @Override
-    public Authentication readAuthentication(String accessToken) {
-        try {
-            Claims claims = Jwts.parserBuilder().setSigningKey(oauthProperties.getToken().getSecretKeyBytes()).build().parseClaimsJws(accessToken).getBody();
-            final String subject = claims.getSubject();
-            UserDetails userDetails = JSON.parse(subject, UserDetails.class);
-            Authentication authentication = new Authentication();
-            authentication.setUserDetails(userDetails);
-            return authentication;
-        }catch (Exception e){
-            throw new AuthenticationException(e.getMessage());
-        }
     }
 }

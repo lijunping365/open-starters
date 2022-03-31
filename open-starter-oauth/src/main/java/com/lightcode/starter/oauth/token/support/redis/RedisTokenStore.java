@@ -2,8 +2,6 @@ package com.lightcode.starter.oauth.token.support.redis;
 
 import com.lightcode.starter.oauth.authentication.Authentication;
 import com.lightcode.starter.oauth.domain.UserDetails;
-import com.lightcode.starter.oauth.enums.ResultEnum;
-import com.lightcode.starter.oauth.exception.AuthenticationException;
 import com.lightcode.starter.oauth.properties.OAuthProperties;
 import com.lightcode.starter.oauth.properties.token.TokenProperties;
 import com.lightcode.starter.oauth.token.AbstractTokenStore;
@@ -12,7 +10,6 @@ import com.lightcode.starter.oauth.token.TokenEnhancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisTokenStore extends AbstractTokenStore {
 
-    private static final String ACCESS_TOKEN_KEY = "accessToken::";
     private final RedisTemplate<String, Object> redisTemplate;
     private final OAuthProperties oauthProperties;
 
@@ -48,22 +44,7 @@ public class RedisTokenStore extends AbstractTokenStore {
         return token;
     }
 
-    @Override
-    public Authentication readAuthentication(String accessToken){
-        Object o = redisTemplate.opsForValue().get(buildAccessTokenKey(accessToken));
-        if (Objects.isNull(o)){
-            throw new AuthenticationException(ResultEnum.UNAUTHORIZED);
-        }
-        UserDetails userDetails = (UserDetails) o;
-        Authentication authentication = new Authentication();
-        authentication.setUserDetails(userDetails);
-        return authentication;
-    }
-
     private String buildAccessTokenKey(String accessToken){
-        return ACCESS_TOKEN_KEY + accessToken;
+        return oauthProperties.getToken().getTokenPrefix() + accessToken;
     }
-
-
-
 }
