@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public abstract class AbstractTaskProcessor<T extends Task> implements TaskProcessor<T>{
 
   protected final TaskBuilder taskBuilder;
-
   protected final TaskExecutor executor;
 
   protected AbstractTaskProcessor(TaskBuilder taskBuilder, TaskExecutor executor) {

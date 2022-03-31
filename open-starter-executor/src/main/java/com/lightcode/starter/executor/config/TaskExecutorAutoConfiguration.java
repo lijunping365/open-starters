@@ -13,10 +13,11 @@ import com.lightcode.starter.executor.interceptor.DefaultTaskAfterInterceptor;
 import com.lightcode.starter.executor.interceptor.DefaultTaskBeforeInterceptor;
 import com.lightcode.starter.executor.interceptor.TaskAfterInterceptor;
 import com.lightcode.starter.executor.interceptor.TaskBeforeInterceptor;
+import com.lightcode.starter.executor.processor.DefaultTaskProcessor;
+import com.lightcode.starter.executor.processor.TaskProcessor;
 import com.lightcode.starter.executor.properties.TaskExecutorProperties;
 import com.lightcode.starter.executor.thread.ResizableCapacityLinkedBlockingQueue;
 import com.lightcode.starter.executor.thread.TaskThreadPoolExecutor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -33,19 +34,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableConfigurationProperties(TaskExecutorProperties.class)
 public class TaskExecutorAutoConfiguration {
 
-  @Autowired
-  private TaskExecutorProperties properties;
-
-
   @Bean
   @ConditionalOnMissingBean
-  public ThreadPoolExecutor threadPoolExecutor(ResizableCapacityLinkedBlockingQueue<Runnable> blockingQueue){
+  public ThreadPoolExecutor threadPoolExecutor(TaskExecutorProperties properties,
+                                               ResizableCapacityLinkedBlockingQueue<Runnable> blockingQueue){
     return new TaskThreadPoolExecutor(properties, blockingQueue);
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public ResizableCapacityLinkedBlockingQueue<Runnable> blockingQueue(){
+  public ResizableCapacityLinkedBlockingQueue<Runnable> blockingQueue(TaskExecutorProperties properties){
     return new ResizableCapacityLinkedBlockingQueue<>(properties.getQueueCapacity());
   }
 
@@ -62,6 +60,12 @@ public class TaskExecutorAutoConfiguration {
                                  TaskBeforeInterceptor taskBeforeInterceptor,
                                  TaskAfterInterceptor taskAfterInterceptor) {
     return new DefaultTaskBuilder(taskExecuteSuccessHandler, taskExecuteFailureHandler, taskBeforeInterceptor, taskAfterInterceptor);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public TaskProcessor<?> taskProcessor(TaskBuilder taskBuilder, TaskExecutor executor){
+    return new DefaultTaskProcessor<>(taskBuilder, executor);
   }
 
   @Bean

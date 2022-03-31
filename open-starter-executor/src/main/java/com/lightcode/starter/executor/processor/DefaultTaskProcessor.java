@@ -13,9 +13,9 @@ import java.util.List;
  * Description: 任务执行器接口提供者
  */
 @Component
-public class TaskProvider<T extends Task> extends AbstractTaskProcessor<T> {
+public class DefaultTaskProcessor<T extends Task> extends AbstractTaskProcessor<T> {
 
-  protected TaskProvider(TaskBuilder taskBuilder, TaskExecutor executor) {
+  public DefaultTaskProcessor(TaskBuilder taskBuilder, TaskExecutor executor) {
     super(taskBuilder, executor);
   }
 
