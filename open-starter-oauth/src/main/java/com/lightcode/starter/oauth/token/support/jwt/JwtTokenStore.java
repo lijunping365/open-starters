@@ -25,7 +25,6 @@ import java.util.Date;
 @Slf4j
 public class JwtTokenStore implements TokenStore {
 
-    private static final long EXPIRE = 24 * 3600;
     private final OAuthProperties oauthProperties;
 
     public JwtTokenStore(OAuthProperties oauthProperties) {
@@ -37,7 +36,7 @@ public class JwtTokenStore implements TokenStore {
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();
         long now = System.currentTimeMillis();
-        Date expiredDate = new Date(now + tokenProperties.getAccessTokenExpiresIn() * EXPIRE);
+        Date expiredDate = new Date(now + tokenProperties.getAccessTokenExpiresIn() * 1000);
         String userDetailsStr = JSON.toJSON(authentication.getUserDetails());
         Claims claims = Jwts.claims().setSubject(userDetailsStr);
         String accessToken = Jwts.builder()

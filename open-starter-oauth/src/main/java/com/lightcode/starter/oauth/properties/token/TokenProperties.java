@@ -10,12 +10,12 @@ import lombok.Data;
 public class TokenProperties {
 
     /**
-     * accessToken 有效期，单位天，默认 1 天
+     * accessToken 有效期，单位秒，默认 1 天
      */
-    private Integer accessTokenExpiresIn = 1;
+    private Integer accessTokenExpiresIn = 24 * 3600;
 
     /**
-     * jwt 加密密钥 key
+     * jwt 加密密钥 key，注意我们使用的是 SignatureAlgorithm.HS256，所以 secretKeyBytes.length * 8 必须大于 256
      */
     private String secretKey = "ThisIsKeyThisIsKeyThisIsKeyThisIsKeyThisIsKeyThisIsKey";
 

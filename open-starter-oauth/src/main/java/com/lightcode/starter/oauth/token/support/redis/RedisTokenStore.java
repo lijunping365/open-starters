@@ -8,11 +8,11 @@ import com.lightcode.starter.oauth.properties.OAuthProperties;
 import com.lightcode.starter.oauth.properties.token.TokenProperties;
 import com.lightcode.starter.oauth.token.AccessToken;
 import com.lightcode.starter.oauth.token.TokenStore;
-import com.lightcode.starter.oauth.utils.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisTokenStore implements TokenStore {
 
     private static final String ACCESS_TOKEN_KEY = "accessToken::";
-    private static final long EXPIRE = 24 * 3600;
     private final RedisTemplate<String, Object> redisTemplate;
     private final OAuthProperties oauthProperties;
 
@@ -38,9 +37,9 @@ public class RedisTokenStore implements TokenStore {
         UserDetails userDetails = authentication.getUserDetails();
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();
-        String accessToken = RandomUtil.randomString(32);
+        String accessToken = UUID.randomUUID().toString();
         long now = System.currentTimeMillis();
-        long expiredTime = now + tokenProperties.getAccessTokenExpiresIn() * EXPIRE;
+        long expiredTime = now + tokenProperties.getAccessTokenExpiresIn() * 1000;
         token.setExpiredTime(String.valueOf(expiredTime));
         token.setAccessToken(accessToken);
         redisTemplate.opsForValue().set(buildAccessTokenKey(accessToken), userDetails, tokenProperties.getAccessTokenExpiresIn(), TimeUnit.SECONDS);
