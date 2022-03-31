@@ -1,5 +1,6 @@
 package com.lightcode.starter.security.properties;
 
+import io.jsonwebtoken.io.Decoders;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -18,6 +19,30 @@ public class SecurityProperties {
       // 登录相关
       "/login/**",
   };
+
+  /**
+   * redis token key 前缀
+   */
+  private String tokenPrefix = "access_token:";
+
+  /**
+   * 该字段需要配置
+   * jwt 加密密钥 key，注意我们使用的是 SignatureAlgorithm.HS256，所以 secretKeyBytes.length * 8 必须大于 256
+   */
+  private String secretKey = "ThisIsKeyThisIsKeyThisIsKeyThisIsKeyThisIsKeyThisIsKey";
+
+  /**
+   * 该属性不需要配置
+   * secret key byte array.
+   */
+  private byte[] secretKeyBytes;
+
+  public byte[] getSecretKeyBytes() {
+    if (secretKeyBytes == null && secretKey != null) {
+      secretKeyBytes = Decoders.BASE64.decode(secretKey);
+    }
+    return secretKeyBytes;
+  }
 
   /**
    * 自定义忽略 Path， 白名单配置
