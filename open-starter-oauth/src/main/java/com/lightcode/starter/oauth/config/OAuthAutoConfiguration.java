@@ -45,8 +45,8 @@ public class OAuthAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnExpression
-    public TokenStore jwtTokenStore(){
+    @ConditionalOnMissingBean
+    public TokenStore tokenStore(){
         return new JwtTokenStore(oAuthProperties);
     }
 
