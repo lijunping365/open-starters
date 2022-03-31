@@ -3,6 +3,7 @@ package com.lightcode.starter.captcha.request;
 import com.lightcode.starter.captcha.exception.ValidateCodeException;
 import com.lightcode.starter.captcha.utils.ValidatorUtils;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import java.io.Serializable;
  * Description: 验证码生成请求实体类
  */
 @Data
+@Accessors(chain = true)
 public class CaptchaGenerateRequest implements Serializable {
     private static final long serialVersionUID = -3596061866163459943L;
 

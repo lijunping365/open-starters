@@ -1,6 +1,7 @@
 package com.lightcode.starter.oauth.request;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * Description: 用户名密码登录
  */
 @Data
+@Accessors(chain = true)
 public class PasswordLoginRequest extends BaseLoginRequest implements Serializable {
 
     private static final long serialVersionUID = 2512743958725643646L;
