@@ -64,5 +64,11 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 @EnableSecurity
 
+如果是后台管理系统如何使用
+
+如果是微服务如何使用
+
+如果是B端或C端应用如何使用
+
 文档后续会补充
 

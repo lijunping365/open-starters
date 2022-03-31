@@ -13,6 +13,7 @@
         <module>open-starter-security</module>
         <module>open-starter-oauth</module>
         <module>open-starter-schedule</module>
+        <module>open-starter-http</module>
     </modules>
 
     <properties>
