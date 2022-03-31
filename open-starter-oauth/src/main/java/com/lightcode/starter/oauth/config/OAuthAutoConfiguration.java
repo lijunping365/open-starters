@@ -8,11 +8,12 @@ import com.lightcode.starter.oauth.core.password.PasswordAuthenticationProcessor
 import com.lightcode.starter.oauth.core.sms.SmsMobileAuthenticationProcessor;
 import com.lightcode.starter.oauth.properties.OAuthProperties;
 import com.lightcode.starter.oauth.service.UserDetailService;
+import com.lightcode.starter.oauth.token.DefaultTokenEnhancer;
+import com.lightcode.starter.oauth.token.TokenEnhancer;
 import com.lightcode.starter.oauth.token.TokenStore;
 import com.lightcode.starter.oauth.token.support.jwt.JwtTokenStore;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -46,8 +47,14 @@ public class OAuthAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TokenStore tokenStore(){
-        return new JwtTokenStore(oAuthProperties);
+    public TokenEnhancer tokenEnhancer(){
+        return new DefaultTokenEnhancer();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TokenStore tokenStore(TokenEnhancer tokenEnhancer){
+        return new JwtTokenStore(tokenEnhancer, oAuthProperties);
     }
 
     @Bean

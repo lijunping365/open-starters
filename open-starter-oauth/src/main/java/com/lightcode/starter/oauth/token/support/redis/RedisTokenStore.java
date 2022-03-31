@@ -6,8 +6,9 @@ import com.lightcode.starter.oauth.enums.ResultEnum;
 import com.lightcode.starter.oauth.exception.AuthenticationException;
 import com.lightcode.starter.oauth.properties.OAuthProperties;
 import com.lightcode.starter.oauth.properties.token.TokenProperties;
+import com.lightcode.starter.oauth.token.AbstractTokenStore;
 import com.lightcode.starter.oauth.token.AccessToken;
-import com.lightcode.starter.oauth.token.TokenStore;
+import com.lightcode.starter.oauth.token.TokenEnhancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -21,19 +22,20 @@ import java.util.concurrent.TimeUnit;
  * Description: Redis token store，把 token 及其映射存储到 Redis 中
  */
 @Slf4j
-public class RedisTokenStore implements TokenStore {
+public class RedisTokenStore extends AbstractTokenStore {
 
     private static final String ACCESS_TOKEN_KEY = "accessToken::";
     private final RedisTemplate<String, Object> redisTemplate;
     private final OAuthProperties oauthProperties;
 
-    public RedisTokenStore(RedisTemplate<String, Object> redisTemplate, OAuthProperties oauthProperties) {
+    public RedisTokenStore(TokenEnhancer tokenEnhancer, RedisTemplate<String, Object> redisTemplate, OAuthProperties oauthProperties) {
+        super(tokenEnhancer);
         this.redisTemplate = redisTemplate;
         this.oauthProperties = oauthProperties;
     }
 
     @Override
-    public AccessToken generateToken(Authentication authentication) {
+    public AccessToken doGenerateToken(Authentication authentication) {
         UserDetails userDetails = authentication.getUserDetails();
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();

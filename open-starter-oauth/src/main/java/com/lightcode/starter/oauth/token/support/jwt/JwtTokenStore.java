@@ -6,7 +6,9 @@ import com.lightcode.starter.oauth.domain.UserDetails;
 import com.lightcode.starter.oauth.exception.AuthenticationException;
 import com.lightcode.starter.oauth.properties.OAuthProperties;
 import com.lightcode.starter.oauth.properties.token.TokenProperties;
+import com.lightcode.starter.oauth.token.AbstractTokenStore;
 import com.lightcode.starter.oauth.token.AccessToken;
+import com.lightcode.starter.oauth.token.TokenEnhancer;
 import com.lightcode.starter.oauth.token.TokenStore;
 import com.lightcode.starter.oauth.utils.JSON;
 import io.jsonwebtoken.Claims;
@@ -23,16 +25,17 @@ import java.util.Date;
  * Description: Jwt token store，把 token 加密传给客户端
  */
 @Slf4j
-public class JwtTokenStore implements TokenStore {
+public class JwtTokenStore extends AbstractTokenStore {
 
     private final OAuthProperties oauthProperties;
 
-    public JwtTokenStore(OAuthProperties oauthProperties) {
+    public JwtTokenStore(TokenEnhancer tokenEnhancer, OAuthProperties oauthProperties) {
+        super(tokenEnhancer);
         this.oauthProperties = oauthProperties;
     }
 
     @Override
-    public AccessToken generateToken(Authentication authentication) {
+    public AccessToken doGenerateToken(Authentication authentication) {
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();
         long now = System.currentTimeMillis();

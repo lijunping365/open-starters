@@ -1,7 +1,9 @@
 package com.lightcode.starter.oauth.token.support.jdbc;
 
 import com.lightcode.starter.oauth.authentication.Authentication;
+import com.lightcode.starter.oauth.token.AbstractTokenStore;
 import com.lightcode.starter.oauth.token.AccessToken;
+import com.lightcode.starter.oauth.token.TokenEnhancer;
 import com.lightcode.starter.oauth.token.TokenStore;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,7 +13,11 @@ import lombok.extern.slf4j.Slf4j;
  * Description: JDBC token store，把 token 及 token 的映射保存到数据库中
  */
 @Slf4j
-public class JdbcTokenStore implements TokenStore {
+public class JdbcTokenStore extends AbstractTokenStore {
+
+    public JdbcTokenStore(TokenEnhancer tokenEnhancer) {
+        super(tokenEnhancer);
+    }
 
     @Override
     public Authentication readAuthentication(String accessToken) {
@@ -19,7 +25,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public AccessToken generateToken(Authentication authentication) {
+    public AccessToken doGenerateToken(Authentication authentication) {
         return null;
     }
 
