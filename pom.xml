@@ -12,6 +12,7 @@
         <module>open-starter-captcha</module>
         <module>open-starter-security</module>
         <module>open-starter-oauth</module>
+        <module>open-starter-schedule</module>
     </modules>
 
     <properties>
