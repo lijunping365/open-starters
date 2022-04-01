@@ -12,7 +12,7 @@ import java.lang.annotation.*;
  * @Date: 2020-11-19 12:56
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import(SecurityInterceptorSelector.class)
 public @interface EnableSecurity {
