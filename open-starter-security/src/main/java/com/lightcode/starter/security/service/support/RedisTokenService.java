@@ -1,5 +1,6 @@
 package com.lightcode.starter.security.service.support;
 
+import com.lightcode.starter.security.exception.SecurityException;
 import com.lightcode.starter.security.domain.Authentication;
 import com.lightcode.starter.security.domain.UserDetails;
 import com.lightcode.starter.security.properties.SecurityProperties;
@@ -25,7 +26,7 @@ public class RedisTokenService implements TokenService {
     public Authentication readAuthentication(String accessToken){
         Object o = redisTemplate.opsForValue().get(buildAccessTokenKey(accessToken));
         if (Objects.isNull(o)){
-            throw new SecurityException("账号未登录或 AccessToken 已失效");
+            throw new SecurityException("AccessToken 错误或 AccessToken 已失效");
         }
         UserDetails userDetails = (UserDetails) o;
         Authentication authentication = new Authentication();

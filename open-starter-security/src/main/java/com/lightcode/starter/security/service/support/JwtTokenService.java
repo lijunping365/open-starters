@@ -1,5 +1,6 @@
 package com.lightcode.starter.security.service.support;
 
+import com.lightcode.starter.security.exception.SecurityException;
 import com.lightcode.starter.security.domain.Authentication;
 import com.lightcode.starter.security.domain.UserDetails;
 import com.lightcode.starter.security.properties.SecurityProperties;
@@ -21,15 +22,16 @@ public class JwtTokenService implements TokenService {
 
     @Override
     public Authentication readAuthentication(String accessToken) {
+        String subject;
         try {
             Claims claims = Jwts.parserBuilder().setSigningKey(securityProperties.getSecretKeyBytes()).build().parseClaimsJws(accessToken).getBody();
-            final String subject = claims.getSubject();
-            UserDetails userDetails = JSON.parse(subject, UserDetails.class);
-            Authentication authentication = new Authentication();
-            authentication.setUserDetails(userDetails);
-            return authentication;
+            subject = claims.getSubject();
         }catch (Exception e){
-            throw new SecurityException(e.getMessage());
+            throw new SecurityException("AccessToken 错误或 AccessToken 已失效");
         }
+        UserDetails userDetails = JSON.parse(subject, UserDetails.class);
+        Authentication authentication = new Authentication();
+        authentication.setUserDetails(userDetails);
+        return authentication;
     }
 }
