@@ -8,8 +8,11 @@ import com.lightcode.starter.security.service.AuthorityService;
 import com.lightcode.starter.security.service.TokenService;
 import com.lightcode.starter.security.exception.SecurityException;
 import com.lightcode.starter.security.utils.JSON;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
@@ -28,8 +31,7 @@ import java.util.*;
  * Description: 认证拦截器
  */
 @Slf4j
-@Data
-public class SecurityInterceptor implements HandlerInterceptor {
+public class SecurityInterceptor implements HandlerInterceptor, BeanFactoryAware, InitializingBean {
 
   /**
    * 认证请求头
@@ -40,12 +42,12 @@ public class SecurityInterceptor implements HandlerInterceptor {
    */
   public static final String AUTHENTICATION_TYPE = "Bearer ";
 
+  private AuthorityService authorityService;
   private final TokenService tokenService;
-  private final AuthorityService authorityService;
+  private BeanFactory beanFactory;
 
-  public SecurityInterceptor(TokenService tokenService, AuthorityService authorityService){
+  public SecurityInterceptor(TokenService tokenService){
     this.tokenService = tokenService;
-    this.authorityService = authorityService;
   }
 
   @Override
@@ -64,6 +66,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
     if (!CollectionUtils.containsAny(authorities, user.getAuthorities())) {
       throw new SecurityException("没有该操作权限");
     }
+
     return true;
   }
 
@@ -76,6 +79,10 @@ public class SecurityInterceptor implements HandlerInterceptor {
   }
 
   private List<String> getAuthorities(HttpServletRequest request){
+    if (Objects.isNull(authorityService)){
+      return Collections.emptyList();
+    }
+
     PathMatcher pathMatcher = new AntPathMatcher();
     Map<String, List<String>> authoritiesMap = authorityService.getAuthorities();
     if (CollectionUtils.isEmpty(authoritiesMap)) {
@@ -94,5 +101,19 @@ public class SecurityInterceptor implements HandlerInterceptor {
   @Override
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
     UserSecurityContextHolder.clear();
+  }
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    try {
+      this.authorityService = beanFactory.getBean(AuthorityService.class);
+    }catch (BeansException e){
+      log.warn("No AuthorityService instance is provided");
+    }
+  }
+
+  @Override
+  public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    this.beanFactory = beanFactory;
   }
 }
