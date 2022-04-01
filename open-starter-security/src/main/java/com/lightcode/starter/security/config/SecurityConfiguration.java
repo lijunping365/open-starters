@@ -2,12 +2,14 @@ package com.lightcode.starter.security.config;
 
 import com.lightcode.starter.security.interceptor.SecurityInterceptor;
 import com.lightcode.starter.security.properties.SecurityProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author lijunping on 2022/4/1
  */
+@ConditionalOnBean(SecurityInterceptor.class)
 public class SecurityConfiguration implements WebMvcConfigurer {
 
     private final SecurityProperties securityProperties;
