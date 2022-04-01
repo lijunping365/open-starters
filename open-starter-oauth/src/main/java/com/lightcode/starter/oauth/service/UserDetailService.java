@@ -15,12 +15,12 @@ public interface UserDetailService {
      * @param username 用户名
      * @return
      */
-    UserDetails loadUserByUsername(String username, String userType);
+    UserDetails loadUserByUsername(String username);
 
     /**
      * 通过手机号获取用户信息
      * @param mobile 手机号
      * @return
      */
-    UserDetails loadUserByMobile(String mobile, String userType);
+    UserDetails loadUserByMobile(String mobile);
 }
