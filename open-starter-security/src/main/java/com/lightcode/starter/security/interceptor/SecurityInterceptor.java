@@ -4,6 +4,7 @@ import com.lightcode.starter.security.annotation.PreAuthorization;
 import com.lightcode.starter.security.context.UserSecurityContext;
 import com.lightcode.starter.security.context.UserSecurityContextHolder;
 import com.lightcode.starter.security.domain.Authentication;
+import com.lightcode.starter.security.enums.SecurityExceptionEnum;
 import com.lightcode.starter.security.service.AuthorityService;
 import com.lightcode.starter.security.service.TokenService;
 import com.lightcode.starter.security.exception.SecurityException;
@@ -64,7 +65,7 @@ public class SecurityInterceptor implements HandlerInterceptor, BeanFactoryAware
 
     List<String> authorities = getAuthorities(request);
     if (!CollectionUtils.containsAny(authorities, user.getAuthorities())) {
-      throw new SecurityException(SecurityException.FORBIDDEN, "permission denied");
+      throw new SecurityException(SecurityExceptionEnum.FORBIDDEN);
     }
 
     return true;
@@ -73,7 +74,7 @@ public class SecurityInterceptor implements HandlerInterceptor, BeanFactoryAware
   private String extractTokenFromHeader(HttpServletRequest request) {
     String header = request.getHeader(AUTHENTICATION_HEADER);
     if (header == null || !header.startsWith(AUTHENTICATION_TYPE)) {
-      throw new SecurityException(SecurityException.FORBIDDEN,"Illegal request header");
+      throw new SecurityException(SecurityExceptionEnum.NON_AUTHENTICATION);
     }
     return header.substring(7);
   }

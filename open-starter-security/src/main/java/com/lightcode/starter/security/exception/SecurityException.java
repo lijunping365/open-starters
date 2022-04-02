@@ -1,5 +1,7 @@
 package com.lightcode.starter.security.exception;
 
+import com.lightcode.starter.security.enums.SecurityExceptionEnum;
+
 /**
  * @author : lijunping
  * @weixin : ilwq18242076871
@@ -16,6 +18,11 @@ public class SecurityException extends RuntimeException{
     public SecurityException(int code) {
         super();
         this.code = code;
+    }
+
+    public SecurityException(SecurityExceptionEnum resultEnum) {
+        super(resultEnum.getMsg());
+        this.code = resultEnum.getCode();
     }
 
     public SecurityException(int code, String message) {

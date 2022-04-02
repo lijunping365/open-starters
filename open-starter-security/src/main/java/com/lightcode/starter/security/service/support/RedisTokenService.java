@@ -1,5 +1,6 @@
 package com.lightcode.starter.security.service.support;
 
+import com.lightcode.starter.security.enums.SecurityExceptionEnum;
 import com.lightcode.starter.security.exception.SecurityException;
 import com.lightcode.starter.security.domain.Authentication;
 import com.lightcode.starter.security.domain.UserDetails;
@@ -26,7 +27,7 @@ public class RedisTokenService implements TokenService {
     public Authentication readAuthentication(String accessToken){
         Object o = redisTemplate.opsForValue().get(buildAccessTokenKey(accessToken));
         if (Objects.isNull(o)){
-            throw new SecurityException(SecurityException.UNAUTHORIZED,"accessToken error or accessToken has been invalid");
+            throw new SecurityException(SecurityExceptionEnum.UNAUTHORIZED);
         }
         UserDetails userDetails = (UserDetails) o;
         Authentication authentication = new Authentication();

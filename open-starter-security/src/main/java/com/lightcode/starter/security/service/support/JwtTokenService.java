@@ -1,5 +1,6 @@
 package com.lightcode.starter.security.service.support;
 
+import com.lightcode.starter.security.enums.SecurityExceptionEnum;
 import com.lightcode.starter.security.exception.SecurityException;
 import com.lightcode.starter.security.domain.Authentication;
 import com.lightcode.starter.security.domain.UserDetails;
@@ -27,7 +28,7 @@ public class JwtTokenService implements TokenService {
             Claims claims = Jwts.parserBuilder().setSigningKey(securityProperties.getSecretKeyBytes()).build().parseClaimsJws(accessToken).getBody();
             subject = claims.getSubject();
         }catch (Exception e){
-            throw new SecurityException(SecurityException.UNAUTHORIZED,"accessToken error or accessToken has been invalid");
+            throw new SecurityException(SecurityExceptionEnum.UNAUTHORIZED);
         }
         UserDetails userDetails = JSON.parse(subject, UserDetails.class);
         Authentication authentication = new Authentication();
