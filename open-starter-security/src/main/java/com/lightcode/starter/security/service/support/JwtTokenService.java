@@ -27,7 +27,7 @@ public class JwtTokenService implements TokenService {
             Claims claims = Jwts.parserBuilder().setSigningKey(securityProperties.getSecretKeyBytes()).build().parseClaimsJws(accessToken).getBody();
             subject = claims.getSubject();
         }catch (Exception e){
-            throw new SecurityException("AccessToken 错误或 AccessToken 已失效");
+            throw new SecurityException(SecurityException.UNAUTHORIZED,"accessToken error or accessToken has been invalid");
         }
         UserDetails userDetails = JSON.parse(subject, UserDetails.class);
         Authentication authentication = new Authentication();

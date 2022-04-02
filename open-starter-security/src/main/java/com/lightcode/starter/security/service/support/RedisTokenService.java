@@ -26,7 +26,7 @@ public class RedisTokenService implements TokenService {
     public Authentication readAuthentication(String accessToken){
         Object o = redisTemplate.opsForValue().get(buildAccessTokenKey(accessToken));
         if (Objects.isNull(o)){
-            throw new SecurityException("AccessToken 错误或 AccessToken 已失效");
+            throw new SecurityException(SecurityException.UNAUTHORIZED,"accessToken error or accessToken has been invalid");
         }
         UserDetails userDetails = (UserDetails) o;
         Authentication authentication = new Authentication();

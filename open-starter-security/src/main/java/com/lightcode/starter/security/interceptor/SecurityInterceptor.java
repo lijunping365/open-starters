@@ -64,7 +64,7 @@ public class SecurityInterceptor implements HandlerInterceptor, BeanFactoryAware
 
     List<String> authorities = getAuthorities(request);
     if (!CollectionUtils.containsAny(authorities, user.getAuthorities())) {
-      throw new SecurityException("没有该操作权限");
+      throw new SecurityException(SecurityException.FORBIDDEN, "permission denied");
     }
 
     return true;
@@ -73,7 +73,7 @@ public class SecurityInterceptor implements HandlerInterceptor, BeanFactoryAware
   private String extractTokenFromHeader(HttpServletRequest request) {
     String header = request.getHeader(AUTHENTICATION_HEADER);
     if (header == null || !header.startsWith(AUTHENTICATION_TYPE)) {
-      throw new SecurityException("非法的请求头");
+      throw new SecurityException(SecurityException.FORBIDDEN,"Illegal request header");
     }
     return header.substring(7);
   }
