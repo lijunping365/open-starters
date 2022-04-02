@@ -1,12 +1,14 @@
 package com.lightcode.starter.security.exception;
 
 import com.lightcode.starter.security.enums.SecurityExceptionEnum;
+import lombok.Data;
 
 /**
  * @author : lijunping
  * @weixin : ilwq18242076871
  * Description: 认证异常类
  */
+@Data
 public class SecurityException extends RuntimeException{
 
     private int code;
