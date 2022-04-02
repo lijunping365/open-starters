@@ -7,13 +7,13 @@ package com.lightcode.starter.oauth.enums;
  */
 public enum OAuthExceptionEnum {
 
-  UNAUTHORIZED(401, "账号未登录"),
+  UNAUTHORIZED(401, "Unauthorized"),
 
-  FORBIDDEN(403, "没有该操作权限"),
+  FORBIDDEN(403, "permission denied"),
 
-  USERNAME_OR_PASSWORD_ERROR(1001, "用户名或密码错误"),
+  USERNAME_OR_PASSWORD_ERROR(1001, "username or password error"),
 
-  ACCOUNT_LOCKED(1002, "账户已被锁定"),
+  ACCOUNT_LOCKED(1002, "account locked"),
   ;
 
   private final Integer code;
