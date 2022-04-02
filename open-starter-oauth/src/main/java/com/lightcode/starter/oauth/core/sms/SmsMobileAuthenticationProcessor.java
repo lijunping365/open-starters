@@ -4,7 +4,7 @@ import com.lightcode.starter.oauth.component.AuthenticationFailureHandler;
 import com.lightcode.starter.oauth.component.AuthenticationSuccessHandler;
 import com.lightcode.starter.oauth.core.AbstractAuthenticationProcessor;
 import com.lightcode.starter.oauth.domain.UserDetails;
-import com.lightcode.starter.oauth.enums.ResultEnum;
+import com.lightcode.starter.oauth.enums.OAuthExceptionEnum;
 import com.lightcode.starter.oauth.exception.AuthenticationException;
 import com.lightcode.starter.oauth.request.MobileLoginRequest;
 import com.lightcode.starter.oauth.service.UserDetailService;
@@ -28,7 +28,7 @@ public class SmsMobileAuthenticationProcessor extends AbstractAuthenticationProc
     protected UserDetails loadUserDetails(MobileLoginRequest request){
         final UserDetails userDetails = userDetailService.loadUserByMobile(request.getMobile());
         if (Objects.isNull(userDetails)){
-            throw new AuthenticationException(ResultEnum.USERNAME_OR_PASSWORD_ERROR);
+            throw new AuthenticationException(OAuthExceptionEnum.USERNAME_OR_PASSWORD_ERROR);
         }
         return userDetails;
     }

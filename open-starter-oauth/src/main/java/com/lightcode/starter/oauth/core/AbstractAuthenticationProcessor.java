@@ -4,7 +4,7 @@ import com.lightcode.starter.oauth.authentication.Authentication;
 import com.lightcode.starter.oauth.component.AuthenticationFailureHandler;
 import com.lightcode.starter.oauth.component.AuthenticationSuccessHandler;
 import com.lightcode.starter.oauth.domain.UserDetails;
-import com.lightcode.starter.oauth.enums.ResultEnum;
+import com.lightcode.starter.oauth.enums.OAuthExceptionEnum;
 import com.lightcode.starter.oauth.exception.AuthenticationException;
 import com.lightcode.starter.oauth.request.BaseLoginRequest;
 import com.lightcode.starter.oauth.token.AccessToken;
@@ -47,7 +47,7 @@ public abstract class AbstractAuthenticationProcessor<T extends BaseLoginRequest
     private void checkAccountLock(UserDetails userDetails){
         if (Objects.nonNull(userDetails) && userDetails.getAccountLocked()) {
             log.info("账号已被锁定 {}", userDetails);
-            throw new AuthenticationException(ResultEnum.ACCOUNT_LOCKED);
+            throw new AuthenticationException(OAuthExceptionEnum.ACCOUNT_LOCKED);
         }
     }
 

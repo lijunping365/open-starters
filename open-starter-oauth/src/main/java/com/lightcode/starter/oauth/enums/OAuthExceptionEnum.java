@@ -5,9 +5,7 @@ package com.lightcode.starter.oauth.enums;
  *
  * @author lijunping
  */
-public enum ResultEnum {
-
-  SUCCESS(200, "成功"),
+public enum OAuthExceptionEnum {
 
   UNAUTHORIZED(401, "账号未登录"),
 
@@ -22,7 +20,7 @@ public enum ResultEnum {
 
   private final String msg;
 
-  ResultEnum(Integer code, String msg) {
+  OAuthExceptionEnum(Integer code, String msg) {
     this.code = code;
     this.msg = msg;
   }
