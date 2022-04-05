@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
  * @weixin : ilwq18242076871
  * Description: 任务的执行器接口
  */
-public interface TaskExecutor extends Executor, Closeable {
+public interface ITaskExecutor extends Executor, Closeable {
 
   /**
    * Executes the given command at some time in the future.  The command

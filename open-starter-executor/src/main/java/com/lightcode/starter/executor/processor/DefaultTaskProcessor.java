@@ -2,7 +2,7 @@ package com.lightcode.starter.executor.processor;
 
 import com.lightcode.starter.executor.builder.TaskBuilder;
 import com.lightcode.starter.executor.domain.Task;
-import com.lightcode.starter.executor.executor.TaskExecutor;
+import com.lightcode.starter.executor.executor.ITaskExecutor;
 
 import java.util.List;
 
@@ -13,12 +13,12 @@ import java.util.List;
  */
 public class DefaultTaskProcessor<T extends Task> extends AbstractTaskProcessor<T> {
 
-  public DefaultTaskProcessor(TaskBuilder taskBuilder, TaskExecutor executor) {
+  public DefaultTaskProcessor(TaskBuilder taskBuilder, ITaskExecutor executor) {
     super(taskBuilder, executor);
   }
 
   @Override
-  protected void doExecute(List<Runnable> tasks, TaskExecutor executor) {
+  protected void doExecute(List<Runnable> tasks, ITaskExecutor executor) {
     tasks.forEach(executor::execute);
   }
 

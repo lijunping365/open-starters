@@ -8,7 +8,7 @@ import com.lightcode.starter.executor.component.DefaultTaskExecuteSuccessHandler
 import com.lightcode.starter.executor.component.TaskExecuteFailureHandler;
 import com.lightcode.starter.executor.component.TaskExecuteSuccessHandler;
 import com.lightcode.starter.executor.executor.DefaultTaskExecutor;
-import com.lightcode.starter.executor.executor.TaskExecutor;
+import com.lightcode.starter.executor.executor.ITaskExecutor;
 import com.lightcode.starter.executor.interceptor.DefaultTaskAfterInterceptor;
 import com.lightcode.starter.executor.interceptor.DefaultTaskBeforeInterceptor;
 import com.lightcode.starter.executor.interceptor.TaskAfterInterceptor;
@@ -49,7 +49,7 @@ public class TaskExecutorAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskExecutor taskExecutor(ThreadPoolExecutor threadPoolExecutor) {
+  public ITaskExecutor iTaskExecutor(ThreadPoolExecutor threadPoolExecutor) {
     return new DefaultTaskExecutor(threadPoolExecutor);
   }
 
@@ -64,8 +64,8 @@ public class TaskExecutorAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskProcessor<?> taskProcessor(TaskBuilder taskBuilder, TaskExecutor executor){
-    return new DefaultTaskProcessor<>(taskBuilder, executor);
+  public TaskProcessor<?> taskProcessor(TaskBuilder taskBuilder, ITaskExecutor iTaskExecutor){
+    return new DefaultTaskProcessor<>(taskBuilder, iTaskExecutor);
   }
 
   @Bean

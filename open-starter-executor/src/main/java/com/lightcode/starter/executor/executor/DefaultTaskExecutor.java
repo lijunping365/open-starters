@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Description: 默认线程池任务执行器
  */
 @Slf4j
-public class DefaultTaskExecutor implements TaskExecutor {
+public class DefaultTaskExecutor implements ITaskExecutor {
 
   private final ThreadPoolExecutor executor;
 

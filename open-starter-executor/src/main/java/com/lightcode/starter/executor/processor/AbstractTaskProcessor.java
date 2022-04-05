@@ -3,7 +3,7 @@ package com.lightcode.starter.executor.processor;
 
 import com.lightcode.starter.executor.builder.TaskBuilder;
 import com.lightcode.starter.executor.domain.Task;
-import com.lightcode.starter.executor.executor.TaskExecutor;
+import com.lightcode.starter.executor.executor.ITaskExecutor;
 import com.lightcode.starter.executor.handler.TaskHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 public abstract class AbstractTaskProcessor<T extends Task> implements TaskProcessor<T>{
 
   protected final TaskBuilder taskBuilder;
-  protected final TaskExecutor executor;
+  protected final ITaskExecutor executor;
 
-  protected AbstractTaskProcessor(TaskBuilder taskBuilder, TaskExecutor executor) {
+  protected AbstractTaskProcessor(TaskBuilder taskBuilder, ITaskExecutor executor) {
     this.taskBuilder = taskBuilder;
     this.executor = executor;
   }
@@ -39,6 +39,6 @@ public abstract class AbstractTaskProcessor<T extends Task> implements TaskProce
     doExecute(taskList, executor);
   }
 
-  protected abstract void doExecute(List<Runnable> tasks, TaskExecutor executor);
+  protected abstract void doExecute(List<Runnable> tasks, ITaskExecutor executor);
 
 }
