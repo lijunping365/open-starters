@@ -4,7 +4,6 @@ import com.lightcode.starter.http.constants.HttpConstant;
 import com.lightcode.starter.http.executor.support.HttpClientExecutor;
 import com.lightcode.starter.http.executor.support.OkHttpExecutor;
 import com.lightcode.starter.http.properties.HttpProperties;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -24,7 +23,6 @@ import java.util.concurrent.TimeUnit;
  * @author: 李俊平
  * @Date: 2022-01-26 09:10
  */
-@Slf4j
 @Configuration
 @EnableConfigurationProperties(HttpProperties.class)
 public class HttpAutoConfiguration {
