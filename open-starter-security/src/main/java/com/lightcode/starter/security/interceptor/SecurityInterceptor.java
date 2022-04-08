@@ -57,6 +57,11 @@ public class SecurityInterceptor implements HandlerInterceptor, BeanFactoryAware
     Authentication authentication = tokenService.readAuthentication(accessToken);
     UserSecurityContext user = JSON.parse(authentication.getUserDetails(), UserSecurityContext.class);
     UserSecurityContextHolder.setContext(user);
+
+    if (!(handler instanceof HandlerMethod)){
+      return true;
+    }
+
     HandlerMethod handlerMethod = (HandlerMethod) handler;
     PreAuthorization authorization = handlerMethod.getMethodAnnotation(PreAuthorization.class);
     if (Objects.isNull(authorization)) {
