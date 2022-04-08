@@ -20,7 +20,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.lightcode</groupId>
+    <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-captcha</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -30,7 +30,7 @@
 
 ```yaml
 com:
-  lightcode:
+  saucesubfresh:
     captcha:
       image:
         length: 4 #图形验证码的位数为6，将覆盖默认配置中的4

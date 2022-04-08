@@ -18,7 +18,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.lightcode</groupId>
+    <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-oauth</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -28,7 +28,7 @@
 
 ```yaml
 com:
-  lightcode:
+  saucesubfresh:
     oauth:
       token:
         # token 有效期，单位 秒

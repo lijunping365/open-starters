@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.lightcode.starter.oauth.config.OAuthAutoConfiguration
+ com.saucesubfresh.starter.oauth.config.OAuthAutoConfiguration

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.lightcode.starter.executor.config.TaskExecutorAutoConfiguration
+com.saucesubfresh.starter.executor.config.TaskExecutorAutoConfiguration

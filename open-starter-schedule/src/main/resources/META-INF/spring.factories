@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.lightcode.starter.schedule.config.ScheduleTaskAutoConfiguration
+ com.saucesubfresh.starter.schedule.config.ScheduleTaskAutoConfiguration
