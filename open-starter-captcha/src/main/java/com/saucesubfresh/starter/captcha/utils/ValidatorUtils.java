@@ -34,7 +34,7 @@ public interface ValidatorUtils {
    * @param violation 校验结果
    * @return {@link ErrorMessageDetail} 错误信息
    */
-  private static <T> ErrorMessageDetail buildErrorMessage(ConstraintViolation<T> violation) {
+  static <T> ErrorMessageDetail buildErrorMessage(ConstraintViolation<T> violation) {
     Path propertyPath = violation.getPropertyPath();
     String message = violation.getMessage();
     Object invalidValue = violation.getInvalidValue();
