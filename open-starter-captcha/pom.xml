@@ -14,16 +14,15 @@
 
     <properties>
         <google.zxing.version>3.3.3</google.zxing.version>
+        <filters.version>2.0.235-1</filters.version>
     </properties>
 
     <dependencies>
-        <!-- 生成图形验证码 -->
         <dependency>
-            <groupId>com.github.penggle</groupId>
-            <artifactId>kaptcha</artifactId>
-            <version>2.3.2</version>
+            <groupId>com.jhlabs</groupId>
+            <artifactId>filters</artifactId>
+            <version>${filters.version}</version>
         </dependency>
-
         <!-- 生成二维码 -->
         <dependency>
             <groupId>com.google.zxing</groupId>
