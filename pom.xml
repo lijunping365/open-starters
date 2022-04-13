@@ -20,6 +20,7 @@
         <module>open-starter-schedule</module>
         <module>open-starter-http</module>
         <module>open-starter-executor</module>
+        <module>open-starter-alarm</module>
     </modules>
 
     <licenses>
