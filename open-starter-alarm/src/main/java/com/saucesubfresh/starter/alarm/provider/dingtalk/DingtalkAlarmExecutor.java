@@ -4,7 +4,6 @@ import com.saucesubfresh.starter.alarm.AbstractAlarmExecutor;
 import com.saucesubfresh.starter.alarm.callback.AlarmCallback;
 import com.saucesubfresh.starter.alarm.callback.AlarmCallbackMessage;
 import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
-import com.saucesubfresh.starter.alarm.properties.DingtalkAlarmProperties;
 import com.saucesubfresh.starter.alarm.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -58,10 +57,9 @@ public class DingtalkAlarmExecutor extends AbstractAlarmExecutor<DingtalkMessage
      * Sign webhook url using secret and timestamp
      */
     private String getSignUrl() {
-        final DingtalkAlarmProperties dingtalkProps = alarmProperties.getDingtalk();
         try {
             Long timestamp = System.currentTimeMillis();
-            return String.format("%s&timestamp=%s&sign=%s", dingtalkProps.getWebhook(), timestamp, sign(timestamp, dingtalkProps.getSecret()));
+            return String.format("%s&timestamp=%s&sign=%s", alarmProperties.getWebhook(), timestamp, sign(timestamp, alarmProperties.getSecret()));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {
             throw new RuntimeException(e);
         }

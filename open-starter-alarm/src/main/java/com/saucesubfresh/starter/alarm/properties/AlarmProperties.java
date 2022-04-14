@@ -10,5 +10,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "com.saucesubfresh.alarm")
 public class AlarmProperties {
 
-    DingtalkAlarmProperties dingtalk = new DingtalkAlarmProperties();
+    /**
+     * 邮件发送者
+     */
+    private String emailFrom;
+
+    /**
+     * 密钥
+     */
+    private String secret;
+
+    /**
+     * 自定义群机器人中的 webhook
+     */
+    private String webhook;
 }

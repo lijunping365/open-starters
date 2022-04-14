@@ -19,7 +19,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-
         <!-- 包含很多与自动配置相关的注解的定义，必须要引入 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

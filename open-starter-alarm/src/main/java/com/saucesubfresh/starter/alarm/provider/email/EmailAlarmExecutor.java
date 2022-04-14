@@ -3,6 +3,7 @@ package com.saucesubfresh.starter.alarm.provider.email;
 import com.saucesubfresh.starter.alarm.AlarmExecutor;
 import com.saucesubfresh.starter.alarm.callback.AlarmCallback;
 import com.saucesubfresh.starter.alarm.callback.AlarmCallbackMessage;
+import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,9 +19,11 @@ import java.util.*;
 @Slf4j
 public class EmailAlarmExecutor implements AlarmExecutor<EmailMessageRequest> {
     private final JavaMailSender mailSender;
+    private final AlarmProperties alarmProperties;
 
-    public EmailAlarmExecutor(JavaMailSender mailSender) {
+    public EmailAlarmExecutor(JavaMailSender mailSender, AlarmProperties alarmProperties) {
         this.mailSender = mailSender;
+        this.alarmProperties = alarmProperties;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class EmailAlarmExecutor implements AlarmExecutor<EmailMessageRequest> {
             try {
                 MimeMessage mimeMessage = mailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+                helper.setFrom(alarmProperties.getEmailFrom());
                 helper.setTo(email);
                 helper.setSubject(message.getTitle());
                 helper.setText(message.getContent(), true);
