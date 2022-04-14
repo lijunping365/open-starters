@@ -9,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.util.CollectionUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,13 +38,18 @@ public class DingtalkAlarmExecutor extends AbstractAlarmExecutor<DingtalkMessage
 
     @Override
     public void doAlarm(DingtalkMessageRequest message, AlarmCallback callback) {
-        Map<String, String> map = new HashMap<>();
+        String errMsg;
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
             String url = getSignUrl();
-            sendAlarmMessage(httpClient, url, JSON.toJSON(message));
-        } catch (IOException e) {
-            map.put(message.getAt().getIsAtAll() ? "@All" : StringUtils.join(message.getAt().getAtMobiles()), e.getMessage());
-            log.error(e.getMessage(), e);
+            String response = sendAlarmMessage(httpClient, url, JSON.toJSON(message));
+            errMsg = JSON.parseMap(response, String.class, String.class).get("errmsg");
+        } catch (Exception e) {
+            errMsg = e.getMessage();
+        }
+        Map<String, String> map = new HashMap<>();
+        if (!StringUtils.equals(errMsg, "ok")){
+            List<String> atMobiles = message.getAt().getAtMobiles();
+            map.put(CollectionUtils.isEmpty(atMobiles) ? "@All" : StringUtils.join(atMobiles), errMsg);
         }
 
         AlarmCallbackMessage callbackMessage = new AlarmCallbackMessage();

@@ -1,6 +1,7 @@
 
 package com.saucesubfresh.starter.alarm;
 
+import com.saucesubfresh.starter.alarm.exception.AlarmException;
 import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
@@ -38,7 +39,7 @@ public abstract class AbstractAlarmExecutor<T extends BaseAlarmMessage> implemen
     /**
      * Send alarm message to remote endpoint
      */
-    protected void sendAlarmMessage(CloseableHttpClient httpClient, String url, String requestBody) {
+    protected String sendAlarmMessage(CloseableHttpClient httpClient, String url, String requestBody) throws AlarmException {
         CloseableHttpResponse httpResponse = null;
         try {
             HttpPost post = new HttpPost(url);
@@ -50,11 +51,12 @@ public abstract class AbstractAlarmExecutor<T extends BaseAlarmMessage> implemen
             httpResponse = httpClient.execute(post);
             StatusLine statusLine = httpResponse.getStatusLine();
             if (statusLine != null && statusLine.getStatusCode() != HttpStatus.SC_OK) {
-                log.error("send alarm to {} failure. Response code: {}, Response content: {}", url, statusLine.getStatusCode(),
-                        EntityUtils.toString(httpResponse.getEntity()));
+                log.error("send alarm to {} failure. Response code: {}", url, statusLine.getStatusCode());
             }
+            return EntityUtils.toString(httpResponse.getEntity());
         } catch (Throwable e) {
             log.error("send alarm to {} failure.", url, e);
+            throw new AlarmException(e.getMessage());
         } finally {
             if (httpResponse != null) {
                 try {
