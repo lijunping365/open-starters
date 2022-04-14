@@ -13,6 +13,13 @@
     <description>集成各种报警</description>
 
     <dependencies>
+        <!-- mail-starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+
         <!-- 包含很多与自动配置相关的注解的定义，必须要引入 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -29,6 +36,12 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

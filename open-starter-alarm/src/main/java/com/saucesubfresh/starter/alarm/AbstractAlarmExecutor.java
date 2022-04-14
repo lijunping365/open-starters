@@ -1,0 +1,68 @@
+
+package com.saucesubfresh.starter.alarm;
+
+import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+
+/**
+ * @author lijunping on 2022/4/14
+ */
+@Slf4j
+public abstract class AbstractAlarmExecutor<T extends BaseAlarmMessage> implements AlarmExecutor<T> {
+
+    private static final int HTTP_CONNECT_TIMEOUT = 1000;
+    private static final int HTTP_CONNECTION_REQUEST_TIMEOUT = 1000;
+    private static final int HTTP_SOCKET_TIMEOUT = 10000;
+    private final RequestConfig requestConfig;
+
+    public AbstractAlarmExecutor() {
+        this.requestConfig = RequestConfig.custom()
+                .setConnectTimeout(HTTP_CONNECT_TIMEOUT)
+                .setConnectionRequestTimeout(HTTP_CONNECTION_REQUEST_TIMEOUT)
+                .setSocketTimeout(HTTP_SOCKET_TIMEOUT)
+                .build();
+    }
+
+    /**
+     * Send alarm message to remote endpoint
+     */
+    protected void sendAlarmMessage(CloseableHttpClient httpClient, String url, String requestBody) {
+        CloseableHttpResponse httpResponse = null;
+        try {
+            HttpPost post = new HttpPost(url);
+            post.setConfig(requestConfig);
+            post.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
+            post.setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType());
+            StringEntity entity = new StringEntity(requestBody, ContentType.APPLICATION_JSON);
+            post.setEntity(entity);
+            httpResponse = httpClient.execute(post);
+            StatusLine statusLine = httpResponse.getStatusLine();
+            if (statusLine != null && statusLine.getStatusCode() != HttpStatus.SC_OK) {
+                log.error("send alarm to {} failure. Response code: {}, Response content: {}", url, statusLine.getStatusCode(),
+                        EntityUtils.toString(httpResponse.getEntity()));
+            }
+        } catch (Throwable e) {
+            log.error("send alarm to {} failure.", url, e);
+        } finally {
+            if (httpResponse != null) {
+                try {
+                    httpResponse.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }
+    }
+}
