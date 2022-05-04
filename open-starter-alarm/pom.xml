@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>open-starter-alarm</artifactId>
+    <version>1.0.1</version>
     <description>集成各种报警</description>
 
     <dependencies>

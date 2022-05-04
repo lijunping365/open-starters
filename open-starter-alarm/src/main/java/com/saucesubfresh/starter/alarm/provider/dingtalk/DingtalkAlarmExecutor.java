@@ -1,15 +1,13 @@
 package com.saucesubfresh.starter.alarm.provider.dingtalk;
 
 import com.saucesubfresh.starter.alarm.AbstractAlarmExecutor;
-import com.saucesubfresh.starter.alarm.callback.AlarmCallback;
-import com.saucesubfresh.starter.alarm.callback.AlarmCallbackMessage;
+import com.saucesubfresh.starter.alarm.exception.AlarmException;
 import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
 import com.saucesubfresh.starter.alarm.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.util.CollectionUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -18,11 +16,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author lijunping on 2022/4/14
@@ -30,6 +24,8 @@ import java.util.Map;
 @Slf4j
 public class DingtalkAlarmExecutor extends AbstractAlarmExecutor<DingtalkMessageRequest> {
     private static final String SIGN_METHOD = "HmacSHA256";
+    private static final String RESPONSE_MSG = "errmsg";
+    private static final String SUCCESS_SIGN = "ok";
     private final AlarmProperties alarmProperties;
 
     public DingtalkAlarmExecutor(AlarmProperties alarmProperties) {
@@ -37,26 +33,19 @@ public class DingtalkAlarmExecutor extends AbstractAlarmExecutor<DingtalkMessage
     }
 
     @Override
-    public void doAlarm(DingtalkMessageRequest message, AlarmCallback callback) {
+    public void doAlarm(DingtalkMessageRequest message) throws AlarmException {
         String errMsg;
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
             String url = getSignUrl();
             String response = sendAlarmMessage(httpClient, url, JSON.toJSON(message));
-            errMsg = JSON.parseMap(response, String.class, String.class).get("errmsg");
+            errMsg = JSON.parseMap(response, String.class, String.class).get(RESPONSE_MSG);
         } catch (Exception e) {
             errMsg = e.getMessage();
         }
-        Map<String, String> map = new HashMap<>();
-        if (!StringUtils.equals(errMsg, "ok")){
-            List<String> atMobiles = message.getAt().getAtMobiles();
-            map.put(CollectionUtils.isEmpty(atMobiles) ? "@All" : StringUtils.join(atMobiles), errMsg);
-        }
 
-        AlarmCallbackMessage callbackMessage = new AlarmCallbackMessage();
-        callbackMessage.setAlarmMessage(message);
-        callbackMessage.setFailedSender(map);
-        callbackMessage.setTime(LocalDateTime.now());
-        callback.callback(callbackMessage);
+        if (!StringUtils.equals(errMsg, SUCCESS_SIGN)){
+            throw new AlarmException(errMsg);
+        }
     }
 
     /**

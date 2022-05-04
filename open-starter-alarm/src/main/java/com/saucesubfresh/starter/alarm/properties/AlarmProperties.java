@@ -11,12 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AlarmProperties {
 
     /**
-     * 邮件发送者
-     */
-    private String emailFrom;
-
-    /**
-     * 密钥
+     * 钉钉机器人密钥
      */
     private String secret;
 

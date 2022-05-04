@@ -23,8 +23,8 @@ public class AlarmAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(JavaMailSender.class)
-    public EmailAlarmExecutor mailAlarmExecutor(JavaMailSender mailSender, AlarmProperties alarmProperties){
-        return new EmailAlarmExecutor(mailSender, alarmProperties);
+    public EmailAlarmExecutor mailAlarmExecutor(JavaMailSender mailSender){
+        return new EmailAlarmExecutor(mailSender);
     }
 
     @Bean

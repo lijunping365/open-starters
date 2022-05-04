@@ -1,6 +1,6 @@
 package com.saucesubfresh.starter.alarm;
 
-import com.saucesubfresh.starter.alarm.callback.AlarmCallback;
+import com.saucesubfresh.starter.alarm.exception.AlarmException;
 import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
 
 /**
@@ -8,5 +8,5 @@ import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
  */
 public interface AlarmExecutor<T extends BaseAlarmMessage> {
 
-    void doAlarm(T message, AlarmCallback callback);
+    void doAlarm(T message) throws AlarmException;
 }
