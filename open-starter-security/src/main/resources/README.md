@@ -1,12 +1,12 @@
 # 安全插件
 
-安全认证拦截插件
+认证、鉴权拦截插件
 
 ## 功能
 
 - [x] 配置路由白名单功能，白名单内的路由不会被拦截，即请求头不需要携带 token 就能访问
 
-- [x] 基于注解拦截进行权限校验，如果方法上加了 PreAuthorization 注解则会进行拦截并校验权限，如果有相应权限才能通过，否则将被拒绝访问
+- [x] 默认提供基于注解进行权限拦截校验，如果方法上加了 PreAuthorization 注解则会进行权限校验，如果有相应权限才能通过，否则将被拒绝访问
 
 - [x] 开发者无感知获取用户信息
 
@@ -16,7 +16,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.lightcode</groupId>
+    <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-security</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -41,7 +41,7 @@ public class JobAdminApplication {
 
 ```yaml
 com:
-  lightcode:
+  saucesubfresh:
     security:
       # 配置白名单
       ignore-paths: "/login"
@@ -81,11 +81,28 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 
 ```
 
-### 高级使用-用户权限拦截
+### 高阶使用-用户鉴权功能
 
-通常在后台管理系统中会使用此功能
+常见的权限访问控制做法有如下两种
 
-> 1.在需要某个角色才能访问的方法上添加 PreAuthorization 注解
-> 2.需要注入 AuthorityService 的实现
+#### 1、路径比对
+
+一般的系统在权限设计上，都会分为角色、权限（RBAC），复杂一点的可能会有用户组、组织之类的概念。
+
+用户的权限是写死的，对应于后台的接口或者资源，是没办法改变的，一般不对用户开放修改权限。
+
+管理员用户可以通过给角色分配权限的方式，来实现访问控制。
+
+即分析当前访问路径所需要的权限，检查当前用户是否具有该权限，做一个对比，根据对比结果来决定当前用户是否可以访问该资源。
+
+这种做法的好处是代码的入侵性不高，不需要再每个接口上加注解。但相对来说，显得不那么直观。
+
+具体实现可以参考 Open-Admin
+
+#### 2、使用注解的方式
+
+有些小型的系统或许压根就不需要权限，只需要给用户分配角色，没有给角色分配权限这一过程。这样的话，角色也是不可变的，就可以根据角色来做访问控制了。
+
+在需要某个角色才能访问的方法上添加 PreAuthorization 注解，在该 starter 中已提供该实现。
 
 

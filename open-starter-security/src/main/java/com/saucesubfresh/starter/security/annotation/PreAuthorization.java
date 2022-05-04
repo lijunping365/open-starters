@@ -12,5 +12,9 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PreAuthorization {
-  
+
+    /**
+     * 指定用户拥有某个角色才能访问该接口
+     */
+    String role() default "";
 }

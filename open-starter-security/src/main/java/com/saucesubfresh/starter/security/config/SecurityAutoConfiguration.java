@@ -1,5 +1,9 @@
 package com.saucesubfresh.starter.security.config;
 
+import com.saucesubfresh.starter.security.authentication.AuthenticationEntryPoint;
+import com.saucesubfresh.starter.security.authentication.BearerTokenAuthenticationEntryPoint;
+import com.saucesubfresh.starter.security.authorization.AccessDeniedHandler;
+import com.saucesubfresh.starter.security.authorization.DefaultAccessDeniedHandler;
 import com.saucesubfresh.starter.security.properties.SecurityProperties;
 import com.saucesubfresh.starter.security.service.TokenService;
 import com.saucesubfresh.starter.security.service.support.JwtTokenService;
@@ -23,6 +27,18 @@ public class SecurityAutoConfiguration {
     @ConditionalOnMissingBean
     public TokenService tokenService(SecurityProperties securityProperties){
         return new JwtTokenService(securityProperties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthenticationEntryPoint authenticationEntryPoint(TokenService tokenService){
+        return new BearerTokenAuthenticationEntryPoint(tokenService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new DefaultAccessDeniedHandler();
     }
 
 }
