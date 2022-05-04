@@ -25,7 +25,7 @@ public class SmsMobileAuthenticationProcessor extends AbstractAuthenticationProc
     }
 
     @Override
-    protected UserDetails loadUserDetails(MobileLoginRequest request){
+    protected UserDetails loadUserDetails(MobileLoginRequest request) throws AuthenticationException{
         final UserDetails userDetails = userDetailService.loadUserByMobile(request.getMobile());
         if (Objects.isNull(userDetails)){
             throw new AuthenticationException(OAuthExceptionEnum.USERNAME_OR_PASSWORD_ERROR);

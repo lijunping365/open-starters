@@ -28,7 +28,7 @@ public class PasswordAuthenticationProcessor extends AbstractAuthenticationProce
     }
 
     @Override
-    protected UserDetails loadUserDetails(PasswordLoginRequest request){
+    protected UserDetails loadUserDetails(PasswordLoginRequest request) throws AuthenticationException{
         final UserDetails userDetails = userDetailService.loadUserByUsername(request.getUsername());
         if (Objects.isNull(userDetails)){
             throw new AuthenticationException(OAuthExceptionEnum.USERNAME_OR_PASSWORD_ERROR);

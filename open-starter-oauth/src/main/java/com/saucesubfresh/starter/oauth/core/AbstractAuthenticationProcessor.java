@@ -31,7 +31,7 @@ public abstract class AbstractAuthenticationProcessor<T extends BaseLoginRequest
     }
 
     @Override
-    public AccessToken authentication(T request){
+    public AccessToken authentication(T request) throws AuthenticationException{
         try {
             UserDetails userDetails = loadUserDetails(request);
             checkAccountLock(userDetails);
@@ -45,13 +45,13 @@ public abstract class AbstractAuthenticationProcessor<T extends BaseLoginRequest
         }
     }
 
-    private void checkAccountLock(UserDetails userDetails){
+    private void checkAccountLock(UserDetails userDetails) {
         if (Objects.nonNull(userDetails) && userDetails.getAccountLocked()) {
             log.info("账号已被锁定 {}", userDetails);
             throw new AuthenticationException(OAuthExceptionEnum.ACCOUNT_LOCKED);
         }
     }
 
-    protected abstract UserDetails loadUserDetails(T request);
+    protected abstract UserDetails loadUserDetails(T request) throws AuthenticationException;
 
 }

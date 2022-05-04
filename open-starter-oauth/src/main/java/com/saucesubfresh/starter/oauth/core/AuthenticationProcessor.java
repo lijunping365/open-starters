@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.oauth.core;
 
 
+import com.saucesubfresh.starter.oauth.exception.AuthenticationException;
 import com.saucesubfresh.starter.oauth.request.BaseLoginRequest;
 import com.saucesubfresh.starter.oauth.token.AccessToken;
 
@@ -9,5 +10,5 @@ import com.saucesubfresh.starter.oauth.token.AccessToken;
  */
 public interface AuthenticationProcessor<T extends BaseLoginRequest> {
 
-    AccessToken authentication(T request);
+    AccessToken authentication(T request) throws AuthenticationException;
 }
