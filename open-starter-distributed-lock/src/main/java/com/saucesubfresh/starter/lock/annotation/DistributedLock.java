@@ -50,15 +50,17 @@ public @interface DistributedLock {
   /**
    * 最长等待时间。
    * 该字段只有当tryLock()返回true才有效。
+   * 默认为 -1
    */
-  long waitTime() default 30L;
+  long waitTime() default -1;
 
   /**
    * 锁超时时间。
    * 超时时间过后，锁自动释放。
-   * 建议：尽量缩简需要加锁的逻辑。
+   * 默认为 -1，即使用 redisson 默认的 30s
+   * 注意：指定值为 -1 时看门狗才会工作
    */
-  long leaseTime() default 500L;
+  long leaseTime() default -1;
 
   /**
    * 时间单位。默认为毫秒。

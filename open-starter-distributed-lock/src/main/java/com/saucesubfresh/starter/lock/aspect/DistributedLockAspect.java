@@ -65,7 +65,7 @@ public class DistributedLockAspect {
 
   private Object tryLock(ProceedingJoinPoint pjp, DistributedLock annotation, String lockName) {
     try {
-      return lockProcessor.tryLock(()-> proceed(pjp), lockName,annotation.waitTime(), annotation.leaseTime(), annotation.timeUnit(), annotation.fairLock());
+      return lockProcessor.tryLock(()-> proceed(pjp), lockName, annotation.waitTime(), annotation.leaseTime(), annotation.timeUnit(), annotation.fairLock());
     } catch (Exception e) {
       e.printStackTrace();
       return null;
