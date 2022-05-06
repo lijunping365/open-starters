@@ -8,8 +8,8 @@
 ## 常用的分布式锁都有什么？
 
 >1.基于数据库实现分布式锁
->2.基于Zookeeper实现分布式锁
->3.基于Redis实现分布式锁
+>2.基于Redisson实现分布式锁（系统默认提供）
+>3.基于Zookeeper实现分布式锁（频繁创建节点，系统未提供）
 
 # Redisson概述
 Redisson底层采用的是Netty 框架。支持Redis 2.8以上版本，支持Java1.6+以上版本。
@@ -377,4 +377,166 @@ public String getFieldName(){
     return "";
 }
 ```
+
+## 使用分布式锁需要注意的点
+
+### 看门狗
+
+它是干啥用的呢？
+
+好的，如果你回答不上来这个问题。那当你遇到下面这个面试题的时候肯定懵逼。
+
+面试官：请问你用 Redis 做分布式锁的时候，如果指定过期时间到了，把锁给释放了。但是任务还未执行完成，导致任务再次被执行，这种情况你会怎么处理呢？
+
+这个时候，99% 的面试官想得到的回答都是看门狗，或者一种类似于看门狗的机制。
+
+如果你说：这个问题我遇到过，但是我就是把过期时间设置的长一点。
+
+时间到底设置多长，是你一个非常主观的判断，设置的长一点，能一定程度上解决这个问题，但是不能完全解决。
+
+所以，请回去等通知吧。
+
+或者你回答：这个问题我遇到过，我不设置过期时间，由程序调用 unlock 来保证。
+
+好的，程序保证调用 unlock 方法没毛病，这是在程序层面可控、可保证的。但是如果你程序运行的服务器刚好还没来得及执行 unlock 就宕机了呢，这个你不能打包票吧？
+
+这个锁是不是就死锁了？
+
+所以，请回去等通知吧。
+
+为了解决前面提到的过期时间不好设置，以及一不小心死锁的问题，Redisson 内部基于时间轮，针对每一个锁都搞了一个定时任务，这个定时任务，就是看门狗。
+
+在 Redisson 实例被关闭前，这个狗子可以通过定时任务不断的延长锁的有效期。
+
+因为你根本就不需要设置过期时间，这样就从根本上解决了“过期时间不好设置”的问题。默认情况下，看门狗的检查锁的超时时间是 30 秒钟，也可以通过修改参数来另行指定。
+
+如果很不幸，节点宕机了导致没有执行 unlock，那么在默认的配置下最长 30s 的时间后，这个锁就自动释放了。
+
+那么问题来了，面试官紧接着来一个追问：怎么自动释放呢？
+
+这个时候，你只需要来一个战术后仰：程序都没了，你觉得定时任务还在吗？定时任务都不在了，定时任务不在了就不会给锁自动续期了，锁就会在一定时间后失效，所以也不会存在死锁的问题。
+
+### 看门狗什么情况下才会工作
+
+分析源码一看便知（RedissonLock）
+
+```
+private RFuture<Boolean> tryAcquireOnceAsync(long waitTime, long leaseTime, TimeUnit unit, long threadId) {
+    RFuture<Boolean> ttlRemainingFuture;
+    if (leaseTime != -1) {
+        ttlRemainingFuture = tryLockInnerAsync(waitTime, leaseTime, unit, threadId, RedisCommands.EVAL_NULL_BOOLEAN);
+    } else {
+        ttlRemainingFuture = tryLockInnerAsync(waitTime, internalLockLeaseTime,
+                TimeUnit.MILLISECONDS, threadId, RedisCommands.EVAL_NULL_BOOLEAN);
+    }
+
+    ttlRemainingFuture.onComplete((ttlRemaining, e) -> {
+        if (e != null) {
+            return;
+        }
+
+        // lock acquired
+        if (ttlRemaining) {
+            if (leaseTime != -1) {
+                internalLockLeaseTime = unit.toMillis(leaseTime);
+            } else {
+                scheduleExpirationRenewal(threadId);
+            }
+        }
+    });
+    return ttlRemainingFuture;
+}
+```
+
+这里的 leaseTime 是 -1，所以触发的是 else 分支中的 scheduleExpirationRenewal 代码。
+                     
+而这个代码就是启动看门狗的代码。换句话说，如果这里的 leaseTime 不是 -1，那么就不会启动看门狗。
+
+那么怎么让 leaseTime 不是 -1 呢？自己指定加锁时间为其他值，且不是 -1.
+
+### 看门狗工作原理
+
+首先，我们知道看门狗其实就是一个定时任务，接下来我们来扒扒源码
+
+```
+protected void scheduleExpirationRenewal(long threadId) {
+    ExpirationEntry entry = new ExpirationEntry();
+    ExpirationEntry oldEntry = EXPIRATION_RENEWAL_MAP.putIfAbsent(getEntryName(), entry);
+    // 重入加锁
+    if (oldEntry != null) {
+        oldEntry.addThreadId(threadId);
+    } else { // 第一次加锁，触发定时任务
+        entry.addThreadId(threadId);
+        renewExpiration();
+    }
+}
+```
+
+里面就是把当前线程封装成了一个对象，然后维护到一个 MAP 中。
+
+你只要记住这个 MAP 的 key 是当前线程，value 是 ExpirationEntry 对象，这个对象维护的是当前线程的加锁次数。
+
+然后，我们先看 scheduleExpirationRenewal 方法里面，调用 MAP 的 putIfAbsent 方法后，返回的 oldEntry 不为空的情况。
+
+这种情况说明是第一次加锁，会触发 renewExpiration 方法，这个方法里面就是看门狗的核心逻辑。
+
+而在 scheduleExpirationRenewal 方法里面，不管前面提到的 oldEntry 是否为空，都会触发 addThreadId 方法：
+
+从源码中可以看出来，这里仅仅对当前线程的加锁次数进行一个维护。
+
+这个维护很好理解，因为要支持锁的重入嘛，就得记录到底重入了几次。
+
+加锁一次，次数加一。解锁一次，次数减一。
+
+接着看 renewExpiration 方法，这就是看门狗的真面目了：
+
+```
+private void renewExpiration() {
+    ExpirationEntry ee = EXPIRATION_RENEWAL_MAP.get(getEntryName());
+    if (ee == null) {
+        return;
+    }
+    
+    Timeout task = commandExecutor.getConnectionManager().newTimeout(new TimerTask() {
+        @Override
+        public void run(Timeout timeout) throws Exception {
+            ExpirationEntry ent = EXPIRATION_RENEWAL_MAP.get(getEntryName());
+            if (ent == null) {
+                return;
+            }
+            Long threadId = ent.getFirstThreadId();
+            if (threadId == null) {
+                return;
+            }
+            
+            RFuture<Boolean> future = renewExpirationAsync(threadId);
+            future.onComplete((res, e) -> {
+                if (e != null) {
+                    log.error("Can't update lock " + getName() + " expiration", e);
+                    EXPIRATION_RENEWAL_MAP.remove(getEntryName());
+                    return;
+                }
+                
+                if (res) {
+                    // reschedule itself
+                    renewExpiration();
+                }
+            });
+        }
+    }, internalLockLeaseTime / 3, TimeUnit.MILLISECONDS);
+    
+    ee.setTimeout(task);
+}
+```
+
+这段代码主要逻辑是一个基于时间轮的定时任务
+
+
+
+
+
+
+
+
+
 
