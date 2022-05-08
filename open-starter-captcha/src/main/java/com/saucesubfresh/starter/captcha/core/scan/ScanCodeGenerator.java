@@ -7,9 +7,11 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.CharacterSetECI;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.saucesubfresh.starter.captcha.generator.ValidateCodeGenerator;
+import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
+import com.saucesubfresh.starter.captcha.processor.AbstractCaptchaGenerator;
 import com.saucesubfresh.starter.captcha.properties.CaptchaProperties;
 import com.saucesubfresh.starter.captcha.properties.ScanCodeProperties;
+import com.saucesubfresh.starter.captcha.repository.CaptchaRepository;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,16 +22,17 @@ import java.util.UUID;
  * @author : lijunping
  * @weixin : ilwq18242076871
  */
-public class ScanCodeGenerator implements ValidateCodeGenerator {
+public class ScanCodeGenerator extends AbstractCaptchaGenerator<ScanValidateCode> {
 
   private final CaptchaProperties captchaProperties;
 
-  public ScanCodeGenerator(CaptchaProperties captchaProperties) {
+  public ScanCodeGenerator(CaptchaRepository captchaRepository, CaptchaProperties captchaProperties) {
+    super(captchaRepository);
     this.captchaProperties = captchaProperties;
   }
 
   @Override
-  public ScanValidateCode generate() throws WriterException {
+  public ScanValidateCode generate() throws ValidateCodeException {
     String str = UUID.randomUUID().toString();
     String uuid = str.replaceAll("-", "");
     ScanCodeProperties scanCodeProperties = captchaProperties.getScan();
@@ -40,9 +43,13 @@ public class ScanCodeGenerator implements ValidateCodeGenerator {
     hintTypes.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);//设置容错级别
     hintTypes.put(EncodeHintType.MARGIN, scanCodeProperties.getMargin());//设置外边距
 
-    BitMatrix bitMatrix = new MultiFormatWriter().encode(uuid, BarcodeFormat.QR_CODE, scanCodeProperties.getWidth(), scanCodeProperties.getHeight(), hintTypes);
+    BitMatrix bitMatrix;
+    try {
+      bitMatrix = new MultiFormatWriter().encode(uuid, BarcodeFormat.QR_CODE, scanCodeProperties.getWidth(), scanCodeProperties.getHeight(), hintTypes);
+    } catch (WriterException e) {
+      throw new ValidateCodeException(e.getMessage());
+    }
 
-    //将二维码写入图片
     BufferedImage bufferedImage = new BufferedImage(scanCodeProperties.getWidth(), scanCodeProperties.getHeight(), BufferedImage.TYPE_INT_RGB);
     for (int i = 0; i < scanCodeProperties.getWidth(); i++) {
       for (int j = 0; j < scanCodeProperties.getHeight(); j++) {

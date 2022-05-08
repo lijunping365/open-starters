@@ -10,7 +10,7 @@
 
 - [x] 生成后的验证码默认会存储到 Redis 上，而且会根据验证码的有效期自动失效
 
-- [x] 验证码的发送由开发者实现，这里提供了回调函数。
+- [x] 验证码的发送由开发者实现
 
 - [x] 可传入与生成验证码时传入的 requestId 和用户输入的验证码进行验证码的校验
 
@@ -50,41 +50,35 @@ com:
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/openJobLogin")
-public class OpenJobLoginController {
+@RequestMapping("/captcha")
+public class OpenJobCaptchaController {
 
-    @Autowired
-    private CaptchaProcessor captchaProcessor;
+    private final ImageCodeGenerator imageCodeGenerator;
+    private final SmsCodeGenerator smsCodeGenerator;
 
-    @Autowired
-    private HttpServletResponse response;
-    /**
-     * 创建验证码
-     */
-    @PostMapping("/validate/code")
-    public void createCode(@RequestBody @Valid OpenJobCaptchaRequest request) throws Exception {
+    public OpenJobCaptchaController(ImageCodeGenerator imageCodeGenerator, SmsCodeGenerator smsCodeGenerator) {
+        this.imageCodeGenerator = imageCodeGenerator;
+        this.smsCodeGenerator = smsCodeGenerator;
+    }
+
+    @PostMapping("/create/image")
+    public Result<OpenJobCaptchaRespDTO> createImageCode(@RequestBody @Valid OpenJobCaptchaRequest request) {
+        OpenJobCaptchaRespDTO openJobCaptchaRespDTO = new OpenJobCaptchaRespDTO();
         CaptchaGenerateRequest captchaGenerateRequest = new CaptchaGenerateRequest();
-        captchaGenerateRequest.setRequestId(request.getRequestId());
-        captchaGenerateRequest.setType(request.getType());
-        
-        captchaProcessor.create(captchaGenerateRequest, validateCode -> {
-            final String type = request.getType();
-            final ValidateCodeType codeType = ValidateCodeType.getValidateCodeType(type);
-            switch (codeType){
-                case IMAGE:
-                    try {
-                        ImageValidateCode imageValidateCode = (ImageValidateCode) validateCode;
-                        // 输出图片
-                        ImageIO.write(imageValidateCode.getImage(), "JPEG", response.getOutputStream());
-                    } catch (IOException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                    break;
-                case SMS:
-                    log.info("向手机号: {}发送短信验证码: {}", request.getMobile(), validateCode.getCode());
-                    break;
-            }
-        });
+        captchaGenerateRequest.setRequestId(request.getDeviceId());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ImageValidateCode imageValidateCode = imageCodeGenerator.create(captchaGenerateRequest);
+            ImageIO.write(imageValidateCode.getImage(), "JPEG", byteArrayOutputStream);
+            byte[] bytes = byteArrayOutputStream.toByteArray();
+            String base64ImgCode = Base64Utils.encodeToString(bytes);
+            openJobCaptchaRespDTO.setImageCode(base64ImgCode);
+            openJobCaptchaRespDTO.setSuccess(true);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ControllerException(e.getMessage());
+        }
+        return Result.succeed(openJobCaptchaRespDTO);
     }
 }
 ```
@@ -96,21 +90,26 @@ public class OpenJobLoginController {
 比如要替换掉原来的短信验证码生成方式
 
 ```java
+@Component
+public class ImageCodeGenerator extends AbstractCaptchaGenerator<ImageValidateCode> {
 
-@Component("smsCodeGenerator")
-public class XxxCodeGenerator implements ValidateCodeGenerator {
+  private final CaptchaProperties captchaProperties;
+  private final KaptchaProducer kaptchaProducer;
 
-    private final CaptchaProperties captchaProperties;
+  public ImageCodeGenerator(CaptchaRepository captchaRepository,
+                            CaptchaProperties captchaProperties,
+                            KaptchaProducer kaptchaProducer) {
+    super(captchaRepository);
+    this.captchaProperties = captchaProperties;
+    this.kaptchaProducer = kaptchaProducer;
+  }
 
-    public XxxCodeGenerator(CaptchaProperties captchaProperties) {
-        this.captchaProperties = captchaProperties;
-    }
-
-    @Override
-    public XxxValidateCode generate() throws Exception {
-        String code = RandomStringUtils.randomNumeric(captchaProperties.getSms().getLength());
-        return new ValidateCode(code, captchaProperties.getSms().getExpireTime());
-    }
+  @Override
+  public ImageValidateCode generate() throws ValidateCodeException {
+    String text = kaptchaProducer.createText();
+    BufferedImage image = kaptchaProducer.createImage(text);
+    return new ImageValidateCode(image, text, captchaProperties.getImage().getExpireTime());
+  }
 }
 ```
 
@@ -134,11 +133,10 @@ public class XxxCaptchaRepository implements CaptchaRepository {
 }
 ```
 
+## 1.0.1 版本更新说明
 
-## 注意点
+1. 去掉了发送回调接口
 
-### 1. 为什么不把发送逻辑也默认实现了
+2. 对验证码生成及验证整体进行了重构和优化
 
-> 1. 发送图片验证码需要 HttpServletResponse，这个写在这里面是发不出的
-
-> 2. 短信服务商需要根据自身去决定
+3. 

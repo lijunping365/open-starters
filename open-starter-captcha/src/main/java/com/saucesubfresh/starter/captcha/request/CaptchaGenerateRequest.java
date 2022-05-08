@@ -19,9 +19,6 @@ import java.io.Serializable;
 public class CaptchaGenerateRequest implements Serializable {
     private static final long serialVersionUID = -3596061866163459943L;
 
-    @NotBlank(message = "验证码类型不能为空, 验证码类型，可选值：sms，image，scan")
-    private String type;
-
     @NotBlank(message = "请求唯一唯一 id 不能为空")
     private String requestId;
 
