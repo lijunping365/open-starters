@@ -5,6 +5,9 @@ import com.saucesubfresh.starter.captcha.core.image.kaptcha.DefaultKaptchaProduc
 import com.saucesubfresh.starter.captcha.core.image.kaptcha.KaptchaProducer;
 import com.saucesubfresh.starter.captcha.core.image.kaptcha.components.*;
 import com.saucesubfresh.starter.captcha.core.image.kaptcha.components.impl.*;
+import com.saucesubfresh.starter.captcha.core.math.DefaultMathTextCreator;
+import com.saucesubfresh.starter.captcha.core.math.MathImageCodeGenerator;
+import com.saucesubfresh.starter.captcha.core.math.MathTextProducer;
 import com.saucesubfresh.starter.captcha.core.scan.ScanCodeGenerator;
 import com.saucesubfresh.starter.captcha.core.sms.SmsCodeGenerator;
 import com.saucesubfresh.starter.captcha.processor.CaptchaVerifyProcessor;
@@ -76,10 +79,25 @@ public class CaptchaAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
+  public MathTextProducer mathTextProducer(CaptchaProperties captchaProperties){
+    return new DefaultMathTextCreator(captchaProperties);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
   public ImageCodeGenerator imageCodeGenerator(CaptchaRepository captchaRepository,
                                                CaptchaProperties properties,
                                                KaptchaProducer kaptchaProducer) {
     return new ImageCodeGenerator(captchaRepository, properties, kaptchaProducer);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public MathImageCodeGenerator mathImageCodeGenerator(CaptchaRepository captchaRepository,
+                                                       CaptchaProperties properties,
+                                                       KaptchaProducer kaptchaProducer,
+                                                       MathTextProducer mathTextProducer) {
+    return new MathImageCodeGenerator(captchaRepository, properties, kaptchaProducer, mathTextProducer);
   }
 
   @Bean

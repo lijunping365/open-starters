@@ -16,6 +16,9 @@ public class CaptchaProperties {
   /**封装图片验证吗相关的属性*/
   private ImageCodeProperties image = new ImageCodeProperties();
 
+  /**封装算数图片验证吗相关的属性*/
+  private MathImageCodeProperties math = new MathImageCodeProperties();
+
   /**封装短信验证吗相关的属性*/
   private SmsCodeProperties sms = new SmsCodeProperties();
 
