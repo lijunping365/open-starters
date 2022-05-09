@@ -202,3 +202,7 @@ public class SecurityAutoConfiguration {
 > 1.如果采用的是 Jwt token，配置 jwt 的 secretKey 时，open-starter-oauth 和 open-starter-security 须一致
 > 2.如果采用的是 redis token，配置 redis 的 tokenPrefix 时，open-starter-oauth 和 open-starter-security 须一致，而且 redis 地址也应一致
 > 3.其他同理
+
+## 1.0.1 版本更新说明
+
+1. 声明异常抛出类型
