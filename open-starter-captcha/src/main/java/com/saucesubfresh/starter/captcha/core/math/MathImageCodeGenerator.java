@@ -6,9 +6,9 @@ import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
 import com.saucesubfresh.starter.captcha.processor.AbstractCaptchaGenerator;
 import com.saucesubfresh.starter.captcha.properties.CaptchaProperties;
 import com.saucesubfresh.starter.captcha.repository.CaptchaRepository;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**
  * @author: 李俊平
@@ -18,24 +18,21 @@ public class MathImageCodeGenerator extends AbstractCaptchaGenerator<ImageValida
 
     private final CaptchaProperties captchaProperties;
     private final KaptchaProducer kaptchaProducer;
-    private final MathTextProducer mathTextProducer;
 
     public MathImageCodeGenerator(CaptchaRepository captchaRepository,
                                   CaptchaProperties captchaProperties,
-                                  KaptchaProducer kaptchaProducer,
-                                  MathTextProducer mathTextProducer) {
+                                  KaptchaProducer kaptchaProducer) {
         super(captchaRepository);
         this.captchaProperties = captchaProperties;
         this.kaptchaProducer = kaptchaProducer;
-        this.mathTextProducer = mathTextProducer;
     }
 
     @Override
     protected ImageValidateCode generate() throws ValidateCodeException {
-        List<String> list = mathTextProducer.getText();
-        String text = list.get(0);
-        String sum = list.get(1);
-        BufferedImage image = kaptchaProducer.createImage(text);
-        return new ImageValidateCode(image, sum, captchaProperties.getImage().getExpireTime());
+        Integer firstNum = RandomUtils.nextInt() % 10 + 1;
+        Integer secondNum = RandomUtils.nextInt() % 10 + 1;
+        Integer validateCode = firstNum + secondNum;
+        BufferedImage image = kaptchaProducer.createImage(firstNum + "+" + secondNum + "=?");
+        return new ImageValidateCode(image, String.valueOf(validateCode), captchaProperties.getImage().getExpireTime());
     }
 }
