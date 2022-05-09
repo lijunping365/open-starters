@@ -139,4 +139,4 @@ public class XxxCaptchaRepository implements CaptchaRepository {
 
 2. 对验证码生成及验证整体进行了重构和优化
 
-3. 
+3. 加入了数学表达式图形验证码功能
