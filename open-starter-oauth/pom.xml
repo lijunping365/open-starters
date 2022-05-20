@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>open-starter-oauth</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <description>简单的 oauth 插件</description>
 
     <properties>
