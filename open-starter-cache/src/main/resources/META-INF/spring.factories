@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.saucesubfresh.starter.schedule.config.ScheduleTaskAutoConfiguration
+ com.saucesubfresh.starter.cache.config.CacheAutoConfiguration

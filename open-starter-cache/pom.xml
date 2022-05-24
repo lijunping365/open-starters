@@ -11,7 +11,29 @@
 
     <artifactId>open-starter-cache</artifactId>
 
+    <properties>
+        <caffeine.version>3.1.0</caffeine.version>
+        <redisson.version>3.17.2</redisson.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!-- 包含很多与自动配置相关的注解的定义，必须要引入 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
