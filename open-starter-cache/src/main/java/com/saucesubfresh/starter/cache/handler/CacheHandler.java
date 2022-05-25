@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  */
 public interface CacheHandler {
 
-    Object handlerCacheable(Cacheable cacheAble, Class<?> returnType, Object[] args, Supplier<Object> supplier) throws Throwable;
+    Object handlerCacheable(Cacheable cacheAble, Class<?> returnType, Object[] args, InvokeCallBack callBack) throws Throwable;
 
-    void handlerCacheEvict(CacheEvict cacheEvict) throws Throwable;
+    void handlerCacheEvict(CacheEvict cacheEvict, Object[] args) throws Throwable;
 }

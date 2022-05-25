@@ -12,16 +12,10 @@
     <artifactId>open-starter-cache</artifactId>
 
     <properties>
-        <caffeine.version>3.1.0</caffeine.version>
         <redisson.version>3.17.2</redisson.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-            <version>${caffeine.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.redisson</groupId>
@@ -30,17 +24,23 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <optional>true</optional>
         </dependency>
 
-        <!-- 包含很多与自动配置相关的注解的定义，必须要引入 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <optional>true</optional>
         </dependency>
 
-        <!-- 非必须的，引入后可以在配置文件中输入我们自定义配置的时候有相应的提示，也可以通过其他.properties文件为相关类进行属性映射（SpringBoot默认使用application.yml)-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -50,6 +50,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

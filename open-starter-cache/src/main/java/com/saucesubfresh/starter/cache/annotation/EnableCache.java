@@ -1,6 +1,6 @@
 package com.saucesubfresh.starter.cache.annotation;
 
-import com.saucesubfresh.starter.cache.selector.CacheConfigurationSelector;
+import com.saucesubfresh.starter.cache.config.CacheAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -11,6 +11,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(CacheConfigurationSelector.class)
+@Import(CacheAutoConfiguration.class)
 public @interface EnableCache {
+
 }

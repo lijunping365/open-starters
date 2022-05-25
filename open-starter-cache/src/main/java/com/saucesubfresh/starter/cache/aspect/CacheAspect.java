@@ -1,5 +1,6 @@
 package com.saucesubfresh.starter.cache.aspect;
 
+import com.saucesubfresh.starter.cache.annotation.CacheEvict;
 import com.saucesubfresh.starter.cache.annotation.Cacheable;
 import com.saucesubfresh.starter.cache.core.Cache;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
@@ -17,11 +18,9 @@ import java.lang.reflect.Method;
 @Aspect
 public class CacheAspect {
 
-    private final KeyGenerator keyGenerator;
     private final CacheHandler cacheHandler;
 
-    public CacheAspect(KeyGenerator keyGenerator, CacheHandler cacheHandler) {
-        this.keyGenerator = keyGenerator;
+    public CacheAspect(CacheHandler cacheHandler) {
         this.cacheHandler = cacheHandler;
     }
 
@@ -30,11 +29,15 @@ public class CacheAspect {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class<?> methodReturnType = method.getReturnType();
         return cacheHandler.handlerCacheable(cacheable, methodReturnType, joinPoint.getArgs(), ()->{
-            try {
-                return joinPoint.proceed(joinPoint.getArgs());
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
+            return joinPoint.proceed(joinPoint.getArgs());
         });
+    }
+
+    @Around("@annotation(cacheEvict)")
+    public Object cacheClear(ProceedingJoinPoint joinPoint, CacheEvict cacheEvict) throws Throwable {
+        Object result = joinPoint.proceed(joinPoint.getArgs());
+        cacheHandler.handlerCacheEvict(cacheEvict, joinPoint.getArgs());
+        return result;
+
     }
 }

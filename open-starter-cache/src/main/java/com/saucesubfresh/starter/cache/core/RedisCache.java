@@ -1,5 +1,6 @@
 package com.saucesubfresh.starter.cache.core;
 
+import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
@@ -8,10 +9,11 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 public class RedisCache<K, V> implements ClusterCache<K, V> {
 
-    private final RedisTemplate<K, V> redisTemplate;
+    private final CacheProperties cacheProperties;
+    private RedisTemplate<K, V> redisTemplate;
 
-    public RedisCache(RedisTemplate<K, V> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public RedisCache(CacheProperties cacheProperties) {
+        this.cacheProperties = cacheProperties;
     }
 
     @Override
