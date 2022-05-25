@@ -13,4 +13,19 @@ public class RedisCache<K, V> implements ClusterCache<K, V> {
     public RedisCache(RedisTemplate<K, V> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
+
+    @Override
+    public V get(K key) {
+        return null;
+    }
+
+    @Override
+    public void put(K key, V value) {
+
+    }
+
+    @Override
+    public void evict(K key) {
+
+    }
 }

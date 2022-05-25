@@ -13,4 +13,19 @@ public class CaffeineCache<K, V> implements LocalCache<K, V>{
     public CaffeineCache(Cache<K, V> cache) {
         this.cache = cache;
     }
+
+    @Override
+    public V get(K key) {
+        return cache.getIfPresent(key);
+    }
+
+    @Override
+    public void put(K key, V value) {
+        cache.put(key, value);
+    }
+
+    @Override
+    public void evict(K key) {
+        cache.invalidate(key);
+    }
 }

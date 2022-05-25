@@ -4,14 +4,11 @@ import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
-/**
- * 添加缓存注解
- */
-@Inherited
 @Documented
-@Target({ElementType.METHOD})
+@Inherited
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Cacheable {
+public @interface CacheEvict {
 
     /**
      * 缓存名称

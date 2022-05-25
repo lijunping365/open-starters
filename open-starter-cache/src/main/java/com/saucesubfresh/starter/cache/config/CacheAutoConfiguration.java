@@ -1,12 +1,14 @@
 package com.saucesubfresh.starter.cache.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import com.saucesubfresh.starter.cache.aspect.CacheAspect;
 import com.saucesubfresh.starter.cache.core.CaffeineCache;
 import com.saucesubfresh.starter.cache.core.LocalCache;
 import com.saucesubfresh.starter.cache.core.RedisCache;
 import com.saucesubfresh.starter.cache.core.ClusterCache;
+import com.saucesubfresh.starter.cache.handler.CacheHandler;
+import com.saucesubfresh.starter.cache.handler.DefaultCacheHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
-import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,6 +21,7 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 @Configuration
 @EnableConfigurationProperties(CacheProperties.class)
+@ConditionalOnBean(CacheAspect.class)
 public class CacheAutoConfiguration {
 
     @Bean
@@ -31,7 +34,7 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedisTemplate.class)
-    public <K,V> ClusterCache<K,V> remoteCache(RedisTemplate<K,V> redisTemplate){
+    public <K,V> ClusterCache<K,V> clusterCache(RedisTemplate<K,V> redisTemplate){
         return new RedisCache<>(redisTemplate);
     }
 
@@ -39,4 +42,10 @@ public class CacheAutoConfiguration {
 //    @ConditionalOnMissingBean
 //    @ConditionalOnBean(RedissonClient.class)
 //    public
+
+    @Bean
+    @ConditionalOnMissingBean
+    public <K,V> CacheHandler cacheHandler(LocalCache<K,V> localCache, ClusterCache<K,V> clusterCache){
+        return new DefaultCacheHandler(localCache, clusterCache);
+    }
 }
