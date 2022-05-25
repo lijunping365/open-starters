@@ -46,6 +46,6 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public <K,V> CacheHandler cacheHandler(LocalCache<K,V> localCache, ClusterCache<K,V> clusterCache){
-        return new DefaultCacheHandler(localCache, clusterCache);
+        return new DefaultCacheHandler<>(localCache, clusterCache);
     }
 }
