@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 /**
  * @author lijunping on 2022/5/25
  */
-public interface CacheHandler{
+public interface CacheHandler {
 
     Object handlerCacheable(Cacheable cacheAble, Class<?> returnType, Object[] args, Supplier<Object> supplier) throws Throwable;
 

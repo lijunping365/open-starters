@@ -10,16 +10,15 @@ import java.util.function.Supplier;
 /**
  * @author lijunping on 2022/5/25
  */
-public class DefaultCacheHandler implements CacheHandler{
+public class DefaultCacheHandler<K,V> implements CacheHandler {
 
-    private final LocalCache localCache;
-    private final ClusterCache clusterCache;
+    private final LocalCache<K,V>  localCache;
+    private final ClusterCache<K,V> clusterCache;
 
-    public <K,V> DefaultCacheHandler(LocalCache<K,V> localCache, ClusterCache<K,V> clusterCache) {
+    public DefaultCacheHandler(LocalCache<K,V> localCache, ClusterCache<K,V> clusterCache) {
         this.localCache = localCache;
         this.clusterCache = clusterCache;
     }
-
 
     @Override
     public Object handlerCacheable(Cacheable cacheAble, Class<?> returnType, Object[] args, Supplier<Object> supplier) {
