@@ -14,12 +14,13 @@ public @interface CacheEvict {
      * 缓存名称
      * @return
      */
-    @AliasFor("name")
+    @AliasFor("cacheName")
     String value() default "";
 
     /**
      * 缓存名称
      * @return
      */
-    String name() default "";
+    @AliasFor("value")
+    String cacheName() default "";
 }
