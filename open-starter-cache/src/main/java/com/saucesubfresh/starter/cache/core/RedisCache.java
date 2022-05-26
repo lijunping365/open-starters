@@ -1,16 +1,17 @@
 package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * 集群缓存默认实现（redis cache）
  * @author lijunping on 2022/5/24
  */
-public class RedisCache<K, V> implements ClusterCache<K, V> {
+public class RedisCache<K, V> implements ClusterCache<K, V>, InitializingBean {
 
     private final CacheProperties cacheProperties;
-    private RedisTemplate<K, V> redisTemplate;
 
     public RedisCache(CacheProperties cacheProperties) {
         this.cacheProperties = cacheProperties;
@@ -29,5 +30,15 @@ public class RedisCache<K, V> implements ClusterCache<K, V> {
     @Override
     public void evict(K key) {
 
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+//        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+//        //set key serializer
+//        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+//        redisTemplate.setKeySerializer(stringRedisSerializer);
+//        redisTemplate.setHashKeySerializer(stringRedisSerializer);
+//        this.redisTemplate = (RedisTemplate<K, V>) redisTemplate;
     }
 }

@@ -10,18 +10,18 @@ import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.handler.CacheHandler;
 import com.saucesubfresh.starter.cache.handler.DefaultCacheHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * @author lijunping on 2022/5/20
  */
 @Configuration
-@EnableAspectJAutoProxy
 @EnableConfigurationProperties(CacheProperties.class)
+@ConditionalOnBean(CacheAspect.class)
 public class CacheAutoConfiguration {
 
     @Bean
@@ -36,11 +36,6 @@ public class CacheAutoConfiguration {
         return new RedisCache<>(cacheProperties);
     }
 
-//    @Bean
-//    @ConditionalOnMissingBean
-//    @ConditionalOnBean(RedissonClient.class)
-//    public
-
     @Bean
     @ConditionalOnMissingBean
     public KeyGenerator keyGenerator(){
@@ -51,10 +46,5 @@ public class CacheAutoConfiguration {
     @ConditionalOnMissingBean
     public <K,V> CacheHandler cacheHandler(KeyGenerator keyGenerator, LocalCache<K,V> localCache, ClusterCache<K,V> clusterCache){
         return new DefaultCacheHandler<>(keyGenerator, localCache, clusterCache);
-    }
-
-    @Bean
-    public CacheAspect cacheAspect(CacheHandler cacheHandler){
-        return new CacheAspect(cacheHandler);
     }
 }

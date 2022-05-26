@@ -2,12 +2,11 @@ package com.saucesubfresh.starter.cache.aspect;
 
 import com.saucesubfresh.starter.cache.annotation.CacheEvict;
 import com.saucesubfresh.starter.cache.annotation.Cacheable;
-import com.saucesubfresh.starter.cache.core.Cache;
-import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.handler.CacheHandler;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
@@ -24,20 +23,28 @@ public class CacheAspect {
         this.cacheHandler = cacheHandler;
     }
 
-    @Around("@annotation(cacheable)")
-    public Object cacheClear(ProceedingJoinPoint joinPoint, Cacheable cacheable) throws Throwable {
+    @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.Cacheable)")
+    public void doCacheable() {}
+
+    @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.CacheEvict)")
+    public void doCacheEvict() {}
+
+    @Around("doCacheable()")
+    public Object cacheable(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        Cacheable cacheable = method.getAnnotation(Cacheable.class);
         Class<?> methodReturnType = method.getReturnType();
         return cacheHandler.handlerCacheable(cacheable, methodReturnType, joinPoint.getArgs(), ()->{
             return joinPoint.proceed(joinPoint.getArgs());
         });
     }
 
-    @Around("@annotation(cacheEvict)")
-    public Object cacheClear(ProceedingJoinPoint joinPoint, CacheEvict cacheEvict) throws Throwable {
+    @Around("doCacheEvict()")
+    public Object cacheClear(ProceedingJoinPoint joinPoint) throws Throwable {
+        Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Object result = joinPoint.proceed(joinPoint.getArgs());
-        cacheHandler.handlerCacheEvict(cacheEvict, joinPoint.getArgs());
+        CacheEvict cacheable = method.getAnnotation(CacheEvict.class);
+        cacheHandler.handlerCacheEvict(cacheable, joinPoint.getArgs());
         return result;
-
     }
 }
