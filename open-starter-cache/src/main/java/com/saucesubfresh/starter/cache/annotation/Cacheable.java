@@ -18,12 +18,12 @@ public @interface Cacheable {
      * @return
      */
     @AliasFor("cacheName")
-    String value() default "";
+    String value();
 
     /**
      * 缓存名称
      * @return
      */
     @AliasFor("value")
-    String cacheName() default "";
+    String cacheName();
 }

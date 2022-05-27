@@ -1,35 +1,36 @@
 package com.saucesubfresh.starter.cache.core;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
+import org.redisson.api.RedissonClient;
 
 /**
- * 本地缓存默认实现（caffeine cache）
+ * 集群缓存默认实现（redisson cache）
  * @author lijunping on 2022/5/24
  */
-public class CaffeineCache<K, V> implements LocalCache<K, V>{
+public class RedissonCache<K, V> implements ClusterCache<K, V>{
 
     private final CacheProperties cacheProperties;
-    private final Cache<K, V> cache;
+    private final RedissonClient redissonClient;
 
-    public CaffeineCache(CacheProperties cacheProperties, Cache<K, V> cache) {
+    public RedissonCache(CacheProperties cacheProperties, RedissonClient redissonClient) {
         this.cacheProperties = cacheProperties;
-        this.cache = cache;
+        this.redissonClient = redissonClient;
     }
 
     @Override
     public V get(K key) {
-        return cache.getIfPresent(key);
+        return null;
     }
 
     @Override
     public void put(K key, V value) {
-        cache.put(key, value);
+
     }
 
     @Override
     public void evict(K key) {
-        cache.invalidate(key);
+
     }
+
 
 }
