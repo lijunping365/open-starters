@@ -2,7 +2,7 @@ package com.saucesubfresh.starter.cache.aspect;
 
 import com.saucesubfresh.starter.cache.annotation.CacheEvict;
 import com.saucesubfresh.starter.cache.annotation.Cacheable;
-import com.saucesubfresh.starter.cache.handler.CacheHandler;
+import com.saucesubfresh.starter.cache.handler.CacheAnnotationHandler;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,10 +17,10 @@ import java.lang.reflect.Method;
 @Aspect
 public class CacheAspect {
 
-    private final CacheHandler cacheHandler;
+    private final CacheAnnotationHandler cacheAnnotationHandler;
 
-    public CacheAspect(CacheHandler cacheHandler) {
-        this.cacheHandler = cacheHandler;
+    public CacheAspect(CacheAnnotationHandler cacheAnnotationHandler) {
+        this.cacheAnnotationHandler = cacheAnnotationHandler;
     }
 
     @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.Cacheable)")
@@ -34,7 +34,7 @@ public class CacheAspect {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Cacheable cacheable = method.getAnnotation(Cacheable.class);
         Class<?> methodReturnType = method.getReturnType();
-        return cacheHandler.handlerCacheable(cacheable, methodReturnType, joinPoint.getArgs(), ()->{
+        return cacheAnnotationHandler.handlerCacheable(cacheable, methodReturnType, joinPoint.getArgs(), ()->{
             return joinPoint.proceed(joinPoint.getArgs());
         });
     }
@@ -44,7 +44,7 @@ public class CacheAspect {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Object result = joinPoint.proceed(joinPoint.getArgs());
         CacheEvict cacheable = method.getAnnotation(CacheEvict.class);
-        cacheHandler.handlerCacheEvict(cacheable, joinPoint.getArgs());
+        cacheAnnotationHandler.handlerCacheEvict(cacheable, joinPoint.getArgs());
         return result;
     }
 }

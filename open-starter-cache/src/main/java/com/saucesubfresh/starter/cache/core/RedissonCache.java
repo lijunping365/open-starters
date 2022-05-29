@@ -7,7 +7,7 @@ import org.redisson.api.RedissonClient;
  * 集群缓存默认实现（redisson cache）
  * @author lijunping on 2022/5/24
  */
-public class RedissonCache<K, V> implements ClusterCache<K, V>{
+public class RedissonCache<K, V> implements RemoteCache<K, V> {
 
     private final CacheProperties cacheProperties;
     private final RedissonClient redissonClient;

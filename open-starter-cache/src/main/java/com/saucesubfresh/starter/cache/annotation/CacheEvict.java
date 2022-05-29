@@ -4,6 +4,9 @@ import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
+/**
+ * 使用该注解标志的方法，会清空指定的缓存。一般用在更新或者删除方法上
+ */
 @Documented
 @Inherited
 @Target(ElementType.METHOD)
