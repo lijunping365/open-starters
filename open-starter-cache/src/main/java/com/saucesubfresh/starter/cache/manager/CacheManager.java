@@ -1,5 +1,7 @@
 package com.saucesubfresh.starter.cache.manager;
 
+import com.saucesubfresh.starter.cache.core.Cache;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,7 @@ import java.util.List;
  * @author: 李俊平
  * @Date: 2022-05-29 13:36
  */
-public interface CacheManager {
+public interface CacheManager<K,V> extends Cache<K,V> {
 
     /**
      * 通过 namespace （相当于 applicationName）获取当前应用内所有的缓存

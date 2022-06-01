@@ -1,7 +1,7 @@
 package com.saucesubfresh.starter.cache.handler;
 
-import com.saucesubfresh.starter.cache.annotation.CacheEvict;
-import com.saucesubfresh.starter.cache.annotation.Cacheable;
+import com.saucesubfresh.starter.cache.annotation.OpenCacheEvict;
+import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 
@@ -11,21 +11,21 @@ import com.saucesubfresh.starter.cache.manager.CacheManager;
 public class DefaultCacheAnnotationHandler<K,V> implements CacheAnnotationHandler {
 
     private final KeyGenerator keyGenerator;
-    private final CacheManager cacheManager;
+    private final CacheManager<K,V> cacheManager;
 
-    public DefaultCacheAnnotationHandler(KeyGenerator keyGenerator, CacheManager cacheManager) {
+    public DefaultCacheAnnotationHandler(KeyGenerator keyGenerator, CacheManager<K, V> cacheManager) {
         this.keyGenerator = keyGenerator;
         this.cacheManager = cacheManager;
     }
 
 
     @Override
-    public Object handlerCacheable(Cacheable cacheAble, Class<?> returnType, Object[] args, InvokeCallBack callBack) {
+    public Object handlerCacheable(OpenCacheable cacheAble, Class<?> returnType, Object[] args, InvokeCallBack callBack) {
         return null;
     }
 
     @Override
-    public void handlerCacheEvict(CacheEvict cacheEvict, Object[] args) throws Throwable {
+    public void handlerCacheEvict(OpenCacheEvict openCacheEvict, Object[] args) throws Throwable {
 
     }
 

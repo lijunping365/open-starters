@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Inherited
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CacheEvict {
+public @interface OpenCacheEvict {
 
     /**
      * 缓存名称

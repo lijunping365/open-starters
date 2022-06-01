@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Cacheable {
+public @interface OpenCacheable {
 
     /**
      * 缓存名称

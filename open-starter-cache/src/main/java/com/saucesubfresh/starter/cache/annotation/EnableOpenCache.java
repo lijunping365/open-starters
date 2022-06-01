@@ -13,6 +13,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import(CacheConfigurationSelector.class)
-public @interface EnableCache {
+public @interface EnableOpenCache {
 
 }
