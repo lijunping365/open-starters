@@ -1,22 +1,16 @@
 package com.saucesubfresh.starter.cache.manager;
 
-import com.saucesubfresh.starter.cache.core.LocalCache;
-import com.saucesubfresh.starter.cache.core.RemoteCache;
-import org.checkerframework.checker.units.qual.K;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.annotation.AnnotationUtils;
+import com.saucesubfresh.starter.cache.core.ClusterCache;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author: 李俊平
  * @Date: 2022-05-29 14:57
  */
-public abstract class AbstractCacheManager implements CacheManager<K,V>, InitializingBean {
+public abstract class AbstractCacheManager implements CacheManager{
 
-    private final LocalCache localCache;
-    private final RemoteCache remoteCache;
+    protected final ConcurrentMap<String, ClusterCache> cacheMap = new ConcurrentHashMap<>(16);
 
-    public AbstractCacheManager(LocalCache<K, V> localCache, RemoteCache<K, V> remoteCache) {
-        this.localCache = localCache;
-        this.remoteCache = remoteCache;
-    }
 }

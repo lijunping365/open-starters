@@ -1,17 +1,42 @@
 package com.saucesubfresh.starter.cache.manager;
 
-import com.saucesubfresh.starter.cache.core.LocalCache;
-import com.saucesubfresh.starter.cache.core.RemoteCache;
+import com.saucesubfresh.starter.cache.core.*;
+import com.saucesubfresh.starter.cache.properties.CacheConfig;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.InitializingBean;
 
-import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: 李俊平
  * @Date: 2022-05-29 13:38
  */
-public class DefaultCacheManager<K,V> extends AbstractCacheManager<K,V> {
+public class DefaultCacheManager extends AbstractCacheManager implements InitializingBean {
 
-    public DefaultCacheManager(LocalCache<K, V> localCache, RemoteCache<K, V> remoteCache) {
-        super(localCache, remoteCache);
+    private static final String JOINER = ":";
+
+    private final RedissonClient redissonClient;
+
+    public DefaultCacheManager(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
+    }
+
+    @Override
+    public ClusterCache getCache(String namespace, String cacheName) {
+        String cacheMapKey = namespace + JOINER + cacheName;
+        ClusterCache cache = cacheMap.get(cacheMapKey);
+        if (Objects.nonNull(cache)){
+            return cache;
+        }
+        CacheConfig cacheConfig = new CacheConfig();
+
+        cache = new ClusterCacheProvider(cacheMapKey, localCache, remoteCache);
+        ClusterCache oldCache = cacheMap.putIfAbsent(cacheMapKey, cache);
+        return oldCache == null ? cache : oldCache;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
     }
 }

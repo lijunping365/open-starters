@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Inherited
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OpenCacheEvict {
+public @interface OpenCacheClear {
 
     /**
      * 缓存名称
@@ -26,10 +26,4 @@ public @interface OpenCacheEvict {
      */
     @AliasFor("value")
     String cacheName();
-
-    /**
-     * 缓存 key， 如果未指定则会使用 KeyGenerator 的默认实现去生成
-     * @return
-     */
-    String cacheKey() default "";
 }

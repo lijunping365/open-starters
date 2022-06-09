@@ -16,11 +16,6 @@ public class CacheProperties {
     private String namespace;
 
     /**
-     * 是否存储空值，默认存储空值
-     */
-    private boolean allowNullValues = true;
-
-    /**
      * 是否开启统计功能，默认开启
      */
     private boolean statistical = true;

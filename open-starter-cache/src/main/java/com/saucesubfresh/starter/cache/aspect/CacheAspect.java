@@ -1,5 +1,6 @@
 package com.saucesubfresh.starter.cache.aspect;
 
+import com.saucesubfresh.starter.cache.annotation.OpenCacheClear;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheEvict;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
 import com.saucesubfresh.starter.cache.handler.CacheAnnotationHandler;
@@ -29,6 +30,9 @@ public class CacheAspect {
     @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.OpenCacheEvict)")
     public void doCacheEvict() {}
 
+    @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.OpenCacheClear)")
+    public void doCacheClear() {}
+
     @Around("doCacheable()")
     public Object cacheable(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
@@ -40,11 +44,20 @@ public class CacheAspect {
     }
 
     @Around("doCacheEvict()")
-    public Object cacheClear(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object cacheEvict(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Object result = joinPoint.proceed(joinPoint.getArgs());
         OpenCacheEvict cacheable = method.getAnnotation(OpenCacheEvict.class);
         cacheAnnotationHandler.handlerCacheEvict(cacheable, joinPoint.getArgs());
+        return result;
+    }
+
+    @Around("doCacheClear()")
+    public Object cacheClear(ProceedingJoinPoint joinPoint) throws Throwable {
+        Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        Object result = joinPoint.proceed(joinPoint.getArgs());
+        OpenCacheClear cacheClear = method.getAnnotation(OpenCacheClear.class);
+        cacheAnnotationHandler.handlerCacheClear(cacheClear, joinPoint.getArgs());
         return result;
     }
 }

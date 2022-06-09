@@ -1,5 +1,6 @@
 package com.saucesubfresh.starter.cache.handler;
 
+import com.saucesubfresh.starter.cache.annotation.OpenCacheClear;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheEvict;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
 
@@ -15,4 +16,6 @@ public interface CacheAnnotationHandler {
     Object handlerCacheable(OpenCacheable cacheAble, Class<?> returnType, Object[] args, InvokeCallBack callBack) throws Throwable;
 
     void handlerCacheEvict(OpenCacheEvict openCacheEvict, Object[] args) throws Throwable;
+
+    void handlerCacheClear(OpenCacheClear openCacheClear, Object[] args) throws Throwable;
 }
