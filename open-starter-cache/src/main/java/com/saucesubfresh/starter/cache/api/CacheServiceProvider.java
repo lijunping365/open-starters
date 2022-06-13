@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.cache.service;
+package com.saucesubfresh.starter.cache.api;
 
 import java.util.List;
 

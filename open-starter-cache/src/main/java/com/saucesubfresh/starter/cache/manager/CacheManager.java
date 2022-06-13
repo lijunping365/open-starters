@@ -11,9 +11,8 @@ public interface CacheManager {
 
     /**
      * 获取 ClusterCache
-     * @param namespace 应用隔离
      * @param cacheName 缓存隔离
      * @return ClusterCache
      */
-    ClusterCache getCache(String namespace, String cacheName);
+    ClusterCache getCache(String cacheName);
 }

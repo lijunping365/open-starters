@@ -31,7 +31,7 @@ public class DefaultCacheAnnotationHandler implements CacheAnnotationHandler {
         final String cacheName = cacheAble.cacheName();
         final String cacheKey = cacheAble.cacheKey();
         final String namespace = properties.getNamespace();
-        final ClusterCache cache = cacheManager.getCache(namespace, cacheName);
+        final ClusterCache cache = cacheManager.getCache(cacheName);
         value = cache.get(cacheKey);
         if (Objects.isNull(value)){
             value = callBack.invoke();
@@ -47,7 +47,7 @@ public class DefaultCacheAnnotationHandler implements CacheAnnotationHandler {
         final String namespace = properties.getNamespace();
         final String cacheName = cacheEvict.cacheName();
         final String cacheKey = cacheEvict.cacheKey();
-        final ClusterCache cache = cacheManager.getCache(namespace, cacheName);
+        final ClusterCache cache = cacheManager.getCache(cacheName);
         cache.evict(cacheKey);
     }
 
@@ -55,7 +55,7 @@ public class DefaultCacheAnnotationHandler implements CacheAnnotationHandler {
     public void handlerCacheClear(OpenCacheClear cacheClear, Object[] args) throws Throwable {
         final String namespace = properties.getNamespace();
         final String cacheName = cacheClear.cacheName();
-        final ClusterCache cache = cacheManager.getCache(namespace, cacheName);
+        final ClusterCache cache = cacheManager.getCache(cacheName);
         cache.clear();
     }
 
