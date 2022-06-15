@@ -110,3 +110,7 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 1. 对拦截器拦截方法进行了重大重构，拆分出了 401（认证） 处理策略和 403（授权） 处理策略
 2. 认证、授权接口支持自定义
 3. 优化了鉴权相关逻辑，提供简单的基于注解鉴权能力，同时给开发者预留了基于“路径比对”的接口能力
+
+## 1.0.2 版本更新说明
+
+1. 增加角色列表字段

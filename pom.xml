@@ -6,7 +6,7 @@
 
     <groupId>com.saucesubfresh</groupId>
     <artifactId>Open-Starter-Store</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -58,7 +58,7 @@
         <resource.delimiter>@</resource.delimiter>
         <java.version>1.8</java.version>
 
-        <spring-boot.version>2.6.6</spring-boot.version>
+        <spring-boot.version>2.7.0</spring-boot.version>
         <lombok.version>1.18.16</lombok.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>

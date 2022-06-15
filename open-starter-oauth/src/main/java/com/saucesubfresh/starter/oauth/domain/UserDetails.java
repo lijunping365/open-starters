@@ -3,6 +3,7 @@ package com.saucesubfresh.starter.oauth.domain;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author : lijunping
@@ -32,6 +33,11 @@ public class UserDetails implements Serializable {
      * 用户手机号
      */
     private String mobile;
+
+    /**
+     * 角色列表
+     */
+    private List<String> authorities;
 
     /**
      * 账号是否锁定 true 锁定，false 非锁定

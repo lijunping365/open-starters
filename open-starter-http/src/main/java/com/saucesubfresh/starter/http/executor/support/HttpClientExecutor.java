@@ -3,16 +3,16 @@ package com.saucesubfresh.starter.http.executor.support;
 import com.saucesubfresh.starter.http.exception.HttpException;
 import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
+import com.saucesubfresh.starter.http.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -90,11 +88,7 @@ public class HttpClientExecutor extends AbstractHttpExecutor implements Initiali
 
     private void handlerData(HttpPost httpPost, Map<String, String> data) throws UnsupportedEncodingException {
         if (data != null){
-            List<NameValuePair> paramList = new ArrayList<>();
-            for (String key : data.keySet()) {
-                paramList.add(new BasicNameValuePair(key, data.get(key)));
-            }
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramList,Charset.defaultCharset());
+            StringEntity entity = new StringEntity(JSON.toJSON(data), ContentType.APPLICATION_JSON);
             httpPost.setEntity(entity);
         }
     }

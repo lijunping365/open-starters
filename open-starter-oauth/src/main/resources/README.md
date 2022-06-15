@@ -206,3 +206,7 @@ public class SecurityAutoConfiguration {
 ## 1.0.1 版本更新说明
 
 1. 声明异常抛出类型
+
+## 1.0.2 版本更新说明
+
+1. 增加角色列表字段
