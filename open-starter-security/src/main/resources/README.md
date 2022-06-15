@@ -113,4 +113,4 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 
 ## 1.0.2 版本更新说明
 
-1. 去除敏感字段，增加角色列表字段
+1. 增加角色列表字段

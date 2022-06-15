@@ -25,6 +25,11 @@ public class UserDetails implements Serializable {
     private String username;
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
      * 用户手机号
      */
     private String mobile;
