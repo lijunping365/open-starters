@@ -6,21 +6,18 @@ import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
 import com.saucesubfresh.starter.cache.core.ClusterCache;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
-import com.saucesubfresh.starter.cache.properties.CacheProperties;
 
 import java.util.Objects;
 
 /**
  * @author lijunping on 2022/5/25
  */
-public class DefaultCacheAnnotationHandler implements CacheAnnotationHandler {
+public class DefaultCacheHandler implements CacheHandler {
 
-    private final CacheProperties properties;
     private final KeyGenerator keyGenerator;
     private final CacheManager cacheManager;
 
-    public DefaultCacheAnnotationHandler(CacheProperties properties, KeyGenerator keyGenerator, CacheManager cacheManager) {
-        this.properties = properties;
+    public DefaultCacheHandler(KeyGenerator keyGenerator, CacheManager cacheManager) {
         this.keyGenerator = keyGenerator;
         this.cacheManager = cacheManager;
     }
@@ -30,7 +27,6 @@ public class DefaultCacheAnnotationHandler implements CacheAnnotationHandler {
         Object value;
         final String cacheName = cacheAble.cacheName();
         final String cacheKey = cacheAble.cacheKey();
-        final String namespace = properties.getNamespace();
         final ClusterCache cache = cacheManager.getCache(cacheName);
         value = cache.get(cacheKey);
         if (Objects.isNull(value)){
@@ -44,7 +40,6 @@ public class DefaultCacheAnnotationHandler implements CacheAnnotationHandler {
 
     @Override
     public void handlerCacheEvict(OpenCacheEvict cacheEvict, Object[] args) throws Throwable {
-        final String namespace = properties.getNamespace();
         final String cacheName = cacheEvict.cacheName();
         final String cacheKey = cacheEvict.cacheKey();
         final ClusterCache cache = cacheManager.getCache(cacheName);
@@ -53,7 +48,6 @@ public class DefaultCacheAnnotationHandler implements CacheAnnotationHandler {
 
     @Override
     public void handlerCacheClear(OpenCacheClear cacheClear, Object[] args) throws Throwable {
-        final String namespace = properties.getNamespace();
         final String cacheName = cacheClear.cacheName();
         final ClusterCache cache = cacheManager.getCache(cacheName);
         cache.clear();

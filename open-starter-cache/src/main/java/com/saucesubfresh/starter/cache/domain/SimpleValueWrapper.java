@@ -10,6 +10,7 @@ public class SimpleValueWrapper implements ValueWrapper {
     public SimpleValueWrapper(Object value) {
         this.value = value;
     }
+
     @Override
     public Object get() {
         return this.value;

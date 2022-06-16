@@ -2,6 +2,7 @@ package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.domain.ValueWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -16,12 +17,14 @@ public class ClusterCacheProvider extends AbstractClusterCache {
     private final String cacheName;
     private final LocalCache localCache;
     private final RemoteCache remoteCache;
+    private final RedissonClient redissonClient;
 
-    public ClusterCacheProvider(String cacheName, LocalCache localCache, RemoteCache remoteCache) {
+    public ClusterCacheProvider(String cacheName, RedissonClient redissonClient) {
         super(true);
         this.cacheName = cacheName;
-        this.localCache = localCache;
-        this.remoteCache = remoteCache;
+//        this.localCache = localCache;
+//        this.remoteCache = remoteCache;
+        this.redissonClient = redissonClient;
     }
 
     @Override

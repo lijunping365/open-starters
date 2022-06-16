@@ -1,11 +1,12 @@
 package com.saucesubfresh.starter.cache.config;
 
 import com.saucesubfresh.starter.cache.aspect.CacheAspect;
-import com.saucesubfresh.starter.cache.core.*;
+import com.saucesubfresh.starter.cache.executor.CacheExecutor;
+import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutor;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
-import com.saucesubfresh.starter.cache.handler.CacheAnnotationHandler;
-import com.saucesubfresh.starter.cache.handler.DefaultCacheAnnotationHandler;
+import com.saucesubfresh.starter.cache.handler.CacheHandler;
+import com.saucesubfresh.starter.cache.handler.DefaultCacheHandler;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.DefaultCacheManager;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
@@ -27,8 +28,8 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
-    public CacheManager cacheManager(RedissonClient redissonClient){
-        return new DefaultCacheManager(redissonClient);
+    public CacheManager cacheManager(CacheProperties properties, RedissonClient redissonClient){
+        return new DefaultCacheManager(properties, redissonClient);
     }
 
     @Bean
@@ -39,9 +40,14 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CacheAnnotationHandler cacheAnnotationHandler(CacheProperties cacheProperties, KeyGenerator keyGenerator, CacheManager cacheManager){
-        return new DefaultCacheAnnotationHandler(cacheProperties, keyGenerator, cacheManager);
+    public CacheHandler cacheHandler(KeyGenerator keyGenerator, CacheManager cacheManager){
+        return new DefaultCacheHandler(keyGenerator, cacheManager);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheExecutor cacheExecutor(CacheManager cacheManager){
+        return new DefaultCacheExecutor(cacheManager);
+    }
 
 }

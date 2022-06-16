@@ -11,7 +11,7 @@ import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
  *
  * @author lijunping on 2022/5/25
  */
-public interface CacheAnnotationHandler {
+public interface CacheHandler {
 
     Object handlerCacheable(OpenCacheable cacheAble, Class<?> returnType, Object[] args, InvokeCallBack callBack) throws Throwable;
 

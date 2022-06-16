@@ -3,7 +3,7 @@ package com.saucesubfresh.starter.cache.aspect;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheClear;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheEvict;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
-import com.saucesubfresh.starter.cache.handler.CacheAnnotationHandler;
+import com.saucesubfresh.starter.cache.handler.CacheHandler;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,10 +18,10 @@ import java.lang.reflect.Method;
 @Aspect
 public class CacheAspect {
 
-    private final CacheAnnotationHandler cacheAnnotationHandler;
+    private final CacheHandler cacheHandler;
 
-    public CacheAspect(CacheAnnotationHandler cacheAnnotationHandler) {
-        this.cacheAnnotationHandler = cacheAnnotationHandler;
+    public CacheAspect(CacheHandler cacheHandler) {
+        this.cacheHandler = cacheHandler;
     }
 
     @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.OpenCacheable)")
@@ -38,7 +38,7 @@ public class CacheAspect {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         OpenCacheable openCacheable = method.getAnnotation(OpenCacheable.class);
         Class<?> methodReturnType = method.getReturnType();
-        return cacheAnnotationHandler.handlerCacheable(openCacheable, methodReturnType, joinPoint.getArgs(), ()->{
+        return cacheHandler.handlerCacheable(openCacheable, methodReturnType, joinPoint.getArgs(), ()->{
             return joinPoint.proceed(joinPoint.getArgs());
         });
     }
@@ -48,7 +48,7 @@ public class CacheAspect {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Object result = joinPoint.proceed(joinPoint.getArgs());
         OpenCacheEvict cacheable = method.getAnnotation(OpenCacheEvict.class);
-        cacheAnnotationHandler.handlerCacheEvict(cacheable, joinPoint.getArgs());
+        cacheHandler.handlerCacheEvict(cacheable, joinPoint.getArgs());
         return result;
     }
 
@@ -57,7 +57,7 @@ public class CacheAspect {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Object result = joinPoint.proceed(joinPoint.getArgs());
         OpenCacheClear cacheClear = method.getAnnotation(OpenCacheClear.class);
-        cacheAnnotationHandler.handlerCacheClear(cacheClear, joinPoint.getArgs());
+        cacheHandler.handlerCacheClear(cacheClear, joinPoint.getArgs());
         return result;
     }
 }

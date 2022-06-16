@@ -3,7 +3,6 @@ package com.saucesubfresh.starter.cache.core;
 import com.saucesubfresh.starter.cache.domain.SimpleValueWrapper;
 import com.saucesubfresh.starter.cache.domain.ValueWrapper;
 import org.springframework.cache.support.NullValue;
-import org.springframework.lang.Nullable;
 
 /**
  * @author lijunping on 2022/6/9
