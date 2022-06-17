@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用于某些方法加分布式的同步锁
@@ -31,12 +32,11 @@ public class DistributedLockAspect {
     this.keyGenerator = keyGenerator;
   }
 
-
   @Pointcut("@annotation(com.saucesubfresh.starter.lock.annotation.DistributedLock)")
   public void dsPointcut() {}
 
   @Around("dsPointcut()")
-  public Object doAround(ProceedingJoinPoint joinPoint) {
+  public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable{
     Signature signature = joinPoint.getSignature();
     MethodSignature methodSignature = (MethodSignature) signature;
     Method method = methodSignature.getMethod();
@@ -44,31 +44,17 @@ public class DistributedLockAspect {
     return lock(joinPoint, method, lockName);
   }
 
-  private Object lock(ProceedingJoinPoint pjp, Method method, final String lockName) {
+  private Object lock(ProceedingJoinPoint pjp, Method method, final String lockName) throws Throwable{
     DistributedLock annotation = method.getAnnotation(DistributedLock.class);
     boolean tryLock = annotation.tryLock();
+    boolean fairLock = annotation.fairLock();
+    long leaseTime = annotation.leaseTime();
+    long waitTime = annotation.waitTime();
+    TimeUnit timeUnit = annotation.timeUnit();
     if (tryLock) {
-      return tryLock(pjp, annotation, lockName);
+      return lockProcessor.tryLock(()-> proceed(pjp), lockName, waitTime, leaseTime, timeUnit, fairLock);
     } else {
-      return lock(pjp, annotation, lockName);
-    }
-  }
-
-  private Object lock(ProceedingJoinPoint pjp, DistributedLock annotation, String lockName) {
-    try {
-      return lockProcessor.lock(()-> proceed(pjp), lockName, annotation.leaseTime(), annotation.timeUnit(), annotation.fairLock());
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  private Object tryLock(ProceedingJoinPoint pjp, DistributedLock annotation, String lockName) {
-    try {
-      return lockProcessor.tryLock(()-> proceed(pjp), lockName, annotation.waitTime(), annotation.leaseTime(), annotation.timeUnit(), annotation.fairLock());
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+      return lockProcessor.lock(()-> proceed(pjp), lockName, leaseTime, timeUnit, fairLock);
     }
   }
 
