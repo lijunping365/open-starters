@@ -12,14 +12,10 @@ import java.util.Objects;
 /**
  * @author lijunping on 2022/5/25
  */
-public class DefaultCacheHandler implements CacheHandler {
-
-    private final KeyGenerator keyGenerator;
-    private final CacheManager cacheManager;
+public class DefaultCacheHandler extends AbstractCacheHandler {
 
     public DefaultCacheHandler(KeyGenerator keyGenerator, CacheManager cacheManager) {
-        this.keyGenerator = keyGenerator;
-        this.cacheManager = cacheManager;
+        super(keyGenerator, cacheManager);
     }
 
     @Override
@@ -27,7 +23,7 @@ public class DefaultCacheHandler implements CacheHandler {
         Object value;
         final String cacheName = cacheAble.cacheName();
         final String cacheKey = cacheAble.cacheKey();
-        final ClusterCache cache = cacheManager.getCache(cacheName);
+        final ClusterCache cache = getCache(cacheName);
         value = cache.get(cacheKey);
         if (Objects.isNull(value)){
             value = callBack.invoke();
@@ -42,14 +38,14 @@ public class DefaultCacheHandler implements CacheHandler {
     public void handlerCacheEvict(OpenCacheEvict cacheEvict, Object[] args) throws Throwable {
         final String cacheName = cacheEvict.cacheName();
         final String cacheKey = cacheEvict.cacheKey();
-        final ClusterCache cache = cacheManager.getCache(cacheName);
+        final ClusterCache cache = getCache(cacheName);
         cache.evict(cacheKey);
     }
 
     @Override
     public void handlerCacheClear(OpenCacheClear cacheClear, Object[] args) throws Throwable {
         final String cacheName = cacheClear.cacheName();
-        final ClusterCache cache = cacheManager.getCache(cacheName);
+        final ClusterCache cache = getCache(cacheName);
         cache.clear();
     }
 

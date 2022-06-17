@@ -1,5 +1,6 @@
 package com.saucesubfresh.starter.cache.executor;
 
+import com.saucesubfresh.starter.cache.core.ClusterCache;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 
 /**
@@ -7,24 +8,25 @@ import com.saucesubfresh.starter.cache.manager.CacheManager;
  */
 public class DefaultCacheExecutor extends AbstractCacheExecutor {
 
-    private final CacheManager cacheManager;
-
     public DefaultCacheExecutor(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
+        super(cacheManager);
     }
 
     @Override
-    public boolean preloadCache(String cacheName, String cacheKey) {
-        return false;
+    public void preloadCache(String cacheName, String cacheKey) {
+        ClusterCache cache = getCache(cacheName);
+        cache.get(cacheKey);
     }
 
     @Override
-    public boolean clearCache(String cacheName) {
-        return false;
+    public void clearCache(String cacheName) {
+        ClusterCache cache = getCache(cacheName);
+        cache.clear();
     }
 
     @Override
-    public boolean evictCache(String cacheName, String cacheKey) {
-        return false;
+    public void evictCache(String cacheName, String cacheKey) {
+        ClusterCache cache = getCache(cacheName);
+        cache.clear();
     }
 }
