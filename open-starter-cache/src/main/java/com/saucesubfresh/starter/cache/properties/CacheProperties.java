@@ -19,4 +19,14 @@ public class CacheProperties {
      * 是否开启统计功能，默认开启
      */
     private boolean statistical = true;
+
+    /**
+     * 缓存数量最大值
+     */
+    private int maxSize = 10_000;
+
+    /**
+     * 缓存过期时间
+     */
+    private long ttl = -1;
 }

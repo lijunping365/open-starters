@@ -8,9 +8,10 @@ import java.lang.reflect.Method;
 public interface KeyGenerator {
     /**
      * 生成 key
+     * @param cacheKey
      * @param method
      * @param args
      * @return
      */
-    String generate(Method method, Object[] args);
+    String generate(String cacheKey, Method method, Object[] args);
 }

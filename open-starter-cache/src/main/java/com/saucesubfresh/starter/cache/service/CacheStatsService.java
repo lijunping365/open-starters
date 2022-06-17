@@ -1,5 +1,7 @@
 package com.saucesubfresh.starter.cache.service;
 
+import com.saucesubfresh.starter.cache.domain.CacheStatsInfo;
+
 import java.util.List;
 
 /**
@@ -7,13 +9,12 @@ import java.util.List;
  * @author: 李俊平
  * @Date: 2022-06-08 23:39
  */
-public interface CacheService {
+public interface CacheStatsService {
 
     /**
      * 通过 namespace （相当于 applicationName）获取当前应用内所有的缓存
-     * @param namespace 命名空间，区分应用
      * @return 所有缓存
      */
-    List<String> getCacheNames(String namespace);
+    List<CacheStatsInfo> getCacheStatsInfo();
 
 }

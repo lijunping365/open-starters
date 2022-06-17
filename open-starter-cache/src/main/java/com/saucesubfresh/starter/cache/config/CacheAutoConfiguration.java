@@ -5,11 +5,13 @@ import com.saucesubfresh.starter.cache.executor.CacheExecutor;
 import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutor;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
-import com.saucesubfresh.starter.cache.handler.CacheHandler;
-import com.saucesubfresh.starter.cache.handler.DefaultCacheHandler;
+import com.saucesubfresh.starter.cache.processor.CacheProcessor;
+import com.saucesubfresh.starter.cache.processor.DefaultCacheProcessor;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.DefaultCacheManager;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
+import com.saucesubfresh.starter.cache.service.CacheStatsService;
+import com.saucesubfresh.starter.cache.service.CacheStatsServiceProvider;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -40,14 +42,20 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CacheHandler cacheHandler(KeyGenerator keyGenerator, CacheManager cacheManager){
-        return new DefaultCacheHandler(keyGenerator, cacheManager);
+    public CacheProcessor cacheHandler(CacheManager cacheManager){
+        return new DefaultCacheProcessor(cacheManager);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public CacheExecutor cacheExecutor(CacheManager cacheManager){
         return new DefaultCacheExecutor(cacheManager);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheStatsService cacheStatsService(CacheManager cacheManager){
+        return new CacheStatsServiceProvider(cacheManager);
     }
 
 }

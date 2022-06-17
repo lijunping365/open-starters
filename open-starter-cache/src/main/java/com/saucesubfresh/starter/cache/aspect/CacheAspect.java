@@ -3,7 +3,8 @@ package com.saucesubfresh.starter.cache.aspect;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheClear;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheEvict;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
-import com.saucesubfresh.starter.cache.handler.CacheHandler;
+import com.saucesubfresh.starter.cache.generator.KeyGenerator;
+import com.saucesubfresh.starter.cache.processor.CacheProcessor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,10 +19,12 @@ import java.lang.reflect.Method;
 @Aspect
 public class CacheAspect {
 
-    private final CacheHandler cacheHandler;
+    private final KeyGenerator keyGenerator;
+    private final CacheProcessor cacheProcessor;
 
-    public CacheAspect(CacheHandler cacheHandler) {
-        this.cacheHandler = cacheHandler;
+    public CacheAspect(KeyGenerator keyGenerator, CacheProcessor cacheProcessor) {
+        this.keyGenerator = keyGenerator;
+        this.cacheProcessor = cacheProcessor;
     }
 
     @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.OpenCacheable)")
@@ -37,27 +40,36 @@ public class CacheAspect {
     public Object cacheable(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         OpenCacheable openCacheable = method.getAnnotation(OpenCacheable.class);
-        Class<?> methodReturnType = method.getReturnType();
-        return cacheHandler.handlerCacheable(openCacheable, methodReturnType, joinPoint.getArgs(), ()->{
-            return joinPoint.proceed(joinPoint.getArgs());
-        });
+        final String cacheName = openCacheable.cacheName();
+        String cacheKey = keyGenerator.generate(openCacheable.key(), method, joinPoint.getArgs());
+        return cacheProcessor.handlerCacheable(()-> proceed(joinPoint), cacheName, cacheKey);
     }
 
     @Around("doCacheEvict()")
     public Object cacheEvict(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        Object result = joinPoint.proceed(joinPoint.getArgs());
-        OpenCacheEvict cacheable = method.getAnnotation(OpenCacheEvict.class);
-        cacheHandler.handlerCacheEvict(cacheable, joinPoint.getArgs());
+        Object result = proceed(joinPoint);
+        OpenCacheEvict cacheEvict = method.getAnnotation(OpenCacheEvict.class);
+        final String cacheName = cacheEvict.cacheName();
+        String cacheKey = keyGenerator.generate(cacheEvict.key(), method, joinPoint.getArgs());
+        cacheProcessor.handlerCacheEvict(cacheName, cacheKey);
         return result;
     }
 
     @Around("doCacheClear()")
     public Object cacheClear(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        Object result = joinPoint.proceed(joinPoint.getArgs());
+        Object result = proceed(joinPoint);
         OpenCacheClear cacheClear = method.getAnnotation(OpenCacheClear.class);
-        cacheHandler.handlerCacheClear(cacheClear, joinPoint.getArgs());
+        cacheProcessor.handlerCacheClear(cacheClear.cacheName());
         return result;
+    }
+
+    private Object proceed(ProceedingJoinPoint pjp) {
+        try {
+            return pjp.proceed();
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+        }
     }
 }

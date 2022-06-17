@@ -2,6 +2,7 @@ package com.saucesubfresh.starter.cache.manager;
 
 import com.saucesubfresh.starter.cache.core.ClusterCache;
 import com.saucesubfresh.starter.cache.core.ClusterCacheProvider;
+import com.saucesubfresh.starter.cache.properties.CacheConfig;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.redisson.api.RedissonClient;
 
@@ -11,6 +12,7 @@ import org.redisson.api.RedissonClient;
  */
 public class DefaultCacheManager extends AbstractCacheManager {
 
+    private static final String SAM = ":";
     private final RedissonClient redissonClient;
 
     public DefaultCacheManager(CacheProperties properties, RedissonClient redissonClient) {
@@ -19,7 +21,13 @@ public class DefaultCacheManager extends AbstractCacheManager {
     }
 
     @Override
-    protected ClusterCache createCache(String cacheName) {
+    protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
+        String namespace = properties.getNamespace();
+        cacheName = generate(namespace, cacheName);
         return new ClusterCacheProvider(cacheName, redissonClient);
+    }
+
+    protected String generate(String namespace, String cacheName){
+        return namespace + SAM + cacheName;
     }
 }

@@ -18,12 +18,12 @@ public @interface OpenCacheClear {
      * @return
      */
     @AliasFor("cacheName")
-    String value();
+    String value() default "";
 
     /**
      * 缓存名称
      * @return
      */
     @AliasFor("value")
-    String cacheName();
+    String cacheName() default "";
 }

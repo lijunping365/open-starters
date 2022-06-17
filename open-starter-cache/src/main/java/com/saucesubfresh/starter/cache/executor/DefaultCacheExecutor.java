@@ -13,19 +13,13 @@ public class DefaultCacheExecutor extends AbstractCacheExecutor {
     }
 
     @Override
-    public void preloadCache(String cacheName, String cacheKey) {
+    public void preloadCache(String cacheName) {
         ClusterCache cache = getCache(cacheName);
-        cache.get(cacheKey);
+        //cache.get();
     }
 
     @Override
     public void clearCache(String cacheName) {
-        ClusterCache cache = getCache(cacheName);
-        cache.clear();
-    }
-
-    @Override
-    public void evictCache(String cacheName, String cacheKey) {
         ClusterCache cache = getCache(cacheName);
         cache.clear();
     }

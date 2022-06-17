@@ -18,18 +18,18 @@ public @interface OpenCacheEvict {
      * @return
      */
     @AliasFor("cacheName")
-    String value();
+    String value() default "";
 
     /**
      * 缓存名称
      * @return
      */
     @AliasFor("value")
-    String cacheName();
+    String cacheName() default "";
 
     /**
      * 缓存 key， 如果未指定则会使用 KeyGenerator 的默认实现去生成
      * @return
      */
-    String cacheKey() default "";
+    String key() default "";
 }

@@ -1,6 +1,10 @@
 package com.saucesubfresh.starter.cache.manager;
 
 import com.saucesubfresh.starter.cache.core.ClusterCache;
+import com.saucesubfresh.starter.cache.properties.CacheConfig;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 管理 cache
@@ -15,4 +19,16 @@ public interface CacheManager {
      * @return ClusterCache
      */
     ClusterCache getCache(String cacheName);
+
+    /**
+     * 获取 ClusterCache 列表
+     * @return
+     */
+    Map<String, ClusterCache> getCacheList();
+
+    /**
+     * 获取 ClusterCache 列表
+     * @return
+     */
+    Map<String, CacheConfig> getCacheConfigList();
 }
