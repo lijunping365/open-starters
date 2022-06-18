@@ -7,14 +7,13 @@ import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +24,7 @@ import java.util.concurrent.ConcurrentMap;
  * @Date: 2022-05-29 14:57
  */
 @Slf4j
-public abstract class AbstractCacheManager implements CacheManager, ApplicationContextAware, SmartInitializingSingleton {
+public abstract class AbstractCacheManager implements CacheManager, ApplicationContextAware, InitializingBean {
 
     private final ConcurrentMap<String, ClusterCache> cacheMap = new ConcurrentHashMap<>(16);
 
@@ -62,7 +61,16 @@ public abstract class AbstractCacheManager implements CacheManager, ApplicationC
     }
 
     @Override
-    public void afterSingletonsInstantiated() {
+    public void afterPropertiesSet() throws Exception {
+        this.initConfig();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    private void initConfig(){
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
         for (String beanDefinitionName : beanDefinitionNames) {
             Object bean = applicationContext.getBean(beanDefinitionName);
@@ -89,11 +97,6 @@ public abstract class AbstractCacheManager implements CacheManager, ApplicationC
                 buildCacheConfig(annotation, bean, executeMethod);
             }
         }
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 
     private void buildCacheConfig(OpenCacheable openCacheable, Object bean, Method executeMethod){
