@@ -1,14 +1,15 @@
 package com.saucesubfresh.starter.cache.config;
 
+import com.saucesubfresh.starter.cache.annotation.EnableOpenCache;
 import com.saucesubfresh.starter.cache.aspect.CacheAspect;
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
 import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutor;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
-import com.saucesubfresh.starter.cache.processor.CacheProcessor;
-import com.saucesubfresh.starter.cache.processor.DefaultCacheProcessor;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.DefaultCacheManager;
+import com.saucesubfresh.starter.cache.processor.CacheProcessor;
+import com.saucesubfresh.starter.cache.processor.DefaultCacheProcessor;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import com.saucesubfresh.starter.cache.service.CacheStatsService;
 import com.saucesubfresh.starter.cache.service.CacheStatsServiceProvider;
@@ -24,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(CacheProperties.class)
-@ConditionalOnBean(CacheAspect.class)
+@ConditionalOnBean(annotation = {EnableOpenCache.class})
 public class CacheAutoConfiguration {
 
     @Bean
@@ -42,7 +43,7 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CacheProcessor cacheHandler(CacheManager cacheManager){
+    public CacheProcessor cacheProcessor(CacheManager cacheManager){
         return new DefaultCacheProcessor(cacheManager);
     }
 
@@ -56,6 +57,12 @@ public class CacheAutoConfiguration {
     @ConditionalOnMissingBean
     public CacheStatsService cacheStatsService(CacheManager cacheManager){
         return new CacheStatsServiceProvider(cacheManager);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheAspect cacheAspect(KeyGenerator keyGenerator, CacheProcessor cacheProcessor){
+        return new CacheAspect(keyGenerator, cacheProcessor);
     }
 
 }
