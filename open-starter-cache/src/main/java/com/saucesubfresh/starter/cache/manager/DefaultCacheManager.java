@@ -24,7 +24,7 @@ public class DefaultCacheManager extends AbstractCacheManager {
     protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
         String namespace = properties.getNamespace();
         cacheName = generate(namespace, cacheName);
-        return new ClusterCacheProvider(cacheName, redissonClient);
+        return new ClusterCacheProvider(cacheName, redissonClient, cacheConfig);
     }
 
     protected String generate(String namespace, String cacheName){

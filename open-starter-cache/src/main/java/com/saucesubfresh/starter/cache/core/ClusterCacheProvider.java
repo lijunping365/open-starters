@@ -1,11 +1,15 @@
 package com.saucesubfresh.starter.cache.core;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.saucesubfresh.starter.cache.domain.ValueWrapper;
+import com.saucesubfresh.starter.cache.properties.CacheConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.LocalCachedMapOptions;
 import org.redisson.api.RedissonClient;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -18,15 +22,15 @@ public class ClusterCacheProvider extends AbstractClusterCache {
     private final RedissonClient redissonClient;
     private final Cache<Object, Object> caffeineCache;
 
-    public ClusterCacheProvider(String cacheName, RedissonClient redissonClient) {
+    public ClusterCacheProvider(String cacheName, RedissonClient redissonClient, CacheConfig cacheConfig) {
         this.cacheName = cacheName;
         this.redissonClient = redissonClient;
+        this.caffeineCache = initCaffeineCache(cacheConfig);
     }
 
     @Override
     public Object get(Object key) {
-        Object value = map.get(key);
-
+        Object value = caffeineCache.getIfPresent(key);
         if (value == null) {
             addCacheMiss();
         } else {
@@ -62,5 +66,29 @@ public class ClusterCacheProvider extends AbstractClusterCache {
     public void clear() {
         //remoteCache.clear();
         //localCache.clear();
+    }
+
+    private Cache<Object, Object> initCaffeineCache(CacheConfig cacheConfig){
+        Caffeine<Object, Object> caffeineBuilder = Caffeine.newBuilder();
+        if (options.getTimeToLiveInMillis() > 0) {
+            caffeineBuilder.expireAfterWrite(options.getTimeToLiveInMillis(), TimeUnit.MILLISECONDS);
+        }
+        if (options.getMaxIdleInMillis() > 0) {
+            caffeineBuilder.expireAfterAccess(options.getMaxIdleInMillis(), TimeUnit.MILLISECONDS);
+        }
+        if (options.getCacheSize() > 0) {
+            caffeineBuilder.maximumSize(options.getCacheSize());
+        }
+        if (options.getEvictionPolicy() == LocalCachedMapOptions.EvictionPolicy.SOFT) {
+            caffeineBuilder.softValues();
+        }
+        if (options.getEvictionPolicy() == LocalCachedMapOptions.EvictionPolicy.WEAK) {
+            caffeineBuilder.weakValues();
+        }
+        return caffeineBuilder.build();
+    }
+
+    public int getSize(){
+        return caffeineCache.asMap().size();
     }
 }
