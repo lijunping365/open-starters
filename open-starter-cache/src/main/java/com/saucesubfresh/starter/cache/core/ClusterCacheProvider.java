@@ -1,16 +1,14 @@
 package com.saucesubfresh.starter.cache.core;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.saucesubfresh.starter.cache.domain.ValueWrapper;
 import com.saucesubfresh.starter.cache.properties.CacheConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.LocalCachedMapOptions;
+import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
+import org.redisson.spring.cache.RedissonCache;
+import org.springframework.cache.Cache;
 
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 
 /**
  * @author lijunping on 2022/6/9
@@ -18,77 +16,36 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 public class ClusterCacheProvider extends AbstractClusterCache {
 
-    private final String cacheName;
-    private final RedissonClient redissonClient;
-    private final Cache<Object, Object> caffeineCache;
+    private final Cache cache;
 
     public ClusterCacheProvider(String cacheName, RedissonClient redissonClient, CacheConfig cacheConfig) {
-        this.cacheName = cacheName;
-        this.redissonClient = redissonClient;
-        this.caffeineCache = initCaffeineCache(cacheConfig);
+        LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
+        options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);
+        RMap<Object, Object> map = redissonClient.getLocalCachedMap(cacheName, options);
+        this.cache = new RedissonCache(map, true);
     }
 
     @Override
     public Object get(Object key) {
-        Object value = caffeineCache.getIfPresent(key);
-        if (value == null) {
-            addCacheMiss();
-        } else {
-            addCacheHit();
-        }
-        return toValueWrapper(value);
-//        ValueWrapper obj = localCache.get(key);
-//        if (Objects.nonNull(obj)){
-//            log.info("Get data from LocalCache");
-//            return obj;
-//        }
-//        obj = remoteCache.get(key);
-//        if (Objects.nonNull(obj)){
-//            log.info("Get data from RemoteCache");
-//            localCache.put(key, obj);
-//        }
-        return null;
+        return Optional.ofNullable(cache.get(key))
+                .map(Cache.ValueWrapper::get)
+                .orElse(null);
 
     }
 
     @Override
     public void put(Object key, Object value) {
-        //localCache.put(key, wrapper(value));
+        cache.put(key, value);
     }
 
     @Override
     public void evict(Object key) {
-        //remoteCache.evict(key);
-        //localCache.evict(key);
+        cache.evict(key);
     }
 
     @Override
     public void clear() {
-        //remoteCache.clear();
-        //localCache.clear();
+        cache.clear();
     }
 
-    private Cache<Object, Object> initCaffeineCache(CacheConfig cacheConfig){
-        Caffeine<Object, Object> caffeineBuilder = Caffeine.newBuilder();
-        if (options.getTimeToLiveInMillis() > 0) {
-            caffeineBuilder.expireAfterWrite(options.getTimeToLiveInMillis(), TimeUnit.MILLISECONDS);
-        }
-        if (options.getMaxIdleInMillis() > 0) {
-            caffeineBuilder.expireAfterAccess(options.getMaxIdleInMillis(), TimeUnit.MILLISECONDS);
-        }
-        if (options.getCacheSize() > 0) {
-            caffeineBuilder.maximumSize(options.getCacheSize());
-        }
-        if (options.getEvictionPolicy() == LocalCachedMapOptions.EvictionPolicy.SOFT) {
-            caffeineBuilder.softValues();
-        }
-        if (options.getEvictionPolicy() == LocalCachedMapOptions.EvictionPolicy.WEAK) {
-            caffeineBuilder.weakValues();
-        }
-        return caffeineBuilder.build();
-    }
-
-    public int getSize(){
-        return caffeineCache.asMap().size();
-    }
 }
