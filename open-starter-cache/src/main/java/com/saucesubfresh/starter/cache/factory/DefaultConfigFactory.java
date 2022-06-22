@@ -33,7 +33,7 @@ public class DefaultConfigFactory extends AbstractConfigFactory implements Resou
 
         Resource resource = resourceLoader.getResource(configLocation);
         try {
-            return CacheConfig.fromJSON(resource.getInputStream());
+            return CacheConfig.fromYAML(resource.getInputStream());
         } catch (IOException e) {
             log.warn("加载配置文件：{}，异常 {}", properties.getConfigLocation(), e);
             return Collections.emptyMap();
