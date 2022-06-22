@@ -37,7 +37,7 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Map<String, ? extends CacheConfig> config = this.initConfig();
+        Map<String, ? extends CacheConfig> config = this.loadConfig();
         if (CollectionUtils.isEmpty(config)){
             configMap.putAll(config);
         }
@@ -51,6 +51,6 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
                 .build();
     }
 
-    protected abstract Map<String, ? extends CacheConfig> initConfig();
+    protected abstract Map<String, ? extends CacheConfig> loadConfig();
 
 }

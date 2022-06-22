@@ -25,7 +25,7 @@ public class DefaultConfigFactory extends AbstractConfigFactory implements Resou
     }
 
     @Override
-    protected Map<String, ? extends CacheConfig> initConfig() {
+    protected Map<String, ? extends CacheConfig> loadConfig() {
         final String configLocation = properties.getConfigLocation();
         if (StringUtils.isBlank(configLocation)) {
             return Collections.emptyMap();
