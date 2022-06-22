@@ -4,6 +4,8 @@ import com.saucesubfresh.starter.cache.annotation.EnableOpenCache;
 import com.saucesubfresh.starter.cache.aspect.CacheAspect;
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
 import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutor;
+import com.saucesubfresh.starter.cache.factory.ConfigFactory;
+import com.saucesubfresh.starter.cache.factory.DefaultConfigFactory;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
@@ -29,8 +31,8 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
-    public CacheManager cacheManager(CacheProperties properties, RedissonClient redissonClient){
-        return new DefaultCacheManager(properties, redissonClient);
+    public CacheManager cacheManager(CacheProperties properties, ConfigFactory configFactory, RedissonClient redissonClient){
+        return new DefaultCacheManager(properties, configFactory, redissonClient);
     }
 
     @Bean
@@ -49,6 +51,12 @@ public class CacheAutoConfiguration {
     @ConditionalOnMissingBean
     public CacheExecutor cacheExecutor(CacheManager cacheManager){
         return new DefaultCacheExecutor(cacheManager);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ConfigFactory configFactory(CacheProperties properties){
+        return new DefaultConfigFactory(properties);
     }
 
     @Bean

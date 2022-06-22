@@ -11,27 +11,28 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class CacheProperties {
 
     /**
-     * 命名空间，相当于应用名称
+     * 配置文件
      */
-    private String namespace;
+    private String configLocation = "classpath:/open-cache-config.yaml";
 
     /**
-     * 是否存储空值，默认为 true
+     * 命名空间，相当于应用名称，应当改为自己的
      */
-    private boolean allowNullValues = true;
+    private String namespace = "open-cache";
 
     /**
-     * 是否开启统计功能，默认开启
+     * 键值输入的最大空闲时间(毫秒)。
      */
-    private boolean statistical = true;
+    private long maxIdleTime = 720000;
 
     /**
-     * 缓存数量最大值
+     * 缓存容量（缓存数量最大值）
      */
-    private int maxSize = 10_000;
+    private int maxSize = 100;
 
     /**
-     * 缓存过期时间
+     * 键值条目的存活时间，以毫秒为单位。
      */
-    private long ttl = -1;
+    private long ttl = 30000;
+
 }

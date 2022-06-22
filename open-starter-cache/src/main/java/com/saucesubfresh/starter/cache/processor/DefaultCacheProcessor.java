@@ -20,9 +20,10 @@ public class DefaultCacheProcessor extends AbstractCacheProcessor {
         Object value;
         final ClusterCache cache = getCache(cacheName);
         value = cache.get(cacheKey);
-        if (Objects.isNull(value)){
-            value = callback.get();
+        if (Objects.nonNull(value)){
+            return value;
         }
+        value = callback.get();
         cache.put(cacheKey, value);
         return value;
     }

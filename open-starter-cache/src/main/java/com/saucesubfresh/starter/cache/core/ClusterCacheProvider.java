@@ -1,14 +1,12 @@
 package com.saucesubfresh.starter.cache.core;
 
-import com.saucesubfresh.starter.cache.properties.CacheConfig;
+import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.LocalCachedMapOptions;
-import org.redisson.api.RMap;
+import org.redisson.api.RLocalCachedMap;
 import org.redisson.api.RedissonClient;
-import org.redisson.spring.cache.RedissonCache;
-import org.springframework.cache.Cache;
 
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author lijunping on 2022/6/9
@@ -16,33 +14,84 @@ import java.util.Optional;
 @Slf4j
 public class ClusterCacheProvider extends AbstractClusterCache {
 
-    private final Cache cache;
+    /**
+     * RLocalCachedMap 自带本地和远程缓存
+     */
+    private final RLocalCachedMap<Object, Object> map;
 
-    public ClusterCacheProvider(String cacheName, RedissonClient redissonClient, CacheConfig cacheConfig) {
+    private final AtomicLong hits = new AtomicLong();
+
+    private final AtomicLong puts = new AtomicLong();
+
+    private final AtomicLong misses = new AtomicLong();
+
+    public ClusterCacheProvider(String cacheName,
+                                RedissonClient redissonClient,
+                                CacheConfig cacheConfig) {
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
         options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);
-        RMap<Object, Object> map = redissonClient.getLocalCachedMap(cacheName, options);
-        this.cache = new RedissonCache(map, cacheConfig.isAllowNullValues());
+        options.cacheSize(cacheConfig.getMaxSize());
+        options.timeToLive(cacheConfig.getTtl());
+        options.maxIdle(cacheConfig.getMaxIdleTime());
+        this.map = redissonClient.getLocalCachedMap(cacheName, options);
     }
 
     @Override
     public Object get(Object key) {
-        return Optional.ofNullable(cache.get(key)).map(Cache.ValueWrapper::get).orElse(null);
+        Object value = map.get(key);
+        if (value == null) {
+            addCacheMiss();
+        } else {
+            addCacheHit();
+        }
+        return toValueWrapper(value);
     }
 
     @Override
     public void put(Object key, Object value) {
-        cache.put(key, value);
+        value = toStoreValue(value);
+        map.fastPut(key, value);
+        addCachePut();
     }
 
     @Override
     public void evict(Object key) {
-        cache.evict(key);
+        map.fastRemove(key);
     }
 
     @Override
     public void clear() {
-        cache.clear();
+        map.clear();
+    }
+
+    /** The number of get requests that were satisfied by the cache.
+     * @return the number of hits
+     */
+    long getCacheHits(){
+        return hits.get();
+    }
+
+    /** A miss is a get request that is not satisfied.
+     * @return the number of misses
+     */
+    long getCacheMisses(){
+        return misses.get();
+    }
+
+    long getCachePuts() {
+        return puts.get();
+    }
+
+    private void addCachePut() {
+        puts.incrementAndGet();
+    }
+
+    private void addCacheHit(){
+        hits.incrementAndGet();
+    }
+
+    private void addCacheMiss(){
+        misses.incrementAndGet();
     }
 
 }
