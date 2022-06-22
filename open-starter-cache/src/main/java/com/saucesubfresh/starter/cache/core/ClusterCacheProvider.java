@@ -22,15 +22,12 @@ public class ClusterCacheProvider extends AbstractClusterCache {
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
         options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);
         RMap<Object, Object> map = redissonClient.getLocalCachedMap(cacheName, options);
-        this.cache = new RedissonCache(map, true);
+        this.cache = new RedissonCache(map, cacheConfig.isAllowNullValues());
     }
 
     @Override
     public Object get(Object key) {
-        return Optional.ofNullable(cache.get(key))
-                .map(Cache.ValueWrapper::get)
-                .orElse(null);
-
+        return Optional.ofNullable(cache.get(key)).map(Cache.ValueWrapper::get).orElse(null);
     }
 
     @Override

@@ -16,10 +16,29 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CacheConfig {
 
+    /**
+     * 缓存名称
+     */
     private String cacheName;
 
+    /**
+     * 是否允存储许空值
+     */
+    private boolean allowNullValues;
+
+    /**
+     * 键值条目的存活时间，以毫秒为单位。
+     */
+    private long ttl;
+
+    /**
+     * 缓存容量
+     */
     private int maxSize;
 
-    private long ttl;
+    /**
+     * 键值输入的最大空闲时间(毫秒)。
+     */
+    private long maxIdleTime;
 
 }

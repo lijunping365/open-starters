@@ -117,6 +117,7 @@ public abstract class AbstractCacheManager implements CacheManager, ApplicationC
         String cacheName = openCacheable.cacheName();
         CacheConfig cacheConfig = CacheConfig.builder()
                         .cacheName(openCacheable.cacheName())
+                        .allowNullValues(properties.isAllowNullValues())
                         .maxSize(properties.getMaxSize())
                         .ttl(properties.getTtl())
                         .build();
