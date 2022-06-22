@@ -12,7 +12,7 @@ public class TokenProperties {
     /**
      * accessToken 有效期，单位秒，默认 1 天
      */
-    private Integer accessTokenExpiresIn = 24 * 3600;
+    private long accessTokenExpiresIn = 24 * 3600;
 
     /**
      * redis token key 前缀

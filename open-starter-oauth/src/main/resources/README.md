@@ -210,3 +210,4 @@ public class SecurityAutoConfiguration {
 ## 1.0.2 版本更新说明
 
 1. 增加角色列表字段
+2. token 过期时间改为 long 型
