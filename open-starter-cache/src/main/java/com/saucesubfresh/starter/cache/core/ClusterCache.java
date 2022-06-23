@@ -1,9 +1,17 @@
 package com.saucesubfresh.starter.cache.core;
 
+import com.saucesubfresh.starter.cache.stats.CacheStats;
+
 /**
  * @author lijunping on 2022/5/24
  */
 public interface ClusterCache{
+
+    /**
+     * 获取统计数据
+     * @return
+     */
+    CacheStats getStats();
     /**
      * 获取缓存
      * @param key

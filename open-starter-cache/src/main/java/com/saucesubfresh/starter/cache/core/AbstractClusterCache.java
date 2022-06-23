@@ -1,11 +1,24 @@
 package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.domain.NullValue;
+import com.saucesubfresh.starter.cache.stats.CacheStats;
+import com.saucesubfresh.starter.cache.stats.StatsCounter;
 
 /**
  * @author lijunping on 2022/6/9
  */
 public abstract class AbstractClusterCache implements ClusterCache {
+
+    private final StatsCounter statsCounter;
+
+    @Override
+    public CacheStats getStats() {
+        return statsCounter.snapshot();
+    }
+
+    public AbstractClusterCache(StatsCounter statsCounter) {
+        this.statsCounter = statsCounter;
+    }
 
     protected Object toValueWrapper(Object value) {
         if (value == null) {
@@ -22,5 +35,17 @@ public abstract class AbstractClusterCache implements ClusterCache {
             return NullValue.INSTANCE;
         }
         return userValue;
+    }
+
+    protected void afterRead(Object value){
+        if (value == null) {
+            statsCounter.recordMisses(1);
+        } else {
+            statsCounter.recordHits(1);
+        }
+    }
+
+    protected void afterPut(){
+        statsCounter.recordHits(1);
     }
 }

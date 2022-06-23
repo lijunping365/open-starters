@@ -12,8 +12,6 @@
 
 若二级缓存也查询不到，则从数据源中查询，将结果分别回填到一级缓存，二级缓存中。
 
-因此，我们非常有必要使用二级缓存在集群模式下。
-
 ## 缓存的有界和无界
 
 有界的缓存我们可以留下更多的空间和资源给服务器，让其处理的更快，因此我们需要使我们的缓存变成有界的。
@@ -46,31 +44,7 @@ redis 压力也很大， redis 也快扛不住了，我们为了减轻 redis 的
 
 二级缓存，我们使用Redisson对Spring Cache的扩展类RedissonCache 。它的底层是RMap，底层存储是Hash。
 
-2. 考虑完第一个问题之后一直在考虑 spring cache 为什么要设计 CacheManager
-
-看了 CacheManager 的实现之一 CaffeineCacheManager，里面有 private final ConcurrentMap<String, Cache> cacheMap = new ConcurrentHashMap(16);
-
-我知道一个 cacheName 对应一个 Cache， cacheName 对应一个分类数据， 比如有个 cacheName 叫 book，那 这个 book 缓存的数据都是 book 相关的，cat 缓存的数据都是与 cat 相关的，
-
-后来发现他是要实现一个类似 redis 中 hash 的一个结构，Map<key(indexName), Map<hashKey(就是我们缓存注解设置的 key), value(就是 key 对应的数据)>>，这样设计的确实更加方便操作
-
-因为我一开始想把 CacheManager 去掉，直接用 Map 去存所有的数据，Map key 就是 cacheName + cacheKey 组合，Map value 就是数据，这样操作起来确实很麻烦，
-
-有了 CacheManager 我们就可以像操作 redis 的 Hash 一样操作我我们的缓存了，
-
-     那有了这个理解，我们在看下 CacheManager 的另一个实现 RedisCacheManager，里面没有 Map<String, Map<String,Object> 的结构，因为我们知道 redis 就有 hash 这种数据结构，
-
-    而且我们发现 RedisCacheManager 有 private final Map<String, RedisCacheConfiguration> initialCacheConfiguration; RedisCacheConfiguration 就代表 Cache 的一些配置
-
-我们再看下 CacheManager 的另一个实现 RedissonSpringCacheManager 里面有 ConcurrentMap<String, Cache> instanceMap = new ConcurrentHashMap<String, Cache>(); 
-
-而且我们的一个 Cacheable 注解就代表一个 Cache
-
-但是我们关于 Cache 的配置，比如某个 Cache 的最大缓存数量，过期时间... 我们这里既然是二级缓存，应该有一个统一配置中心去管理这个配置，虽然 caffeine 和 redis 都支持这些配置，但是不如统一管理
-
-但是我们又考虑到一二级缓存的配置不一定都要一致，比如最大缓存数量，我们本地可能会配置的稍微小些，但是我们 redis 可以配置的稍微大些，这样当本地缓存失效之后可以从二级缓存拿到数据就不需要跑数据库去拿。
-
-3. 考虑一二级缓存的配置是否要一致
+2. 考虑一二级缓存的配置是否要一致
 
 
 **「查询」数据的流程**：
@@ -122,7 +96,16 @@ redis 压力也很大， redis 也快扛不住了，我们为了减轻 redis 的
 https://www.cnblogs.com/makemylife/p/15796265.html
 
 
+# 目前还未实现的功能
 
+1. 我们说一级缓存是应用内缓存，那么当你的项目部署在多个节点的时候，如何保证当你对某个key进行修改删除操作时，使其它节点的一级缓存一致呢？
+采用哪种通信方式，我们是采用 redisson 的，还是用自己的 rpc 框架？
+
+2. 指标数据如何设计
+
+3. 指标数据采用数据上报还是采用查询的方式，目前还在思考中
+
+4. 
 
 
 

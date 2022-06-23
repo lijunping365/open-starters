@@ -5,5 +5,4 @@ package com.saucesubfresh.starter.cache.metrics;
  */
 public interface CacheMetrics {
 
-
 }
