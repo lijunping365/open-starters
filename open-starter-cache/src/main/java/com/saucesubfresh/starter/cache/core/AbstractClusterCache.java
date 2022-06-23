@@ -46,6 +46,6 @@ public abstract class AbstractClusterCache implements ClusterCache {
     }
 
     protected void afterPut(){
-        statsCounter.recordHits(1);
+        statsCounter.recordPuts(1);
     }
 }
