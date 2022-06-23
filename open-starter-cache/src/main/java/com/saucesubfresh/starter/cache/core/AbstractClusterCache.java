@@ -11,13 +11,13 @@ public abstract class AbstractClusterCache implements ClusterCache {
 
     private final StatsCounter statsCounter;
 
+    public AbstractClusterCache(StatsCounter statsCounter) {
+        this.statsCounter = statsCounter;
+    }
+
     @Override
     public CacheStats getStats() {
         return statsCounter.snapshot();
-    }
-
-    public AbstractClusterCache(StatsCounter statsCounter) {
-        this.statsCounter = statsCounter;
     }
 
     protected Object toValueWrapper(Object value) {
