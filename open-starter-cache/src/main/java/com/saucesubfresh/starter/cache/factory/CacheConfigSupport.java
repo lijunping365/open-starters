@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.Map;
 
 /**
+ * copy from redisson
  * @author lijunping on 2022/6/22
  */
 public class CacheConfigSupport {
