@@ -6,3 +6,6 @@
 
 1. 替换 httpClient post form 表单请求为 APPLICATION_JSON 式请求
 
+1.0.2
+
+1. OkHttp 去掉 retryOnConnectionFailure 属性

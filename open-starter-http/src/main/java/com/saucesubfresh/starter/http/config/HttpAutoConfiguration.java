@@ -42,9 +42,9 @@ public class HttpAutoConfiguration {
     @ConditionalOnMissingBean
     public OkHttpClient okHttpClient() {
         return new OkHttpClient.Builder()
-                .retryOnConnectionFailure(false)
                 .connectionPool(connectionPool())
                 .connectTimeout(properties.getTimeOut(), TimeUnit.SECONDS)
+                .writeTimeout(properties.getTimeOut(), TimeUnit.SECONDS)
                 .readTimeout(properties.getTimeOut(), TimeUnit.SECONDS)
                 .build();
     }
