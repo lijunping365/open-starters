@@ -21,6 +21,11 @@ public class CacheProperties {
     private String namespace = "open-cache";
 
     /**
+     * 是否开启自动上报
+     */
+    private boolean reportable = false;
+
+    /**
      * 键值输入的最大空闲时间(毫秒)。
      */
     private long maxIdleTime = 720000;

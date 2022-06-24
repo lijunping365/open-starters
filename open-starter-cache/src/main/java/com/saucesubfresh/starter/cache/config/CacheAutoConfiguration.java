@@ -10,6 +10,10 @@ import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.DefaultCacheManager;
+import com.saucesubfresh.starter.cache.metrics.CacheMetricsBuilder;
+import com.saucesubfresh.starter.cache.metrics.CacheMetricsPusher;
+import com.saucesubfresh.starter.cache.metrics.DefaultCacheMetricsBuilder;
+import com.saucesubfresh.starter.cache.metrics.DefaultCacheMetricsPusher;
 import com.saucesubfresh.starter.cache.processor.CacheProcessor;
 import com.saucesubfresh.starter.cache.processor.DefaultCacheProcessor;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
@@ -57,6 +61,18 @@ public class CacheAutoConfiguration {
     @ConditionalOnMissingBean
     public ConfigFactory configFactory(CacheProperties properties){
         return new DefaultConfigFactory(properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheMetricsBuilder cacheMetricsBuilder(CacheProperties properties, CacheManager cacheManager){
+        return new DefaultCacheMetricsBuilder(properties, cacheManager);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheMetricsPusher cacheMetricsPusher(){
+        return new DefaultCacheMetricsPusher();
     }
 
     @Bean
