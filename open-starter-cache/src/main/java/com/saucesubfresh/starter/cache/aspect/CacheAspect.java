@@ -2,6 +2,7 @@ package com.saucesubfresh.starter.cache.aspect;
 
 import com.saucesubfresh.starter.cache.annotation.OpenCacheClear;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheEvict;
+import com.saucesubfresh.starter.cache.annotation.OpenCachePut;
 import com.saucesubfresh.starter.cache.annotation.OpenCacheable;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.processor.CacheProcessor;
@@ -36,6 +37,9 @@ public class CacheAspect {
     @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.OpenCacheClear)")
     public void doCacheClear() {}
 
+    @Pointcut("@annotation(com.saucesubfresh.starter.cache.annotation.OpenCachePut)")
+    public void doCachePut() {}
+
     @Around("doCacheable()")
     public Object cacheable(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
@@ -62,6 +66,17 @@ public class CacheAspect {
         Object result = proceed(joinPoint);
         OpenCacheClear cacheClear = method.getAnnotation(OpenCacheClear.class);
         cacheProcessor.handlerCacheClear(cacheClear.cacheName());
+        return result;
+    }
+
+    @Around("doCachePut()")
+    public Object cachePut(ProceedingJoinPoint joinPoint) throws Throwable {
+        Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        Object result = proceed(joinPoint);
+        OpenCachePut cachePut = method.getAnnotation(OpenCachePut.class);
+        final String cacheName = cachePut.cacheName();
+        String cacheKey = keyGenerator.generate(cachePut.key(), method, joinPoint.getArgs());
+        cacheProcessor.handlerCachePut(cacheName, cacheKey, result);
         return result;
     }
 

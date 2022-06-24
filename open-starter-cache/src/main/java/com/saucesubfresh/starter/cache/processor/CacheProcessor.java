@@ -9,9 +9,11 @@ import java.util.function.Supplier;
  */
 public interface CacheProcessor {
 
-    Object handlerCacheable(Supplier<Object> callback, String lockName, String cacheKey) throws Throwable;
+    Object handlerCacheable(Supplier<Object> callback, String cacheName, String cacheKey) throws Throwable;
 
     void handlerCacheEvict(String cacheName, String cacheKey) throws Throwable;
 
     void handlerCacheClear(String cacheName) throws Throwable;
+
+    void handlerCachePut(String cacheName, String cacheKey, Object cacheValue) throws Throwable;
 }

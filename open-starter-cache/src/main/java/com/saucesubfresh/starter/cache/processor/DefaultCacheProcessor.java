@@ -40,4 +40,10 @@ public class DefaultCacheProcessor extends AbstractCacheProcessor {
         cache.clear();
     }
 
+    @Override
+    public void handlerCachePut(String cacheName, String cacheKey, Object cacheValue) throws Throwable {
+        final ClusterCache cache = getCache(cacheName);
+        cache.put(cacheKey, cacheValue);
+    }
+
 }
