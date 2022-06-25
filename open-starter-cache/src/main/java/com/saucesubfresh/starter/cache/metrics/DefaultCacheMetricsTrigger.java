@@ -21,7 +21,7 @@ public class DefaultCacheMetricsTrigger implements CacheMetricsTrigger, Initiali
     private final long metricsPeriod;
     private final CacheMetricsPusher pusher;
     private final CacheMetricsCollector collector;
-    private ScheduledExecutorService executorService;
+    private final ScheduledExecutorService executorService;
 
     public DefaultCacheMetricsTrigger(long metricsPeriod,
                                       CacheMetricsPusher pusher,
