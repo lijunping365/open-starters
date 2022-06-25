@@ -211,3 +211,4 @@ public class SecurityAutoConfiguration {
 
 1. 增加角色列表字段
 2. token 过期时间改为 long 型
+3. 配置优化，使用了 @NestedConfigurationProperty
