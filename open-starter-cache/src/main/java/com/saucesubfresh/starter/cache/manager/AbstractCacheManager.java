@@ -44,7 +44,7 @@ public abstract class AbstractCacheManager implements CacheManager{
     }
 
     protected String generate(String namespace, String cacheName){
-        return namespace + SAM + cacheName;
+        return namespace.concat(SAM).concat(cacheName);
     }
 
     protected abstract ClusterCache createCache(String cacheName, CacheConfig cacheConfig);

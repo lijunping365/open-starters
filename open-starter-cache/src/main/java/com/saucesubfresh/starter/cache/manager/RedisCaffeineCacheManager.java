@@ -26,6 +26,6 @@ public class RedisCaffeineCacheManager extends AbstractCacheManager {
     protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
         String namespace = properties.getNamespace();
         cacheName = generate(namespace, cacheName);
-        return new RedisCaffeineCache(cacheName, redisTemplate);
+        return new RedisCaffeineCache(cacheName, cacheConfig, redisTemplate);
     }
 }
