@@ -22,7 +22,7 @@ public class CacheProperties {
      */
     private boolean enableMetrics = false;
     /**
-     * 是否开启自动上报
+     * 自动上报周期，默认 10，单位秒
      */
     private long period = 10;
     /**
