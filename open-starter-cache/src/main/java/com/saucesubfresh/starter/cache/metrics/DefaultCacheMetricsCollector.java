@@ -9,26 +9,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author lijunping on 2022/6/24
+ * @author: 李俊平
+ * @Date: 2022-06-25 12:00
  */
-public abstract class AbstractCacheMetricsPusher implements CacheMetricsPusher {
+public class DefaultCacheMetricsCollector implements CacheMetricsCollector{
 
     private final CacheManager cacheManager;
-
     private final CacheMetricsBuilder cacheMetricsBuilder;
 
-    public AbstractCacheMetricsPusher(CacheManager cacheManager, CacheMetricsBuilder cacheMetricsBuilder) {
+    public DefaultCacheMetricsCollector(CacheManager cacheManager, CacheMetricsBuilder cacheMetricsBuilder) {
         this.cacheManager = cacheManager;
         this.cacheMetricsBuilder = cacheMetricsBuilder;
     }
 
-    protected List<CacheMetrics> getCacheMetrics(){
+    @Override
+    public List<CacheMetrics> collectCacheMetrics() {
         Collection<String> cacheNames = cacheManager.getCacheNames();
         if (CollectionUtils.isEmpty(cacheNames)){
             return Collections.emptyList();
         }
-        return cacheNames.stream()
-                .map(cacheMetricsBuilder::buildCacheMetrics)
-                .collect(Collectors.toList());
+        return cacheNames.stream().map(cacheMetricsBuilder::buildCacheMetrics).collect(Collectors.toList());
     }
 }

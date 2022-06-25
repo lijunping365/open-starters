@@ -10,10 +10,7 @@ import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.RedissonCaffeineCacheManager;
-import com.saucesubfresh.starter.cache.metrics.CacheMetricsBuilder;
-import com.saucesubfresh.starter.cache.metrics.CacheMetricsPusher;
-import com.saucesubfresh.starter.cache.metrics.DefaultCacheMetricsBuilder;
-import com.saucesubfresh.starter.cache.metrics.DefaultCacheMetricsPusher;
+import com.saucesubfresh.starter.cache.metrics.*;
 import com.saucesubfresh.starter.cache.processor.CacheProcessor;
 import com.saucesubfresh.starter.cache.processor.DefaultCacheProcessor;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
@@ -71,8 +68,20 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public CacheMetricsCollector cacheMetricsCollector(CacheManager cacheManager, CacheMetricsBuilder cacheMetricsBuilder){
+        return new DefaultCacheMetricsCollector(cacheManager, cacheMetricsBuilder);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public CacheMetricsPusher cacheMetricsPusher(){
         return new DefaultCacheMetricsPusher();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheMetricsTrigger cacheMetricsTrigger(CacheProperties properties, CacheMetricsCollector cacheMetricsCollector, CacheMetricsPusher cacheMetricsPusher){
+        return new DefaultCacheMetricsTrigger(properties.getPeriod(), cacheMetricsPusher, cacheMetricsCollector);
     }
 
     @Bean
