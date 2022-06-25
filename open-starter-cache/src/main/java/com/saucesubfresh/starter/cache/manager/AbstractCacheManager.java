@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public abstract class AbstractCacheManager implements CacheManager{
 
+    private static final String SAM = ":";
     private final ConfigFactory configFactory;
-
     private final ConcurrentMap<String, ClusterCache> cacheMap = new ConcurrentHashMap<>(16);
 
     protected AbstractCacheManager(ConfigFactory configFactory) {
@@ -41,6 +41,10 @@ public abstract class AbstractCacheManager implements CacheManager{
     @Override
     public Collection<String> getCacheNames() {
         return cacheMap.keySet();
+    }
+
+    protected String generate(String namespace, String cacheName){
+        return namespace + SAM + cacheName;
     }
 
     protected abstract ClusterCache createCache(String cacheName, CacheConfig cacheConfig);

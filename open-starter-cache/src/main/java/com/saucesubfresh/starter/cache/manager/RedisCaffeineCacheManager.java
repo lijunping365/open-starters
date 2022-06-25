@@ -13,7 +13,6 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 public class RedisCaffeineCacheManager extends AbstractCacheManager {
 
-    private static final String SAM = ":";
     private final CacheProperties properties;
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -29,9 +28,4 @@ public class RedisCaffeineCacheManager extends AbstractCacheManager {
         cacheName = generate(namespace, cacheName);
         return new RedisCaffeineCache(cacheName, redisTemplate);
     }
-
-    protected String generate(String namespace, String cacheName){
-        return namespace + SAM + cacheName;
-    }
-
 }

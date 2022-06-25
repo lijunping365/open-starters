@@ -13,7 +13,6 @@ import org.redisson.api.RedissonClient;
  */
 public class RedissonCaffeineCacheManager extends AbstractCacheManager {
 
-    private static final String SAM = ":";
     private final RedissonClient client;
     private final CacheProperties properties;
 
@@ -30,9 +29,5 @@ public class RedissonCaffeineCacheManager extends AbstractCacheManager {
         String namespace = properties.getNamespace();
         cacheName = generate(namespace, cacheName);
         return new RedissonCaffeineCache(cacheName, client, cacheConfig);
-    }
-
-    protected String generate(String namespace, String cacheName){
-        return namespace + SAM + cacheName;
     }
 }
