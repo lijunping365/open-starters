@@ -33,8 +33,9 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     @Override
     public Object get(Object key) {
         Object value = map.get(key);
+        value = toValueWrapper(value);
         this.afterRead(value);
-        return toValueWrapper(value);
+        return value;
     }
 
     @Override

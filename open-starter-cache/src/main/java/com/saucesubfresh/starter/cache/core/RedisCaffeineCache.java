@@ -48,8 +48,9 @@ public class RedisCaffeineCache extends AbstractClusterCache {
                 cache.put(key, value);
             }
         }
+        value = toValueWrapper(value);
         this.afterRead(value);
-        return toValueWrapper(value);
+        return value;
     }
 
     @Override
