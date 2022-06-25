@@ -9,7 +9,7 @@ import com.saucesubfresh.starter.cache.factory.DefaultConfigFactory;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
-import com.saucesubfresh.starter.cache.manager.DefaultCacheManager;
+import com.saucesubfresh.starter.cache.manager.RedissonCaffeineCacheManager;
 import com.saucesubfresh.starter.cache.metrics.CacheMetricsBuilder;
 import com.saucesubfresh.starter.cache.metrics.CacheMetricsPusher;
 import com.saucesubfresh.starter.cache.metrics.DefaultCacheMetricsBuilder;
@@ -36,7 +36,7 @@ public class CacheAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
     public CacheManager cacheManager(CacheProperties properties, ConfigFactory configFactory, RedissonClient redissonClient){
-        return new DefaultCacheManager(properties, configFactory, redissonClient);
+        return new RedissonCaffeineCacheManager(properties, configFactory, redissonClient);
     }
 
     @Bean

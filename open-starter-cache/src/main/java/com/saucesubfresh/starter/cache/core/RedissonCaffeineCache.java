@@ -11,16 +11,16 @@ import org.redisson.api.RedissonClient;
  * @author lijunping on 2022/6/9
  */
 @Slf4j
-public class ClusterCacheProvider extends AbstractClusterCache{
+public class RedissonCaffeineCache extends AbstractClusterCache{
 
     /**
      * RLocalCachedMap 自带本地和远程缓存
      */
     private final RLocalCachedMap<Object, Object> map;
 
-    public ClusterCacheProvider(String cacheName,
-                                RedissonClient redissonClient,
-                                CacheConfig cacheConfig) {
+    public RedissonCaffeineCache(String cacheName,
+                                 RedissonClient redissonClient,
+                                 CacheConfig cacheConfig) {
         super(new ConcurrentStatsCounter());
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
         options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);
