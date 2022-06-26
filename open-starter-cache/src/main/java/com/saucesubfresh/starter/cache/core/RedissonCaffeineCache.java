@@ -1,6 +1,8 @@
 package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
+import com.saucesubfresh.starter.cache.message.CacheMessage;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.LocalCachedMapOptions;
@@ -19,9 +21,10 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     private final RLocalCachedMap<Object, Object> map;
 
     public RedissonCaffeineCache(String cacheName,
+                                 CacheConfig cacheConfig,
                                  RedissonClient redissonClient,
-                                 CacheConfig cacheConfig) {
-        super(new ConcurrentStatsCounter());
+                                 CacheMessageProducer messageProducer) {
+        super(new ConcurrentStatsCounter(), messageProducer);
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
         options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);
         options.cacheSize(cacheConfig.getMaxSize());
@@ -42,16 +45,19 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     public void put(Object key, Object value) {
         value = toStoreValue(value);
         map.fastPut(key, value);
+        super.publish(new CacheMessage());
         this.afterPut();
     }
 
     @Override
     public void evict(Object key) {
+        super.publish(new CacheMessage());
         map.fastRemove(key);
     }
 
     @Override
     public void clear() {
+        super.publish(new CacheMessage());
         map.clear();
     }
 }

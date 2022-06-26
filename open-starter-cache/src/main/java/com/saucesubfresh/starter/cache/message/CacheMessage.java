@@ -23,11 +23,11 @@ public class CacheMessage implements Serializable {
 
     private CacheMessageCommand command;
 
-    public CacheMessage(ByteBuf keyBuf, ByteBuf valueBuf) {
-        key = new byte[keyBuf.readableBytes()];
-        keyBuf.getBytes(keyBuf.readerIndex(), key);
-
-        value = new byte[valueBuf.readableBytes()];
-        valueBuf.getBytes(valueBuf.readerIndex(), value);
-    }
+//    public CacheMessage(ByteBuf keyBuf, ByteBuf valueBuf) {
+//        key = new byte[keyBuf.readableBytes()];
+//        keyBuf.getBytes(keyBuf.readerIndex(), key);
+//
+//        value = new byte[valueBuf.readableBytes()];
+//        valueBuf.getBytes(valueBuf.readerIndex(), value);
+//    }
 }

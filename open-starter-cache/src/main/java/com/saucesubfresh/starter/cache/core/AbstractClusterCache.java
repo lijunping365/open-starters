@@ -1,6 +1,8 @@
 package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.domain.NullValue;
+import com.saucesubfresh.starter.cache.message.CacheMessage;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.CacheStats;
 import com.saucesubfresh.starter.cache.stats.StatsCounter;
 
@@ -10,9 +12,11 @@ import com.saucesubfresh.starter.cache.stats.StatsCounter;
 public abstract class AbstractClusterCache implements ClusterCache {
 
     private final StatsCounter statsCounter;
+    private final CacheMessageProducer producer;
 
-    public AbstractClusterCache(StatsCounter statsCounter) {
+    public AbstractClusterCache(StatsCounter statsCounter, CacheMessageProducer producer) {
         this.statsCounter = statsCounter;
+        this.producer = producer;
     }
 
     @Override
@@ -47,5 +51,9 @@ public abstract class AbstractClusterCache implements ClusterCache {
 
     protected void afterPut(){
         statsCounter.recordPuts(1);
+    }
+
+    protected void publish(CacheMessage message){
+        producer.broadcastLocalCacheStore(message);
     }
 }

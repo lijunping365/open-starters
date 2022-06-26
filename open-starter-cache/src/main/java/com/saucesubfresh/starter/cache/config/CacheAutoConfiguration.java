@@ -37,8 +37,11 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
-    public CacheManager cacheManager(CacheProperties properties, ConfigFactory configFactory, RedissonClient redissonClient){
-        return new RedissonCaffeineCacheManager(properties, configFactory, redissonClient);
+    public CacheManager cacheManager(CacheProperties properties,
+                                     ConfigFactory configFactory,
+                                     RedissonClient redissonClient,
+                                     CacheMessageProducer producer){
+        return new RedissonCaffeineCacheManager(properties, configFactory, redissonClient, producer);
     }
 
     @Bean
@@ -86,7 +89,9 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnProperty(name = "com.saucesubfresh.cache.metrics")
     @ConditionalOnMissingBean
-    public CacheMetricsTrigger cacheMetricsTrigger(CacheProperties properties, CacheMetricsCollector cacheMetricsCollector, CacheMetricsPusher cacheMetricsPusher){
+    public CacheMetricsTrigger cacheMetricsTrigger(CacheProperties properties,
+                                                   CacheMetricsCollector cacheMetricsCollector,
+                                                   CacheMetricsPusher cacheMetricsPusher){
         return new DefaultCacheMetricsTrigger(properties.getPeriod(), cacheMetricsPusher, cacheMetricsCollector);
     }
 

@@ -3,6 +3,8 @@ package com.saucesubfresh.starter.cache.core;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
+import com.saucesubfresh.starter.cache.message.CacheMessage;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,8 +29,9 @@ public class RedisCaffeineCache extends AbstractClusterCache {
 
     public RedisCaffeineCache(String cacheName,
                               CacheConfig cacheConfig,
+                              CacheMessageProducer messageProducer,
                               RedisTemplate<String, Object> redisTemplate) {
-        super(new ConcurrentStatsCounter());
+        super(new ConcurrentStatsCounter(), messageProducer);
         this.cacheName = cacheName;
         this.redisTemplate = redisTemplate;
         this.cache = Caffeine.newBuilder()
@@ -57,7 +60,7 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     public void put(Object key, Object value) {
         value = toStoreValue(value);
         redisTemplate.opsForHash().put(cacheName, key, value);
-        // 发送同步消息
+        super.publish(new CacheMessage());
         cache.put(key, value);
         this.afterPut();
     }
@@ -65,14 +68,14 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     @Override
     public void evict(Object key) {
         redisTemplate.opsForHash().delete(cacheName, key);
-        // 发送同步消息
+        super.publish(new CacheMessage());
         cache.invalidate(key);
     }
 
     @Override
     public void clear() {
         redisTemplate.delete(cacheName);
-        // 发送同步消息
+        super.publish(new CacheMessage());
         cache.invalidateAll();
     }
 }
