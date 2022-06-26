@@ -11,6 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * <p>
+ *     1. 项目启动会自动加载缓存配置文件并放到 configMap 中
+ *     2. 在 configMap 中未找到配置文件时会创建默认的 CacheConfig 并返回
+ * </p>
  * @author lijunping on 2022/6/22
  */
 @Slf4j

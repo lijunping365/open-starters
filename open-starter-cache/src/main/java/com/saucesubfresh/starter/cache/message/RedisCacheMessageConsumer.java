@@ -25,6 +25,6 @@ public class RedisCacheMessageConsumer extends AbstractCacheMessageConsumer impl
         CacheMessage cacheMessage = (CacheMessage) redisTemplate.getValueSerializer().deserialize(message.getBody());
         log.debug("receive a redis topic message, sync local cache, the cacheName is {}, the key is {}",
                 cacheMessage.getCacheName(), cacheMessage.getKey());
-        super.handlerMessage(cacheMessage);
+        super.onMessage(cacheMessage);
     }
 }

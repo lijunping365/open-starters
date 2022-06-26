@@ -17,6 +17,8 @@ public class CacheMessage implements Serializable {
 
     private byte[] value;
 
+    private String topic;
+
     private String cacheName;
 
     private CacheMessageCommand command;

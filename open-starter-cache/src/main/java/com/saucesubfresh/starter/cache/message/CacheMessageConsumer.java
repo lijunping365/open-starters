@@ -6,5 +6,5 @@ package com.saucesubfresh.starter.cache.message;
  */
 public interface CacheMessageConsumer {
 
-    void handlerMessage(CacheMessage message);
+    void onMessage(CacheMessage message);
 }

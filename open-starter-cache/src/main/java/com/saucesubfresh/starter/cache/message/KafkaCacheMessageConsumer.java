@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
  * @author: 李俊平
  * @Date: 2022-06-25 17:26
  */
-public class KafkaCacheMessageConsumer implements CacheMessageConsumer, MessageListener {
+public class KafkaCacheMessageConsumer implements CacheMessageConsumer{
 
     private final CacheManager cacheManager;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -20,14 +20,9 @@ public class KafkaCacheMessageConsumer implements CacheMessageConsumer, MessageL
     }
 
     @Override
-    public void handlerMessage(CacheMessage message) {
+    public void onMessage(CacheMessage message) {
         String cacheName = message.getCacheName();
         CacheMessageCommand command = message.getCommand();
-
-    }
-
-    @Override
-    public void onMessage(Message message, byte[] pattern) {
 
     }
 }

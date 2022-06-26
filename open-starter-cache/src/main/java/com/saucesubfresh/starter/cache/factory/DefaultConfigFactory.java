@@ -12,6 +12,10 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * <p>
+ *     加载配置文件的默认实现，默认加载 yaml 文件
+ * </p>
+ *
  * @author: 李俊平
  * @Date: 2022-06-22 21:31
  */

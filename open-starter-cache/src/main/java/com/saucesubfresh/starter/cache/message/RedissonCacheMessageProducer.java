@@ -7,7 +7,7 @@ package com.saucesubfresh.starter.cache.message;
 public class RedissonCacheMessageProducer implements CacheMessageProducer{
 
     @Override
-    public void sendMessage() {
+    public void sendMessage(CacheMessage message) {
 
     }
 }
