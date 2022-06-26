@@ -14,7 +14,7 @@ public class RedisCacheMessageProducer implements CacheMessageProducer{
         this.redisTemplate = redisTemplate;
     }
     @Override
-    public void sendMessage(CacheMessage message) {
+    public void broadcastLocalCacheStore(CacheMessage message) {
         String topic = message.getTopic();
         redisTemplate.convertAndSend(topic, message);
     }

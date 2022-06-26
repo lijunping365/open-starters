@@ -6,5 +6,5 @@ package com.saucesubfresh.starter.cache.message;
  */
 public interface CacheMessageProducer {
 
-    void sendMessage(CacheMessage message);
+    void broadcastLocalCacheStore(CacheMessage message);
 }

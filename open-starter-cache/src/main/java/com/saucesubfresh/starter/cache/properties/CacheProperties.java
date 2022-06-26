@@ -20,7 +20,7 @@ public class CacheProperties {
     /**
      * 是否开启自动上报
      */
-    private boolean enableMetrics = false;
+    private boolean metrics = false;
     /**
      * 自动上报周期，默认 10，单位秒
      */

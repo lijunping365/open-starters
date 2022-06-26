@@ -10,6 +10,10 @@ import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.RedissonCaffeineCacheManager;
+import com.saucesubfresh.starter.cache.message.CacheMessageConsumer;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
+import com.saucesubfresh.starter.cache.message.RedissonCacheMessageConsumer;
+import com.saucesubfresh.starter.cache.message.RedissonCacheMessageProducer;
 import com.saucesubfresh.starter.cache.metrics.*;
 import com.saucesubfresh.starter.cache.processor.CacheProcessor;
 import com.saucesubfresh.starter.cache.processor.DefaultCacheProcessor;
@@ -17,6 +21,7 @@ import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -79,9 +84,24 @@ public class CacheAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(name = "com.saucesubfresh.cache.metrics")
     @ConditionalOnMissingBean
     public CacheMetricsTrigger cacheMetricsTrigger(CacheProperties properties, CacheMetricsCollector cacheMetricsCollector, CacheMetricsPusher cacheMetricsPusher){
         return new DefaultCacheMetricsTrigger(properties.getPeriod(), cacheMetricsPusher, cacheMetricsCollector);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(RedissonClient.class)
+    public CacheMessageProducer cacheMessageProducer(RedissonClient redissonClient){
+        return new RedissonCacheMessageProducer(redissonClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(RedissonClient.class)
+    public CacheMessageConsumer cacheMessageConsumer(CacheExecutor cacheExecutor){
+        return new RedissonCacheMessageConsumer(cacheExecutor);
     }
 
     @Bean

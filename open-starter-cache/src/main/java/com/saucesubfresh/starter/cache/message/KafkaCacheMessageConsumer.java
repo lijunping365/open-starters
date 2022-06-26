@@ -1,28 +1,22 @@
 package com.saucesubfresh.starter.cache.message;
 
-import com.saucesubfresh.starter.cache.manager.CacheManager;
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.saucesubfresh.starter.cache.executor.CacheExecutor;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.listener.MessageListener;
 
 /**
  * @author: 李俊平
  * @Date: 2022-06-25 17:26
  */
-public class KafkaCacheMessageConsumer implements CacheMessageConsumer{
+public class KafkaCacheMessageConsumer extends AbstractCacheMessageConsumer implements MessageListener<String, CacheMessage> {
 
-    private final CacheManager cacheManager;
-    private final RedisTemplate<String, Object> redisTemplate;
-
-    public KafkaCacheMessageConsumer(CacheManager cacheManager, RedisTemplate<String, Object> redisTemplate) {
-        this.cacheManager = cacheManager;
-        this.redisTemplate = redisTemplate;
+    public KafkaCacheMessageConsumer(CacheExecutor cacheExecutor) {
+        super(cacheExecutor);
     }
 
     @Override
-    public void onMessage(CacheMessage message) {
-        String cacheName = message.getCacheName();
-        CacheMessageCommand command = message.getCommand();
-
+    public void onMessage(ConsumerRecord<String, CacheMessage> consumerRecord) {
+        CacheMessage message = consumerRecord.value();
+        super.onMessage(message);
     }
 }
