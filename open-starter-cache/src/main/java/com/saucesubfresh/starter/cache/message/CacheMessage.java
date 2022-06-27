@@ -10,15 +10,13 @@ import java.io.Serializable;
 @Data
 public class CacheMessage implements Serializable {
 
+    private String cacheName;
+
     private String msgId;
 
     private Object key;
 
     private Object value;
-
-    private String topic;
-
-    private String cacheName;
 
     private CacheMessageCommand command;
 }

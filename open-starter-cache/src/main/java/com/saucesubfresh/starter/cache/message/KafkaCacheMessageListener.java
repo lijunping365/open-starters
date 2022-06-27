@@ -9,11 +9,11 @@ import org.springframework.kafka.core.KafkaTemplate;
  * @Date: 2022-06-25 17:14
  */
 @Slf4j
-public class KafkaCacheMessageProducer implements CacheMessageProducer{
+public class KafkaCacheMessageListener implements CacheMessageListener {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public KafkaCacheMessageProducer(KafkaTemplate<String, Object> kafkaTemplate) {
+    public KafkaCacheMessageListener(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
