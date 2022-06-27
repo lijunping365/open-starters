@@ -18,8 +18,8 @@ public abstract class AbstractCacheMessageConsumer implements CacheMessageConsum
     @Override
     public void onMessage(CacheMessage message) {
         String cacheName = message.getCacheName();
-        byte[] key = message.getKey();
-        byte[] value = message.getValue();
+        Object key = message.getKey();
+        Object value = message.getValue();
         CacheMessageCommand command = message.getCommand();
         switch (command){
             case CLEAR:
