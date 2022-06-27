@@ -55,7 +55,13 @@ public class RedisCaffeineCache extends AbstractClusterCache {
             return;
         }
         entries.forEach((key, value)->{
-            super.publish(new CacheMessage());
+            CacheMessage cacheMessage = new CacheMessage();
+            cacheMessage.setCacheName(cacheName);
+            cacheMessage.setTopic(namespace);
+            cacheMessage.setCommand(CacheMessageCommand.UPDATE);
+            cacheMessage.setKey(key);
+            cacheMessage.setValue(value);
+            super.publish(cacheMessage);
             cache.put(key, value);
         });
     }

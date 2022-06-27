@@ -2,6 +2,7 @@ package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
+import com.saucesubfresh.starter.cache.message.CacheMessageCommand;
 import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,13 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
 
     @Override
     public void preloadCache() {
-        super.publish(new CacheMessage());
+        CacheMessage cacheMessage = new CacheMessage();
+        cacheMessage.setCacheName(cacheName);
+        cacheMessage.setTopic(namespace);
+        cacheMessage.setCommand(CacheMessageCommand.UPDATE);
+        //cacheMessage.setKey(key);
+        //cacheMessage.setValue(value);
+        super.publish(cacheMessage);
         map.preloadCache();
     }
 
@@ -58,19 +65,34 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     public void put(Object key, Object value) {
         value = toStoreValue(value);
         map.fastPut(key, value);
-        super.publish(new CacheMessage());
+        CacheMessage cacheMessage = new CacheMessage();
+        cacheMessage.setCacheName(cacheName);
+        cacheMessage.setTopic(namespace);
+        cacheMessage.setCommand(CacheMessageCommand.UPDATE);
+        cacheMessage.setKey(key);
+        cacheMessage.setValue(value);
+        super.publish(cacheMessage);
         this.afterPut();
     }
 
     @Override
     public void evict(Object key) {
-        super.publish(new CacheMessage());
+        CacheMessage cacheMessage = new CacheMessage();
+        cacheMessage.setCacheName(cacheName);
+        cacheMessage.setTopic(namespace);
+        cacheMessage.setCommand(CacheMessageCommand.INVALIDATE);
+        cacheMessage.setKey(key);
+        super.publish(cacheMessage);
         map.fastRemove(key);
     }
 
     @Override
     public void clear() {
-        super.publish(new CacheMessage());
+        CacheMessage cacheMessage = new CacheMessage();
+        cacheMessage.setCacheName(cacheName);
+        cacheMessage.setTopic(namespace);
+        cacheMessage.setCommand(CacheMessageCommand.CLEAR);
+        super.publish(cacheMessage);
         map.clear();
     }
 }
