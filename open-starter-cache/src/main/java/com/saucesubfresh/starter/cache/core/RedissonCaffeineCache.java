@@ -35,7 +35,8 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
 
     @Override
     public void preloadCache() {
-
+        super.publish(new CacheMessage());
+        map.preloadCache();
     }
 
     @Override

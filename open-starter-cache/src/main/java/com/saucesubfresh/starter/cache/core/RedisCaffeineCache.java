@@ -8,7 +8,9 @@ import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,7 +44,14 @@ public class RedisCaffeineCache extends AbstractClusterCache {
 
     @Override
     public void preloadCache() {
-
+        Map<Object, Object> entries = redisTemplate.opsForHash().entries(cacheName);
+        if (CollectionUtils.isEmpty(entries)){
+            return;
+        }
+        entries.forEach((key, value)->{
+            super.publish(new CacheMessage());
+            cache.put(key, value);
+        });
     }
 
     @Override
