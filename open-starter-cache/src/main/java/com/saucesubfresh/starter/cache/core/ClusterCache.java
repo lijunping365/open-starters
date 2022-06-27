@@ -8,6 +8,11 @@ import com.saucesubfresh.starter.cache.stats.CacheStats;
 public interface ClusterCache{
 
     /**
+     * 二级缓存数据加载到一级缓存
+     */
+    void preloadCache();
+
+    /**
      * 获取统计数据
      * @return
      */

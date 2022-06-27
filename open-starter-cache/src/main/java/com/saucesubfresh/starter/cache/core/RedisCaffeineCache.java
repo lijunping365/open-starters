@@ -41,6 +41,11 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     }
 
     @Override
+    public void preloadCache() {
+
+    }
+
+    @Override
     public Object get(Object key) {
         Object value = cache.getIfPresent(key);
         if (value != null) {

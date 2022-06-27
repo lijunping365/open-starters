@@ -3,7 +3,9 @@ package com.saucesubfresh.starter.cache.config;
 import com.saucesubfresh.starter.cache.annotation.EnableOpenCache;
 import com.saucesubfresh.starter.cache.aspect.CacheAspect;
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
+import com.saucesubfresh.starter.cache.executor.CacheExecutorFailureHandler;
 import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutor;
+import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutorFailureHandler;
 import com.saucesubfresh.starter.cache.factory.ConfigFactory;
 import com.saucesubfresh.starter.cache.factory.DefaultConfigFactory;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
@@ -58,8 +60,14 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CacheExecutor cacheExecutor(CacheManager cacheManager){
-        return new DefaultCacheExecutor(cacheManager);
+    public CacheExecutorFailureHandler cacheExecutorFailureHandler(){
+        return new DefaultCacheExecutorFailureHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheExecutor cacheExecutor(CacheManager cacheManager, CacheExecutorFailureHandler cacheExecutorFailureHandler){
+        return new DefaultCacheExecutor(cacheManager, cacheExecutorFailureHandler);
     }
 
     @Bean
