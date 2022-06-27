@@ -31,7 +31,6 @@ public class RedissonCaffeineCacheManager extends AbstractCacheManager {
     @Override
     protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
         String namespace = properties.getNamespace();
-        cacheName = generate(namespace, cacheName);
-        return new RedissonCaffeineCache(cacheName, cacheConfig, client, producer);
+        return new RedissonCaffeineCache(cacheName, namespace, cacheConfig, client, producer);
     }
 }

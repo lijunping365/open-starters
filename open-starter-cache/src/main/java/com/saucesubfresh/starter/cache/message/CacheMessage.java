@@ -1,6 +1,5 @@
 package com.saucesubfresh.starter.cache.message;
 
-import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,21 +12,13 @@ public class CacheMessage implements Serializable {
 
     private String msgId;
 
-    private byte[] key;
+    private Object key;
 
-    private byte[] value;
+    private Object value;
 
     private String topic;
 
     private String cacheName;
 
     private CacheMessageCommand command;
-
-//    public CacheMessage(ByteBuf keyBuf, ByteBuf valueBuf) {
-//        key = new byte[keyBuf.readableBytes()];
-//        keyBuf.getBytes(keyBuf.readerIndex(), key);
-//
-//        value = new byte[valueBuf.readableBytes()];
-//        valueBuf.getBytes(valueBuf.readerIndex(), value);
-//    }
 }

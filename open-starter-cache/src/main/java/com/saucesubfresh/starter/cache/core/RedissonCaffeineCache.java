@@ -15,22 +15,29 @@ import org.redisson.api.RedissonClient;
 @Slf4j
 public class RedissonCaffeineCache extends AbstractClusterCache{
 
+    private final String cacheName;
+    private final String namespace;
+    private final String cacheHashKey;
     /**
      * RLocalCachedMap 自带本地和远程缓存
      */
     private final RLocalCachedMap<Object, Object> map;
 
     public RedissonCaffeineCache(String cacheName,
+                                 String namespace,
                                  CacheConfig cacheConfig,
                                  RedissonClient redissonClient,
                                  CacheMessageProducer messageProducer) {
         super(new ConcurrentStatsCounter(), messageProducer);
+        this.cacheName = cacheName;
+        this.namespace = namespace;
+        this.cacheHashKey = super.generate(namespace, cacheName);
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
         options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);
         options.cacheSize(cacheConfig.getMaxSize());
         options.timeToLive(cacheConfig.getTtl());
         options.maxIdle(cacheConfig.getMaxIdleTime());
-        this.map = redissonClient.getLocalCachedMap(cacheName, options);
+        this.map = redissonClient.getLocalCachedMap(cacheHashKey, options);
     }
 
     @Override

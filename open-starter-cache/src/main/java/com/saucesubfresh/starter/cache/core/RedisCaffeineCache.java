@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
+import com.saucesubfresh.starter.cache.message.CacheMessageCommand;
 import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +27,20 @@ import java.util.concurrent.TimeUnit;
 public class RedisCaffeineCache extends AbstractClusterCache {
 
     private final String cacheName;
+    private final String namespace;
+    private final String cacheHashKey;
     private final Cache<Object, Object> cache;
     private final RedisTemplate<String, Object> redisTemplate;
 
     public RedisCaffeineCache(String cacheName,
+                              String namespace,
                               CacheConfig cacheConfig,
                               CacheMessageProducer messageProducer,
                               RedisTemplate<String, Object> redisTemplate) {
         super(new ConcurrentStatsCounter(), messageProducer);
         this.cacheName = cacheName;
+        this.namespace = namespace;
+        this.cacheHashKey = super.generate(namespace, cacheName);
         this.redisTemplate = redisTemplate;
         this.cache = Caffeine.newBuilder()
                 .maximumSize(cacheConfig.getMaxSize())
@@ -44,7 +50,7 @@ public class RedisCaffeineCache extends AbstractClusterCache {
 
     @Override
     public void preloadCache() {
-        Map<Object, Object> entries = redisTemplate.opsForHash().entries(cacheName);
+        Map<Object, Object> entries = redisTemplate.opsForHash().entries(cacheHashKey);
         if (CollectionUtils.isEmpty(entries)){
             return;
         }
@@ -60,7 +66,7 @@ public class RedisCaffeineCache extends AbstractClusterCache {
         if (value != null) {
             log.debug("get cache from caffeine, the key is : {}", key);
         } else {
-            value = redisTemplate.opsForHash().get(cacheName, key);
+            value = redisTemplate.opsForHash().get(cacheHashKey, key);
             if (value != null){
                 cache.put(key, value);
             }
@@ -73,23 +79,38 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     @Override
     public void put(Object key, Object value) {
         value = toStoreValue(value);
-        redisTemplate.opsForHash().put(cacheName, key, value);
-        super.publish(new CacheMessage());
+        redisTemplate.opsForHash().put(cacheHashKey, key, value);
+        CacheMessage cacheMessage = new CacheMessage();
+        cacheMessage.setCacheName(cacheName);
+        cacheMessage.setTopic(namespace);
+        cacheMessage.setCommand(CacheMessageCommand.UPDATE);
+        cacheMessage.setKey(key);
+        cacheMessage.setValue(value);
+        super.publish(cacheMessage);
         cache.put(key, value);
         this.afterPut();
     }
 
     @Override
     public void evict(Object key) {
-        redisTemplate.opsForHash().delete(cacheName, key);
-        super.publish(new CacheMessage());
+        redisTemplate.opsForHash().delete(cacheHashKey, key);
+        CacheMessage cacheMessage = new CacheMessage();
+        cacheMessage.setCacheName(cacheName);
+        cacheMessage.setTopic(namespace);
+        cacheMessage.setCommand(CacheMessageCommand.INVALIDATE);
+        cacheMessage.setKey(key);
+        super.publish(cacheMessage);
         cache.invalidate(key);
     }
 
     @Override
     public void clear() {
-        redisTemplate.delete(cacheName);
-        super.publish(new CacheMessage());
+        redisTemplate.delete(cacheHashKey);
+        CacheMessage cacheMessage = new CacheMessage();
+        cacheMessage.setCacheName(cacheName);
+        cacheMessage.setTopic(namespace);
+        cacheMessage.setCommand(CacheMessageCommand.CLEAR);
+        super.publish(cacheMessage);
         cache.invalidateAll();
     }
 }
