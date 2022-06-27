@@ -141,4 +141,4 @@ public class XxxCaptchaRepository implements CaptchaRepository {
 
 3. 加入了数学表达式图形验证码功能
 
-4. 配置优化，使用了 @NestedConfigurationProperty
+4. 配置优化，使用了 @NestedConfigurationProperty，配置时有提示
