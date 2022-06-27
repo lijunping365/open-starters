@@ -12,7 +12,6 @@ import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.RedissonCaffeineCacheManager;
-import com.saucesubfresh.starter.cache.message.CacheMessageConsumer;
 import com.saucesubfresh.starter.cache.message.CacheMessageListener;
 import com.saucesubfresh.starter.cache.message.RedissonCacheMessageListener;
 import com.saucesubfresh.starter.cache.metrics.*;
@@ -30,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author lijunping on 2022/5/20
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(CacheProperties.class)
 @ConditionalOnBean(annotation = {EnableOpenCache.class})
 public class CacheAutoConfiguration {
@@ -105,15 +104,10 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
-    public CacheMessageListener cacheMessageProducer(RedissonClient redissonClient){
-        return new RedissonCacheMessageListener(redissonClient, cacheProperties);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnBean(RedissonClient.class)
-    public CacheMessageConsumer cacheMessageConsumer(CacheExecutor cacheExecutor){
-        return new RedissonCacheMessageConsumer(cacheExecutor, redissonClient);
+    public CacheMessageListener cacheMessageProducer(CacheExecutor cacheExecutor,
+                                                     CacheProperties properties,
+                                                     RedissonClient redissonClient){
+        return new RedissonCacheMessageListener(cacheExecutor, redissonClient, properties);
     }
 
     @Bean

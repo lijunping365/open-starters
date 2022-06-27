@@ -7,11 +7,11 @@ import com.saucesubfresh.starter.cache.manager.CacheManager;
  * @author: 李俊平
  * @Date: 2022-06-25 17:38
  */
-public abstract class AbstractCacheMessageConsumer implements CacheMessageConsumer{
+public abstract class AbstractCacheMessageListener implements CacheMessageListener{
 
     private final CacheExecutor cacheExecutor;
 
-    protected AbstractCacheMessageConsumer(CacheExecutor cacheExecutor) {
+    protected AbstractCacheMessageListener(CacheExecutor cacheExecutor) {
         this.cacheExecutor = cacheExecutor;
     }
 
