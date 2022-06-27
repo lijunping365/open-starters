@@ -4,7 +4,7 @@ import com.saucesubfresh.starter.cache.core.ClusterCache;
 import com.saucesubfresh.starter.cache.core.RedissonCaffeineCache;
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.factory.ConfigFactory;
-import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
+import com.saucesubfresh.starter.cache.message.CacheMessageListener;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.redisson.api.RedissonClient;
 
@@ -16,12 +16,12 @@ public class RedissonCaffeineCacheManager extends AbstractCacheManager {
 
     private final RedissonClient client;
     private final CacheProperties properties;
-    private final CacheMessageProducer producer;
+    private final CacheMessageListener producer;
 
     public RedissonCaffeineCacheManager(CacheProperties properties,
                                         ConfigFactory configFactory,
                                         RedissonClient redissonClient,
-                                        CacheMessageProducer producer) {
+                                        CacheMessageListener producer) {
         super(configFactory);
         this.properties = properties;
         this.client = redissonClient;

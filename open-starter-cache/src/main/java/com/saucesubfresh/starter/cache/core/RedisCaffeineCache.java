@@ -5,7 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
 import com.saucesubfresh.starter.cache.message.CacheMessageCommand;
-import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
+import com.saucesubfresh.starter.cache.message.CacheMessageListener;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisCaffeineCache extends AbstractClusterCache {
 
     private final String cacheName;
-    private final String namespace;
     private final String cacheHashKey;
     private final Cache<Object, Object> cache;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -35,11 +34,10 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     public RedisCaffeineCache(String cacheName,
                               String namespace,
                               CacheConfig cacheConfig,
-                              CacheMessageProducer messageProducer,
+                              CacheMessageListener messageProducer,
                               RedisTemplate<String, Object> redisTemplate) {
         super(new ConcurrentStatsCounter(), messageProducer);
         this.cacheName = cacheName;
-        this.namespace = namespace;
         this.cacheHashKey = super.generate(namespace, cacheName);
         this.redisTemplate = redisTemplate;
         this.cache = Caffeine.newBuilder()
@@ -57,7 +55,6 @@ public class RedisCaffeineCache extends AbstractClusterCache {
         entries.forEach((key, value)->{
             CacheMessage cacheMessage = new CacheMessage();
             cacheMessage.setCacheName(cacheName);
-            cacheMessage.setTopic(namespace);
             cacheMessage.setCommand(CacheMessageCommand.UPDATE);
             cacheMessage.setKey(key);
             cacheMessage.setValue(value);
@@ -88,7 +85,6 @@ public class RedisCaffeineCache extends AbstractClusterCache {
         redisTemplate.opsForHash().put(cacheHashKey, key, value);
         CacheMessage cacheMessage = new CacheMessage();
         cacheMessage.setCacheName(cacheName);
-        cacheMessage.setTopic(namespace);
         cacheMessage.setCommand(CacheMessageCommand.UPDATE);
         cacheMessage.setKey(key);
         cacheMessage.setValue(value);
@@ -102,7 +98,6 @@ public class RedisCaffeineCache extends AbstractClusterCache {
         redisTemplate.opsForHash().delete(cacheHashKey, key);
         CacheMessage cacheMessage = new CacheMessage();
         cacheMessage.setCacheName(cacheName);
-        cacheMessage.setTopic(namespace);
         cacheMessage.setCommand(CacheMessageCommand.INVALIDATE);
         cacheMessage.setKey(key);
         super.publish(cacheMessage);
@@ -114,7 +109,6 @@ public class RedisCaffeineCache extends AbstractClusterCache {
         redisTemplate.delete(cacheHashKey);
         CacheMessage cacheMessage = new CacheMessage();
         cacheMessage.setCacheName(cacheName);
-        cacheMessage.setTopic(namespace);
         cacheMessage.setCommand(CacheMessageCommand.CLEAR);
         super.publish(cacheMessage);
         cache.invalidateAll();
