@@ -34,9 +34,9 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     public RedisCaffeineCache(String cacheName,
                               String namespace,
                               CacheConfig cacheConfig,
-                              CacheMessageListener messageProducer,
+                              CacheMessageListener messageListener,
                               RedisTemplate<String, Object> redisTemplate) {
-        super(new ConcurrentStatsCounter(), messageProducer);
+        super(new ConcurrentStatsCounter(), messageListener);
         this.cacheName = cacheName;
         this.cacheHashKey = super.generate(namespace, cacheName);
         this.redisTemplate = redisTemplate;

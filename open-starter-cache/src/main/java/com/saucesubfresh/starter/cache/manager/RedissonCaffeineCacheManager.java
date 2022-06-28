@@ -16,21 +16,21 @@ public class RedissonCaffeineCacheManager extends AbstractCacheManager {
 
     private final RedissonClient client;
     private final CacheProperties properties;
-    private final CacheMessageListener producer;
+    private final CacheMessageListener listener;
 
     public RedissonCaffeineCacheManager(CacheProperties properties,
                                         ConfigFactory configFactory,
                                         RedissonClient redissonClient,
-                                        CacheMessageListener producer) {
+                                        CacheMessageListener listener) {
         super(configFactory);
         this.properties = properties;
         this.client = redissonClient;
-        this.producer = producer;
+        this.listener = listener;
     }
 
     @Override
     protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
         String namespace = properties.getNamespace();
-        return new RedissonCaffeineCache(cacheName, namespace, cacheConfig, client, producer);
+        return new RedissonCaffeineCache(cacheName, namespace, cacheConfig, client, listener);
     }
 }

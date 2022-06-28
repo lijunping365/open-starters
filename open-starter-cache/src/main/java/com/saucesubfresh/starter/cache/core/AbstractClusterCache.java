@@ -13,11 +13,11 @@ public abstract class AbstractClusterCache implements ClusterCache {
 
     private static final String SAM = ":";
     private final StatsCounter statsCounter;
-    private final CacheMessageListener producer;
+    private final CacheMessageListener messageListener;
 
-    public AbstractClusterCache(StatsCounter statsCounter, CacheMessageListener producer) {
+    public AbstractClusterCache(StatsCounter statsCounter, CacheMessageListener messageListener) {
         this.statsCounter = statsCounter;
-        this.producer = producer;
+        this.messageListener = messageListener;
     }
 
     @Override
@@ -82,7 +82,7 @@ public abstract class AbstractClusterCache implements ClusterCache {
      * @param message 同步消息
      */
     protected void publish(CacheMessage message){
-        producer.broadcastLocalCacheStore(message);
+        messageListener.broadcastLocalCacheStore(message);
     }
 
     /**

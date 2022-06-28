@@ -15,22 +15,22 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisCaffeineCacheManager extends AbstractCacheManager {
 
     private final CacheProperties properties;
-    private final CacheMessageListener producer;
+    private final CacheMessageListener messageListener;
     private final RedisTemplate<String, Object> redisTemplate;
 
     public RedisCaffeineCacheManager(CacheProperties properties,
                                      ConfigFactory configFactory,
-                                     CacheMessageListener producer,
+                                     CacheMessageListener messageListener,
                                      RedisTemplate<String, Object> redisTemplate) {
         super(configFactory);
         this.properties = properties;
-        this.producer = producer;
+        this.messageListener = messageListener;
         this.redisTemplate = redisTemplate;
     }
 
     @Override
     protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
         String namespace = properties.getNamespace();
-        return new RedisCaffeineCache(cacheName, namespace, cacheConfig, producer, redisTemplate);
+        return new RedisCaffeineCache(cacheName, namespace, cacheConfig, messageListener, redisTemplate);
     }
 }
