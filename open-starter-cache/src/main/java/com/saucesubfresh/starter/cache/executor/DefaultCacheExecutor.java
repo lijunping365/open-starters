@@ -20,7 +20,7 @@ public class DefaultCacheExecutor extends AbstractCacheExecutor {
 
     @Override
     public void preloadCache(String cacheName) throws CacheException {
-        ClusterCache cache = getCache(cacheName);
+        ClusterCache cache = super.getCache(cacheName);
         try {
             cache.preloadCache();
         }catch (Exception e){
@@ -31,7 +31,7 @@ public class DefaultCacheExecutor extends AbstractCacheExecutor {
 
     @Override
     public void clearCache(String cacheName) throws CacheException {
-        ClusterCache cache = getCache(cacheName);
+        ClusterCache cache = super.getCache(cacheName);
         try {
             cache.clear();
         }catch (Exception e){
