@@ -2,7 +2,7 @@ package com.saucesubfresh.starter.cache.message;
 
 /**
  * <b>
- *     发送消息给其他节点，广播模式
+ *     监听广播消息
  *
  *     目的就是使其他节点的本地缓存同步
  *
@@ -14,13 +14,6 @@ package com.saucesubfresh.starter.cache.message;
  * @Date: 2022-06-25 17:14
  */
 public interface CacheMessageListener {
-
-    /**
-     * 通知其他节点同步缓存
-     *
-     * @param message 消息
-     */
-    void broadcastLocalCacheStore(CacheMessage message);
 
     /**
      * 接受同步消息，同步本地缓存

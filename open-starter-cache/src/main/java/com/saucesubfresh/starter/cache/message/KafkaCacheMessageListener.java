@@ -27,18 +27,9 @@ public class KafkaCacheMessageListener extends AbstractCacheMessageListener impl
     }
 
     @Override
-    public void broadcastLocalCacheStore(CacheMessage message) {
-        String namespace = cacheProperties.getNamespace();
-        try {
-            kafkaTemplate.send(namespace, message);
-        }catch (Exception e){
-            log.error("发送缓存同步消息失败，{}，{}", e.getMessage(), e);
-        }
-    }
-
-    @Override
     public void onMessage(ConsumerRecord<String, CacheMessage> consumerRecord) {
         CacheMessage message = consumerRecord.value();
+        log.info("received a message, cacheName={}", message.getCacheName());
         super.onMessage(message);
     }
 }

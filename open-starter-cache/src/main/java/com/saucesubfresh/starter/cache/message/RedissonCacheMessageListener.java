@@ -13,25 +13,14 @@ import org.redisson.api.RedissonClient;
 @Slf4j
 public class RedissonCacheMessageListener extends AbstractCacheMessageListener {
 
-    private final RTopic topic;
-
     public RedissonCacheMessageListener(CacheExecutor cacheExecutor, RedissonClient redissonClient, CacheProperties cacheProperties) {
         super(cacheExecutor);
         String namespace = cacheProperties.getNamespace();
-        this.topic = redissonClient.getTopic(namespace);
-        this.topic.addListener(CacheMessage.class, (channel, msg) -> {
+        RTopic topic = redissonClient.getTopic(namespace);
+        topic.addListener(CacheMessage.class, (channel, msg) -> {
             log.info("received a message, cacheName={}", msg.getCacheName());
             super.onMessage(msg);
         });
     }
 
-    @Override
-    public void broadcastLocalCacheStore(CacheMessage message) {
-        try {
-            long receivedMsgClientNum = topic.publish(message);
-            log.info("接收到消息的客户端数量是 {}", receivedMsgClientNum);
-        }catch (Exception e){
-            log.error("发送缓存同步消息失败，{}，{}", e.getMessage(), e);
-        }
-    }
 }

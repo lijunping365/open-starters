@@ -2,7 +2,7 @@ package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.domain.NullValue;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
-import com.saucesubfresh.starter.cache.message.CacheMessageListener;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.CacheStats;
 import com.saucesubfresh.starter.cache.stats.StatsCounter;
 
@@ -13,11 +13,11 @@ public abstract class AbstractClusterCache implements ClusterCache {
 
     private static final String SAM = ":";
     private final StatsCounter statsCounter;
-    private final CacheMessageListener messageListener;
+    private final CacheMessageProducer messageProducer;
 
-    public AbstractClusterCache(StatsCounter statsCounter, CacheMessageListener messageListener) {
+    public AbstractClusterCache(StatsCounter statsCounter, CacheMessageProducer messageProducer) {
         this.statsCounter = statsCounter;
-        this.messageListener = messageListener;
+        this.messageProducer = messageProducer;
     }
 
     @Override
@@ -82,7 +82,7 @@ public abstract class AbstractClusterCache implements ClusterCache {
      * @param message 同步消息
      */
     protected void publish(CacheMessage message){
-        messageListener.broadcastLocalCacheStore(message);
+        messageProducer.broadcastLocalCacheStore(message);
     }
 
     /**

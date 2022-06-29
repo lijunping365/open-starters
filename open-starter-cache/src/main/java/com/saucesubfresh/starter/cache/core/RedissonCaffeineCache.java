@@ -4,6 +4,7 @@ import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
 import com.saucesubfresh.starter.cache.message.CacheMessageCommand;
 import com.saucesubfresh.starter.cache.message.CacheMessageListener;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.LocalCachedMapOptions;
@@ -26,8 +27,8 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
                                  String namespace,
                                  CacheConfig cacheConfig,
                                  RedissonClient redissonClient,
-                                 CacheMessageListener messageListener) {
-        super(new ConcurrentStatsCounter(), messageListener);
+                                 CacheMessageProducer messageProducer) {
+        super(new ConcurrentStatsCounter(), messageProducer);
         this.cacheName = cacheName;
         String cacheHashKey = super.generate(namespace, cacheName);
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();

@@ -6,6 +6,7 @@ import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
 import com.saucesubfresh.starter.cache.message.CacheMessageCommand;
 import com.saucesubfresh.starter.cache.message.CacheMessageListener;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,9 +35,9 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     public RedisCaffeineCache(String cacheName,
                               String namespace,
                               CacheConfig cacheConfig,
-                              CacheMessageListener messageListener,
+                              CacheMessageProducer messageProducer,
                               RedisTemplate<String, Object> redisTemplate) {
-        super(new ConcurrentStatsCounter(), messageListener);
+        super(new ConcurrentStatsCounter(), messageProducer);
         this.cacheName = cacheName;
         this.cacheHashKey = super.generate(namespace, cacheName);
         this.redisTemplate = redisTemplate;

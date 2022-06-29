@@ -13,7 +13,9 @@ import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.RedissonCaffeineCacheManager;
 import com.saucesubfresh.starter.cache.message.CacheMessageListener;
+import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.message.RedissonCacheMessageListener;
+import com.saucesubfresh.starter.cache.message.RedissonCacheMessageProducer;
 import com.saucesubfresh.starter.cache.metrics.*;
 import com.saucesubfresh.starter.cache.processor.CacheProcessor;
 import com.saucesubfresh.starter.cache.processor.DefaultCacheProcessor;
@@ -40,7 +42,7 @@ public class CacheAutoConfiguration {
     public CacheManager cacheManager(CacheProperties properties,
                                      ConfigFactory configFactory,
                                      RedissonClient redissonClient,
-                                     CacheMessageListener producer){
+                                     CacheMessageProducer producer){
         return new RedissonCaffeineCacheManager(properties, configFactory, redissonClient, producer);
     }
 
@@ -104,7 +106,15 @@ public class CacheAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
-    public CacheMessageListener cacheMessageProducer(CacheExecutor cacheExecutor,
+    public CacheMessageProducer cacheMessageProducer(CacheProperties properties,
+                                                     RedissonClient redissonClient){
+        return new RedissonCacheMessageProducer(redissonClient, properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(RedissonClient.class)
+    public CacheMessageListener cacheMessageListener(CacheExecutor cacheExecutor,
                                                      CacheProperties properties,
                                                      RedissonClient redissonClient){
         return new RedissonCacheMessageListener(cacheExecutor, redissonClient, properties);
