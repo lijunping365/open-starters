@@ -23,6 +23,7 @@
         <module>open-starter-alarm</module>
         <module>open-starter-distributed-lock</module>
         <module>open-starter-cache</module>
+        <module>open-starter-crawler</module>
     </modules>
 
     <licenses>
