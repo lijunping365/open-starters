@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultCacheExecutor extends AbstractCacheExecutor {
 
-    private final CacheExecutorFailureHandler failureHandler;
+    private final CacheExecutorErrorHandler failureHandler;
 
-    public DefaultCacheExecutor(CacheManager cacheManager, CacheExecutorFailureHandler failureHandler) {
+    public DefaultCacheExecutor(CacheManager cacheManager, CacheExecutorErrorHandler failureHandler) {
         super(cacheManager);
         this.failureHandler = failureHandler;
     }
@@ -42,6 +42,6 @@ public class DefaultCacheExecutor extends AbstractCacheExecutor {
 
     private void onError(String cacheName, String errMsg){
         CacheException cacheException = new CacheException(cacheName, errMsg);
-        failureHandler.onExecuteFailureHandler(cacheException);
+        failureHandler.onExecuteError(cacheException);
     }
 }
