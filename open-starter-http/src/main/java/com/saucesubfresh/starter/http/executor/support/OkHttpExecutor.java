@@ -6,10 +6,6 @@ import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Map;
 import java.util.Objects;
@@ -18,10 +14,13 @@ import java.util.Objects;
  * Created by lijunping
  **/
 @Slf4j
-public class OkHttpExecutor extends AbstractHttpExecutor implements InitializingBean, BeanFactoryAware {
+public class OkHttpExecutor extends AbstractHttpExecutor {
 
-    private BeanFactory beanFactory;
-    private OkHttpClient client;
+    private final OkHttpClient client;
+
+    public OkHttpExecutor(OkHttpClient client) {
+        this.client = client;
+    }
 
     @Override
     public String doGet(HttpRequest httpRequest) throws HttpException {
@@ -73,19 +72,5 @@ public class OkHttpExecutor extends AbstractHttpExecutor implements Initializing
             }
         }
         return sb;
-    }
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        try {
-            this.client = this.beanFactory.getBean(OkHttpClient.class);
-        } catch (BeansException e) {
-            log.warn("No OkHttpClient instance is provided");
-        }
     }
 }

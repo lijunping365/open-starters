@@ -5,6 +5,7 @@ import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
 import com.saucesubfresh.starter.http.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -14,10 +15,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,10 +23,13 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 @Slf4j
-public class HttpClientExecutor extends AbstractHttpExecutor implements InitializingBean, BeanFactoryAware {
+public class HttpClientExecutor extends AbstractHttpExecutor {
 
-    private BeanFactory beanFactory;
-    private CloseableHttpClient client;
+    private final CloseableHttpClient client;
+
+    public HttpClientExecutor(CloseableHttpClient client) {
+        this.client = client;
+    }
 
     @Override
     public String doGet(HttpRequest request) throws HttpException {
@@ -102,23 +102,9 @@ public class HttpClientExecutor extends AbstractHttpExecutor implements Initiali
     }
 
     private String handlerResponse(CloseableHttpResponse response) throws IOException {
-        if (response.getStatusLine().getStatusCode() != 200){
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK){
             return null;
         }
         return EntityUtils.toString(response.getEntity(), Charset.defaultCharset());
-    }
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        try {
-            this.client = this.beanFactory.getBean(CloseableHttpClient.class);
-        } catch (BeansException e) {
-            log.warn("No CloseableHttpClient instance is provided");
-        }
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @Date: 2021-07-23 09:56
  */
 @Data
-@ConfigurationProperties(prefix = "com.pro.http")
+@ConfigurationProperties(prefix = "com.saucesubfresh.http")
 public class HttpProperties {
 
     /**

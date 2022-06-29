@@ -5,6 +5,7 @@ package com.saucesubfresh.starter.http.exception;
  * @Date: 2022-01-26 11:44
  */
 public class HttpException extends RuntimeException{
+
     public HttpException(String msg) {
         super(msg);
     }
