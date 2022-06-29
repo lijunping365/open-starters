@@ -15,14 +15,14 @@ public interface ScheduleTaskManage {
      * @param scheduleTask
      * @return
      */
-    Boolean addScheduleTask(ScheduleTask scheduleTask);
+    void addScheduleTask(ScheduleTask scheduleTask);
 
     /**
      * 移除任务
      * @param taskId
      * @return
      */
-    Boolean removeScheduleTask(Long taskId);
+    void removeScheduleTask(Long taskId);
 
     /**
      * 获取调度任务

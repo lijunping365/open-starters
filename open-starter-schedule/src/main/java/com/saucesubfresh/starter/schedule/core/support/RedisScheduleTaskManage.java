@@ -35,7 +35,7 @@ public class RedisScheduleTaskManage extends AbstractScheduleTaskManage implemen
     }
 
     @Override
-    public Boolean addScheduleTask(ScheduleTask scheduleTask) {
+    public void addScheduleTask(ScheduleTask scheduleTask) {
         long nextTriggerTime = generateNextValidTime(scheduleTask.getCronExpression());
         redisTemplate.execute((RedisCallback<Object>) connection -> {
             final byte[] hField = SerializationUtils.serialize(scheduleTask.getTaskId());
@@ -44,18 +44,16 @@ public class RedisScheduleTaskManage extends AbstractScheduleTaskManage implemen
             connection.zAdd(SCHEDULE_TASK_QUEUE_KEY, nextTriggerTime, hField);
             return null;
         });
-        return true;
     }
 
     @Override
-    public Boolean removeScheduleTask(Long taskId) {
+    public void removeScheduleTask(Long taskId) {
         redisTemplate.execute((RedisCallback<Object>) connection -> {
             final byte[] hField = SerializationUtils.serialize(taskId);
             connection.hDel(SCHEDULE_TASK_POOL_KEY, hField);
             connection.zRem(SCHEDULE_TASK_QUEUE_KEY, hField);
             return null;
         });
-        return true;
     }
 
     @Override

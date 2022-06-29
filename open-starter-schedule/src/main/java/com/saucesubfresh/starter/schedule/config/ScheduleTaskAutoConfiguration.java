@@ -18,11 +18,11 @@ import org.springframework.data.redis.core.RedisTemplate;
  * @weixin : ilwq18242076871
  * Description: 定时任务执行器配置类
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class ScheduleTaskAutoConfiguration {
 
   @Bean
-  @ConditionalOnMissingBean(ScheduleTaskManage.class)
+  @ConditionalOnMissingBean
   @ConditionalOnBean(RedisTemplate.class)
   public ScheduleTaskManage scheduleTaskManage(RedisTemplate<String, Object> redisTemplate){
     return new RedisScheduleTaskManage(redisTemplate);
