@@ -2,8 +2,7 @@ package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
-import com.saucesubfresh.starter.cache.message.CacheMessageCommand;
-import com.saucesubfresh.starter.cache.message.CacheMessageListener;
+import com.saucesubfresh.starter.cache.message.CacheCommand;
 import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +42,7 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     public void preloadCache() {
         CacheMessage cacheMessage = new CacheMessage();
         cacheMessage.setCacheName(cacheName);
-        cacheMessage.setCommand(CacheMessageCommand.UPDATE);
-        //cacheMessage.setKey(key);
-        //cacheMessage.setValue(value);
+        cacheMessage.setCommand(CacheCommand.UPDATE);
         super.publish(cacheMessage);
         map.preloadCache();
     }
@@ -64,7 +61,7 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
         map.fastPut(key, value);
         CacheMessage cacheMessage = new CacheMessage();
         cacheMessage.setCacheName(cacheName);
-        cacheMessage.setCommand(CacheMessageCommand.UPDATE);
+        cacheMessage.setCommand(CacheCommand.UPDATE);
         cacheMessage.setKey(key);
         cacheMessage.setValue(value);
         super.publish(cacheMessage);
@@ -75,7 +72,7 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     public void evict(Object key) {
         CacheMessage cacheMessage = new CacheMessage();
         cacheMessage.setCacheName(cacheName);
-        cacheMessage.setCommand(CacheMessageCommand.INVALIDATE);
+        cacheMessage.setCommand(CacheCommand.INVALIDATE);
         cacheMessage.setKey(key);
         super.publish(cacheMessage);
         map.fastRemove(key);
@@ -85,7 +82,7 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     public void clear() {
         CacheMessage cacheMessage = new CacheMessage();
         cacheMessage.setCacheName(cacheName);
-        cacheMessage.setCommand(CacheMessageCommand.CLEAR);
+        cacheMessage.setCommand(CacheCommand.CLEAR);
         super.publish(cacheMessage);
         map.clear();
     }

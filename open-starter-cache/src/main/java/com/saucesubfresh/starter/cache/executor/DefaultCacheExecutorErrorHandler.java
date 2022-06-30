@@ -1,6 +1,8 @@
 package com.saucesubfresh.starter.cache.executor;
 
 import com.saucesubfresh.starter.cache.exception.CacheException;
+import com.saucesubfresh.starter.cache.message.CacheCommand;
+import com.saucesubfresh.starter.cache.message.CacheMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -11,8 +13,9 @@ public class DefaultCacheExecutorErrorHandler implements CacheExecutorErrorHandl
 
     @Override
     public void onExecuteError(CacheException cacheException) {
-        final String message = cacheException.getMessage();
-        final String cacheName = cacheException.getCacheName();
-        log.error("缓存操作执行异常 {}，异常原因 {}", cacheName, message);
+        CacheMessage message = cacheException.getCacheMessage();
+        final String cacheName = message.getCacheName();
+        CacheCommand command = message.getCommand();
+        log.error("缓存操作执行异常 = {}，cacheName = {}, 异常原因 = {}", command.name(), cacheName, message);
     }
 }

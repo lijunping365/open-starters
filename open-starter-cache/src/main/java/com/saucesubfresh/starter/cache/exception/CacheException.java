@@ -1,5 +1,6 @@
 package com.saucesubfresh.starter.cache.exception;
 
+import com.saucesubfresh.starter.cache.message.CacheMessage;
 import lombok.Data;
 
 /**
@@ -9,10 +10,10 @@ import lombok.Data;
 @Data
 public class CacheException extends RuntimeException{
 
-    private final String cacheName;
+    private final CacheMessage cacheMessage;
 
-    public CacheException(String cacheName, String message) {
-        super(message);
-        this.cacheName = cacheName;
+    public CacheException(String errMsg, CacheMessage cacheMessage) {
+        super(errMsg);
+        this.cacheMessage = cacheMessage;
     }
 }

@@ -1,7 +1,6 @@
 package com.saucesubfresh.starter.cache.message;
 
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
-import com.saucesubfresh.starter.cache.manager.CacheManager;
 
 /**
  * @author: 李俊平
@@ -17,16 +16,6 @@ public abstract class AbstractCacheMessageListener implements CacheMessageListen
 
     @Override
     public void onMessage(CacheMessage message) {
-        String cacheName = message.getCacheName();
-        Object key = message.getKey();
-        Object value = message.getValue();
-        CacheMessageCommand command = message.getCommand();
-        switch (command){
-            case CLEAR:
-                cacheExecutor.clearCache(cacheName);
-                break;
-            case INVALIDATE:
-
-        }
+        cacheExecutor.execute(message);
     }
 }

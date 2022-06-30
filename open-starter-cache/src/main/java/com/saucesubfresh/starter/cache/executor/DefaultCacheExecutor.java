@@ -1,8 +1,9 @@
 package com.saucesubfresh.starter.cache.executor;
 
 import com.saucesubfresh.starter.cache.core.ClusterCache;
-import com.saucesubfresh.starter.cache.exception.CacheException;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
+import com.saucesubfresh.starter.cache.message.CacheMessage;
+import com.saucesubfresh.starter.cache.message.CacheCommand;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -11,37 +12,37 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultCacheExecutor extends AbstractCacheExecutor {
 
-    private final CacheExecutorErrorHandler failureHandler;
-
-    public DefaultCacheExecutor(CacheManager cacheManager, CacheExecutorErrorHandler failureHandler) {
-        super(cacheManager);
-        this.failureHandler = failureHandler;
+    public DefaultCacheExecutor(CacheManager cacheManager, CacheExecutorErrorHandler errorHandler) {
+        super(cacheManager, errorHandler);
     }
 
     @Override
-    public void preloadCache(String cacheName) throws CacheException {
+    public void execute(CacheMessage message){
+        CacheCommand command = message.getCommand();
+        String cacheName = message.getCacheName();
+        Object key = message.getKey();
+        Object value = message.getValue();
         ClusterCache cache = super.getCache(cacheName);
         try {
-            cache.preloadCache();
+            switch (command){
+                case CLEAR:
+                    cache.clear();
+                    break;
+                case INVALIDATE:
+                    cache.evict(key);
+                    break;
+                case PRELOAD:
+                    cache.preloadCache();
+                    break;
+                case UPDATE:
+                    cache.put(key, value);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Unsupported Operation");
+            }
         }catch (Exception e){
             log.error(e.getMessage(), e);
-            onError(cacheName, e.getMessage());
+            onError(e.getMessage(), message);
         }
-    }
-
-    @Override
-    public void clearCache(String cacheName) throws CacheException {
-        ClusterCache cache = super.getCache(cacheName);
-        try {
-            cache.clear();
-        }catch (Exception e){
-            log.error(e.getMessage(), e);
-            onError(cacheName, e.getMessage());
-        }
-    }
-
-    private void onError(String cacheName, String errMsg){
-        CacheException cacheException = new CacheException(cacheName, errMsg);
-        failureHandler.onExecuteError(cacheException);
     }
 }

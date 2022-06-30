@@ -18,5 +18,5 @@ public class CacheMessage implements Serializable {
 
     private Object value;
 
-    private CacheMessageCommand command;
+    private CacheCommand command;
 }
