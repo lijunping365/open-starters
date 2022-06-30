@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Spider implements Runnable{
 
-    protected List<Pipeline> pipelines = new ArrayList<Pipeline>();
+    private List<Pipeline> pipelines = new ArrayList<Pipeline>();
 
     @Override
     public void run() {
