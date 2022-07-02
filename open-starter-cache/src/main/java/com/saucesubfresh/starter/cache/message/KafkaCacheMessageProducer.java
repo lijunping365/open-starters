@@ -24,6 +24,8 @@ public class KafkaCacheMessageProducer implements CacheMessageProducer {
     @Override
     public void broadcastLocalCacheStore(CacheMessage message) {
         String namespace = properties.getNamespace();
+        Long instanceId = properties.getInstanceId();
+        message.setInstanceId(instanceId);
         try {
             kafkaTemplate.send(namespace, message);
         }catch (Exception e){

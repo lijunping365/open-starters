@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.cache.message;
 
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
+import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -16,8 +17,9 @@ public class RedisCacheMessageListener extends AbstractCacheMessageListener impl
     private final RedisTemplate<String, Object> redisTemplate;
 
     public RedisCacheMessageListener(CacheExecutor cacheExecutor,
+                                     CacheProperties properties,
                                      RedisTemplate<String, Object> redisTemplate) {
-        super(cacheExecutor);
+        super(cacheExecutor, properties);
         this.redisTemplate = redisTemplate;
     }
 

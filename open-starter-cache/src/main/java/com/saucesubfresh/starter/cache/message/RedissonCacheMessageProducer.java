@@ -13,14 +13,18 @@ import org.redisson.api.RedissonClient;
 public class RedissonCacheMessageProducer implements CacheMessageProducer{
 
     private final RTopic topic;
+    private final CacheProperties properties;
 
     public RedissonCacheMessageProducer(RedissonClient redissonClient, CacheProperties properties) {
         String namespace = properties.getNamespace();
+        this.properties = properties;
         this.topic = redissonClient.getTopic(namespace);
     }
 
     @Override
     public void broadcastLocalCacheStore(CacheMessage message) {
+        Long instanceId = properties.getInstanceId();
+        message.setInstanceId(instanceId);
         try {
             topic.publish(message);
         }catch (Exception e){

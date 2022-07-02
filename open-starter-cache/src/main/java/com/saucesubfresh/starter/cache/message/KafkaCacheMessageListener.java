@@ -15,14 +15,12 @@ import org.springframework.kafka.listener.MessageListener;
 @Slf4j
 public class KafkaCacheMessageListener extends AbstractCacheMessageListener implements MessageListener<String, CacheMessage> {
 
-    private final CacheProperties cacheProperties;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public KafkaCacheMessageListener(CacheExecutor cacheExecutor,
                                      CacheProperties cacheProperties,
                                      KafkaTemplate<String, Object> kafkaTemplate) {
-        super(cacheExecutor);
-        this.cacheProperties = cacheProperties;
+        super(cacheExecutor, cacheProperties);
         this.kafkaTemplate = kafkaTemplate;
     }
 

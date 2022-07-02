@@ -23,6 +23,8 @@ public class RedisCacheMessageProducer implements CacheMessageProducer {
     @Override
     public void broadcastLocalCacheStore(CacheMessage message) {
         String namespace = properties.getNamespace();
+        Long instanceId = properties.getInstanceId();
+        message.setInstanceId(instanceId);
         try {
             redisTemplate.convertAndSend(namespace, message);
             log.info("发送缓存同步消息成功");

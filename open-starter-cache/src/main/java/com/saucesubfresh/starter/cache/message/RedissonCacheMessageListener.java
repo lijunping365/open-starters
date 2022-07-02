@@ -13,8 +13,10 @@ import org.redisson.api.RedissonClient;
 @Slf4j
 public class RedissonCacheMessageListener extends AbstractCacheMessageListener {
 
-    public RedissonCacheMessageListener(CacheExecutor cacheExecutor, RedissonClient redissonClient, CacheProperties cacheProperties) {
-        super(cacheExecutor);
+    public RedissonCacheMessageListener(CacheExecutor cacheExecutor,
+                                        RedissonClient redissonClient,
+                                        CacheProperties cacheProperties) {
+        super(cacheExecutor, cacheProperties);
         String namespace = cacheProperties.getNamespace();
         RTopic topic = redissonClient.getTopic(namespace);
         topic.addListener(CacheMessage.class, (channel, msg) -> {

@@ -12,6 +12,8 @@ public class CacheMessage implements Serializable {
 
     private String cacheName;
 
+    private Long instanceId;
+
     private String msgId;
 
     private Object key;
