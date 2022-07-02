@@ -18,10 +18,10 @@ public class DefaultCacheProcessor extends AbstractCacheProcessor {
     @Override
     public Object handlerCacheable(Supplier<Object> callback, String cacheName, String cacheKey) throws Throwable {
         Object value;
-        final ClusterCache cache = getCache(cacheName);
+        final ClusterCache cache = super.getCache(cacheName);
         value = cache.get(cacheKey);
         if (Objects.nonNull(value)){
-            return value;
+            return super.fromStoreValue(value);
         }
         value = callback.get();
         cache.put(cacheKey, value);
@@ -30,19 +30,19 @@ public class DefaultCacheProcessor extends AbstractCacheProcessor {
 
     @Override
     public void handlerCacheEvict(String cacheName, String cacheKey) throws Throwable {
-        final ClusterCache cache = getCache(cacheName);
+        final ClusterCache cache = super.getCache(cacheName);
         cache.evict(cacheKey);
     }
 
     @Override
     public void handlerCacheClear(String cacheName) throws Throwable {
-        final ClusterCache cache = getCache(cacheName);
+        final ClusterCache cache = super.getCache(cacheName);
         cache.clear();
     }
 
     @Override
     public void handlerCachePut(String cacheName, String cacheKey, Object cacheValue) throws Throwable {
-        final ClusterCache cache = getCache(cacheName);
+        final ClusterCache cache = super.getCache(cacheName);
         cache.put(cacheKey, cacheValue);
     }
 

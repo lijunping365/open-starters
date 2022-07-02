@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.cache.processor;
 
 import com.saucesubfresh.starter.cache.core.ClusterCache;
+import com.saucesubfresh.starter.cache.domain.NullValue;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 
 /**
@@ -17,5 +18,12 @@ public abstract class AbstractCacheProcessor implements CacheProcessor {
 
     protected ClusterCache getCache(String cacheName){
         return cacheManager.getCache(cacheName);
+    }
+
+    protected Object fromStoreValue(Object storeValue) {
+        if (storeValue == NullValue.INSTANCE) {
+            return null;
+        }
+        return storeValue;
     }
 }
