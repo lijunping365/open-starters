@@ -2,29 +2,42 @@ package com.saucesubfresh.starter.schedule.trigger;
 
 import com.saucesubfresh.starter.schedule.core.ScheduleTaskManage;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author lijunping on 2022/3/31
  */
-public abstract class AbstractScheduleTaskTrigger implements ScheduleTaskTrigger{
+public abstract class AbstractScheduleTaskTrigger implements ScheduleTaskTrigger, DisposableBean {
 
+    private final ThreadPoolExecutor executor;
     private final ScheduleTaskManage scheduleTaskManage;
     protected final ScheduleTaskExecutor scheduleTaskExecutor;
 
-    public AbstractScheduleTaskTrigger(ScheduleTaskManage scheduleTaskManage, ScheduleTaskExecutor scheduleTaskExecutor) {
+    public AbstractScheduleTaskTrigger(ThreadPoolExecutor executor,
+                                       ScheduleTaskManage scheduleTaskManage,
+                                       ScheduleTaskExecutor scheduleTaskExecutor) {
+        this.executor = executor;
         this.scheduleTaskManage = scheduleTaskManage;
         this.scheduleTaskExecutor = scheduleTaskExecutor;
     }
 
     @Override
     public void trigger() {
-        List<Long> scheduleTaskList = scheduleTaskManage.getScheduleTaskList();
-        if (CollectionUtils.isEmpty(scheduleTaskList)){
-            return;
-        }
-        scheduleTaskExecutor.execute(scheduleTaskList);
+        executor.execute(()->{
+            List<Long> scheduleTaskList = scheduleTaskManage.getScheduleTaskList();
+            if (CollectionUtils.isEmpty(scheduleTaskList)){
+                return;
+            }
+            scheduleTaskExecutor.execute(scheduleTaskList);
+        });
+    }
+
+    @Override
+    public void destroy() {
+        executor.shutdown();
     }
 }

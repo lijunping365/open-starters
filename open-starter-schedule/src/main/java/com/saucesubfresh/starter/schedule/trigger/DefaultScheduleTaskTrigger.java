@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,12 +15,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DefaultScheduleTaskTrigger extends AbstractScheduleTaskTrigger implements SmartInitializingSingleton, DisposableBean {
 
+    private Thread thread;
     private volatile boolean threadToStop = false;
     private static final long INTERVAL_TIME = 1000;
-    private Thread thread;
 
-    public DefaultScheduleTaskTrigger(ScheduleTaskManage scheduleTaskManage, ScheduleTaskExecutor scheduleTaskExecutor) {
-        super(scheduleTaskManage, scheduleTaskExecutor);
+    public DefaultScheduleTaskTrigger(ThreadPoolExecutor executor,
+                                      ScheduleTaskManage scheduleTaskManage,
+                                      ScheduleTaskExecutor scheduleTaskExecutor) {
+        super(executor,scheduleTaskManage, scheduleTaskExecutor);
     }
 
     @Override
