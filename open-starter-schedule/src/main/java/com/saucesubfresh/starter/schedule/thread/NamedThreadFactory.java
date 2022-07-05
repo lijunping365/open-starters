@@ -11,10 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NamedThreadFactory implements ThreadFactory {
 
   private final ThreadGroup group;
-  private final AtomicInteger threadNumber = new AtomicInteger(1);
-
   private final String namePrefix;
   private final boolean daemon;
+  private final AtomicInteger threadNumber = new AtomicInteger(1);
 
   public NamedThreadFactory(String namePrefix, boolean daemon) {
     this.daemon = daemon;
@@ -33,6 +32,4 @@ public class NamedThreadFactory implements ThreadFactory {
     t.setDaemon(daemon);
     return t;
   }
-
-
 }

@@ -2,7 +2,6 @@ package com.saucesubfresh.starter.schedule.core;
 
 
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
-import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 
 import java.util.List;
 
@@ -16,18 +15,24 @@ public interface ScheduleTaskManage {
      * @param scheduleTask
      * @return
      */
-    void addScheduleTask(ScheduleTask scheduleTask) throws ScheduleException;
+    void addScheduleTask(ScheduleTask scheduleTask);
 
     /**
      * 移除任务
      * @param taskId
      * @return
      */
-    void removeScheduleTask(Long taskId) throws ScheduleException;
+    void removeScheduleTask(Long taskId);
 
     /**
-     * 获取调度任务
-     * @return
+     * 获取即将被调度的任务
+     * @return 调度任务的 id 集合
      */
-    List<Long> getScheduleTaskList() throws ScheduleException;
+    List<Long> takeScheduleTask();
+
+    /**
+     * 获取任务池中存在的全部任务
+     * @return 任务池中存在的全部任务
+     */
+    List<ScheduleTask> getScheduleTask();
 }

@@ -27,8 +27,8 @@ public class DefaultScheduleTaskTrigger extends AbstractScheduleTaskTrigger impl
 
     @Override
     public void afterSingletonsInstantiated() {
-        log.info("init schedulerTask success.");
         init();
+        log.info("init schedulerTask success.");
     }
 
     @Override
