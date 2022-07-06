@@ -11,6 +11,18 @@ import java.util.List;
 public interface ScheduleTaskManage {
 
     /**
+     * 获取即将被调度的任务
+     * @return 调度任务集合
+     */
+    List<ScheduleTask> takeScheduleTask();
+
+    /**
+     * 获取任务池中存在的全部任务
+     * @return 任务池中存在的全部任务
+     */
+    List<ScheduleTask> getScheduleTask();
+
+    /**
      * 添加任务
      * @param scheduleTask
      * @return
@@ -23,16 +35,4 @@ public interface ScheduleTaskManage {
      * @return
      */
     void removeScheduleTask(ScheduleTask scheduleTask);
-
-    /**
-     * 获取即将被调度的任务
-     * @return 调度任务集合
-     */
-    List<ScheduleTask> takeScheduleTask();
-
-    /**
-     * 获取任务池中存在的全部任务
-     * @return 任务池中存在的全部任务
-     */
-    List<ScheduleTask> getScheduleTask();
 }

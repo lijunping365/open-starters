@@ -9,12 +9,14 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 使用 redis 来管理要执行的任务
@@ -59,12 +61,9 @@ public class RedisScheduleTaskManage extends AbstractScheduleTaskManage implemen
     }
 
     @Override
-    public List<ScheduleTask> takeScheduleTask() throws ScheduleException{
-        Calendar instance = Calendar.getInstance();
-        long nowSecond = instance.getTimeInMillis() / UNIT;
-        long minSecond = nowSecond - UNIT;
+    public List<ScheduleTask> take(long minSecond, long maxSecond){
         return redisTemplate.execute((RedisCallback<List<ScheduleTask>>) connection -> {
-            Set<byte[]> tasks = connection.zRevRangeByScore(taskQueueName, minSecond, nowSecond);
+            Set<byte[]> tasks = connection.zRevRangeByScore(taskQueueName, minSecond, maxSecond);
             if (CollectionUtils.isEmpty(tasks)) {
                 return null;
             }
@@ -80,7 +79,7 @@ public class RedisScheduleTaskManage extends AbstractScheduleTaskManage implemen
     }
 
     @Override
-    public List<ScheduleTask> getScheduleTask() throws ScheduleException {
+    public List<ScheduleTask> getScheduleTask() {
         return redisTemplate.execute((RedisCallback<List<ScheduleTask>>) connection -> {
             Set<byte[]> tasks = connection.zRange(taskQueueName, 0, -1);
             if (CollectionUtils.isEmpty(tasks)){
