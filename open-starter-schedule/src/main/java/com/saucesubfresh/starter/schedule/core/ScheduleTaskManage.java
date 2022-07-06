@@ -19,16 +19,16 @@ public interface ScheduleTaskManage {
 
     /**
      * 移除任务
-     * @param taskId
+     * @param scheduleTask
      * @return
      */
-    void removeScheduleTask(Long taskId);
+    void removeScheduleTask(ScheduleTask scheduleTask);
 
     /**
      * 获取即将被调度的任务
-     * @return 调度任务的 id 集合
+     * @return 调度任务集合
      */
-    List<Long> takeScheduleTask();
+    List<ScheduleTask> takeScheduleTask();
 
     /**
      * 获取任务池中存在的全部任务

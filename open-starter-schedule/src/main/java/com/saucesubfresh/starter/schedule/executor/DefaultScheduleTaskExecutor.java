@@ -1,5 +1,6 @@
 package com.saucesubfresh.starter.schedule.executor;
 
+import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class DefaultScheduleTaskExecutor implements ScheduleTaskExecutor{
 
     @Override
-    public void execute(List<Long> taskList) {
-        log.info("execute task {}", taskList);
+    public void execute(List<ScheduleTask> scheduleTaskList) {
+        log.info("execute task {}", scheduleTaskList);
     }
 }

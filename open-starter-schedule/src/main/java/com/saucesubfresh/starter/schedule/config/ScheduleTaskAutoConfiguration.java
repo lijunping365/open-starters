@@ -6,6 +6,8 @@ import com.saucesubfresh.starter.schedule.core.RedisScheduleTaskManage;
 import com.saucesubfresh.starter.schedule.executor.DefaultScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
+import com.saucesubfresh.starter.schedule.service.DefaultScheduleTaskLoader;
+import com.saucesubfresh.starter.schedule.service.ScheduleTaskLoader;
 import com.saucesubfresh.starter.schedule.thread.TaskThreadPoolExecutor;
 import com.saucesubfresh.starter.schedule.trigger.DefaultScheduleTaskTrigger;
 import com.saucesubfresh.starter.schedule.trigger.ScheduleTaskTrigger;
@@ -31,8 +33,9 @@ public class ScheduleTaskAutoConfiguration {
   @ConditionalOnMissingBean
   @ConditionalOnBean(RedisTemplate.class)
   public ScheduleTaskManage scheduleTaskManage(ScheduleProperties scheduleProperties,
+                                               ScheduleTaskLoader scheduleTaskLoader,
                                                RedisTemplate<String, Object> redisTemplate){
-    return new RedisScheduleTaskManage(scheduleProperties, redisTemplate);
+    return new RedisScheduleTaskManage(scheduleProperties, scheduleTaskLoader, redisTemplate);
   }
 
   @Bean
@@ -53,5 +56,11 @@ public class ScheduleTaskAutoConfiguration {
   @ConditionalOnMissingBean
   public ThreadPoolExecutor threadPoolExecutor(ScheduleProperties properties){
     return new TaskThreadPoolExecutor(properties);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ScheduleTaskLoader scheduleTaskLoader(){
+    return new DefaultScheduleTaskLoader();
   }
 }

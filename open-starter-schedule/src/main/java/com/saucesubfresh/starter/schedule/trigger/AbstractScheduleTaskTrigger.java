@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.schedule.trigger;
 
 import com.saucesubfresh.starter.schedule.core.ScheduleTaskManage;
+import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public abstract class AbstractScheduleTaskTrigger implements ScheduleTaskTrigger
     @Override
     public void trigger() {
         executor.execute(()->{
-            List<Long> scheduleTaskList = null;
+            List<ScheduleTask> scheduleTaskList = null;
             try {
                 scheduleTaskList = scheduleTaskManage.takeScheduleTask();
             }catch (Exception e){

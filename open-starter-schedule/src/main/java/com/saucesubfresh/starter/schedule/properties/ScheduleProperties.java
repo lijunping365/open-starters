@@ -17,11 +17,6 @@ public class ScheduleProperties {
     private String taskQueueName = "schedule:task:queue:key";
 
     /**
-     * 任务池名称（hash）
-     */
-    private String taskPoolName = "schedule:task:pool:key";
-
-    /**
      * 核心线程数
      */
     private Integer corePoolSize = Runtime.getRuntime().availableProcessors() * 2;

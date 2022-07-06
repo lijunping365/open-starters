@@ -1,5 +1,7 @@
 package com.saucesubfresh.starter.schedule.executor;
 
+import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
+
 import java.util.List;
 
 /**
@@ -8,5 +10,5 @@ import java.util.List;
  */
 public interface ScheduleTaskExecutor {
 
-    void execute(List<Long> taskIds);
+    void execute(List<ScheduleTask> scheduleTaskList);
 }

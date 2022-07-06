@@ -3,6 +3,7 @@ package com.saucesubfresh.starter.schedule.core;
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
+import com.saucesubfresh.starter.schedule.service.ScheduleTaskLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,99 +23,75 @@ import java.util.*;
 @Slf4j
 public class RedisScheduleTaskManage extends AbstractScheduleTaskManage implements InitializingBean, DisposableBean {
     
-    private final byte[] taskQueueName; 
-    private final byte[] taskPoolName;
+    private final byte[] taskQueueName;
+    private final ScheduleTaskLoader scheduleTaskLoader;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisScheduleTaskManage(ScheduleProperties scheduleProperties, 
+    public RedisScheduleTaskManage(ScheduleProperties scheduleProperties,
+                                   ScheduleTaskLoader scheduleTaskLoader,
                                    RedisTemplate<String, Object> redisTemplate){
         this.redisTemplate = redisTemplate;
+        this.scheduleTaskLoader = scheduleTaskLoader;
         String taskQueueName = scheduleProperties.getTaskQueueName();
-        String taskPoolName = scheduleProperties.getTaskPoolName();
         if (StringUtils.isBlank(taskQueueName)){
             throw new ScheduleException("The taskQueueName cannot be empty.");
         }
-        if (StringUtils.isBlank(taskPoolName)){
-            throw new ScheduleException("The taskPoolName cannot be empty.");
-        }
         this.taskQueueName = SerializationUtils.serialize(taskQueueName);
-        this.taskPoolName = SerializationUtils.serialize(taskPoolName);
     }
 
     @Override
     public void addScheduleTask(ScheduleTask scheduleTask){
         long nextTriggerTime = generateNextValidTime(scheduleTask.getCronExpression());
         redisTemplate.execute((RedisCallback<Object>) connection -> {
-            final byte[] hField = SerializationUtils.serialize(scheduleTask.getTaskId());
-            final byte[] hValue = SerializationUtils.serialize(scheduleTask);
-            connection.hSet(taskPoolName, hField, hValue);
-            connection.zAdd(taskQueueName, nextTriggerTime, hField);
+            byte[] value = SerializationUtils.serialize(scheduleTask);
+            connection.zAdd(taskQueueName, nextTriggerTime, value);
             return null;
         });
     }
 
     @Override
-    public void removeScheduleTask(Long taskId){
+    public void removeScheduleTask(ScheduleTask scheduleTask){
         redisTemplate.execute((RedisCallback<Object>) connection -> {
-            final byte[] hField = SerializationUtils.serialize(taskId);
-            connection.hDel(taskPoolName, hField);
-            connection.zRem(taskQueueName, hField);
+            byte[] value = SerializationUtils.serialize(scheduleTask);
+            connection.zRem(taskQueueName, value);
             return null;
         });
     }
 
     @Override
-    public List<Long> takeScheduleTask(){
+    public List<ScheduleTask> takeScheduleTask() throws ScheduleException{
         Calendar instance = Calendar.getInstance();
         long nowSecond = instance.getTimeInMillis() / UNIT;
-        return redisTemplate.execute((RedisCallback<List<Long>>) connection -> {
-            Set<byte[]> scheduleTaskIds = connection.zRevRangeByScore(taskQueueName, nowSecond - UNIT, nowSecond);
-            if (CollectionUtils.isEmpty(scheduleTaskIds)) {
+        long minSecond = nowSecond - UNIT;
+        return redisTemplate.execute((RedisCallback<List<ScheduleTask>>) connection -> {
+            Set<byte[]> tasks = connection.zRevRangeByScore(taskQueueName, minSecond, nowSecond);
+            if (CollectionUtils.isEmpty(tasks)) {
                 return null;
             }
 
-            List<Long> taskList = new ArrayList<>();
-            for (byte[] aByte : scheduleTaskIds) {
-                final Long taskId = SerializationUtils.deserialize(aByte);
-                taskList.add(taskId);
-                reLoop(connection, taskId);
+            List<ScheduleTask> scheduleTasks = new ArrayList<>();
+            for (byte[] value : tasks) {
+                ScheduleTask scheduleTask = SerializationUtils.deserialize(value);
+                long nextTriggerTime = generateNextValidTime(scheduleTask.getCronExpression());
+                connection.zAdd(taskQueueName, nextTriggerTime, value);
             }
-            return taskList;
+            return scheduleTasks;
         });
     }
 
     @Override
     public List<ScheduleTask> getScheduleTask() throws ScheduleException {
-        List<ScheduleTask> scheduleTask = new ArrayList<>();
-        redisTemplate.execute((RedisCallback<Object>) connection -> {
-            Map<byte[], byte[]> map = connection.hGetAll(taskPoolName);
-            if (CollectionUtils.isEmpty(map)){
-                return null;
+        return redisTemplate.execute((RedisCallback<List<ScheduleTask>>) connection -> {
+            Set<byte[]> tasks = connection.zRange(taskQueueName, 0, -1);
+            if (CollectionUtils.isEmpty(tasks)){
+                return Collections.emptyList();
             }
-            for (byte[] value : map.values()) {
+            List<ScheduleTask> scheduleTask = new ArrayList<>();
+            for (byte[] value : tasks) {
                 scheduleTask.add(SerializationUtils.deserialize(value));
             }
-            return null;
+            return scheduleTask;
         });
-        return scheduleTask;
-    }
-
-    /**
-     * 重复执行该任务，在 taskId 被取出的同时判断任务池中该任务还是否存在，
-     * 如果存在则计算该任务下次的执行时间并将该任务继续放入到任务执行队列中；
-     * 如果任务池中不存在该任务，说明该任务已被剔除，不需要重新放入任务队列。
-     * @param connection
-     * @param taskId
-     */
-    private void reLoop(RedisConnection connection, Long taskId){
-        final byte[] hField = SerializationUtils.serialize(taskId);
-        final byte[] scheduleTaskByte = connection.hGet(taskPoolName, hField);
-        if (Objects.isNull(scheduleTaskByte)){
-            return;
-        }
-        final ScheduleTask scheduleTask = SerializationUtils.deserialize(scheduleTaskByte);
-        long nextTriggerTime = generateNextValidTime(scheduleTask.getCronExpression());
-        connection.zAdd(taskQueueName, nextTriggerTime, hField);
     }
 
     /**
@@ -124,15 +101,15 @@ public class RedisScheduleTaskManage extends AbstractScheduleTaskManage implemen
     @Override
     public void afterPropertiesSet() throws Exception {
         try {
+            List<ScheduleTask> scheduleTasks = scheduleTaskLoader.loadScheduleTask();
+            if (CollectionUtils.isEmpty(scheduleTasks)){
+                return;
+            }
             redisTemplate.execute((RedisCallback<Object>) connection -> {
-                Map<byte[], byte[]> map = connection.hGetAll(taskPoolName);
-                if (CollectionUtils.isEmpty(map)){
-                    return null;
-                }
-                map.forEach((k, v)->{
-                    final ScheduleTask scheduleTask = SerializationUtils.deserialize(v);
-                    long nextTriggerTime = generateNextValidTime(scheduleTask.getCronExpression());
-                    connection.zAdd(taskQueueName, nextTriggerTime, k);
+                scheduleTasks.forEach(e->{
+                    long nextTriggerTime = generateNextValidTime(e.getCronExpression());
+                    byte[] value = SerializationUtils.serialize(e);
+                    connection.zAdd(taskQueueName, nextTriggerTime, value);
                 });
                 return null;
             });
