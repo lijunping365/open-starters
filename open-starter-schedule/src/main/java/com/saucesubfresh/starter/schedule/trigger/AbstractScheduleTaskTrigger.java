@@ -1,30 +1,23 @@
 package com.saucesubfresh.starter.schedule.trigger;
 
-import com.saucesubfresh.starter.schedule.core.ScheduleTaskManage;
-import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
-import com.saucesubfresh.starter.schedule.exception.ScheduleException;
-import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.SmartInitializingSingleton;
-import org.springframework.util.CollectionUtils;
+import org.springframework.beans.factory.InitializingBean;
 
-import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author lijunping on 2022/3/31
  */
 @Slf4j
-public abstract class AbstractScheduleTaskTrigger implements ScheduleTaskTrigger, SmartInitializingSingleton, DisposableBean {
+public abstract class AbstractScheduleTaskTrigger implements ScheduleTaskTrigger, InitializingBean, DisposableBean {
 
     private Thread thread;
     private volatile boolean threadToStop = false;
     private static final long INTERVAL_TIME = 1000;
 
     @Override
-    public void afterSingletonsInstantiated() {
+    public void afterPropertiesSet() throws Exception {
         init();
         log.info("init schedulerTask success.");
     }
@@ -47,7 +40,7 @@ public abstract class AbstractScheduleTaskTrigger implements ScheduleTaskTrigger
                     trigger();
                 } catch (Exception e) {
                     if (!threadToStop) {
-                        log.error("JobSchedule#ringThread error:{}", e.getMessage());
+                        log.error("JobSchedule#ringThread error:{}", e.getMessage(), e);
                     }
                 }
             }

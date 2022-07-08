@@ -14,7 +14,7 @@ public class ScheduleProperties {
     /**
      * 任务队列名称 （zset）
      */
-    private String taskQueueName = "schedule:task:queue:key";
+    private String taskQueueName = "schedule:task:queue";
 
     /**
      * 核心线程数
