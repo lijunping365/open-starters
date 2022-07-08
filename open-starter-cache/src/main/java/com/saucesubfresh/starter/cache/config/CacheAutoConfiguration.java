@@ -23,7 +23,6 @@ import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -96,12 +95,11 @@ public class CacheAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "com.saucesubfresh.cache.metrics")
     @ConditionalOnMissingBean
-    public CacheMetricsTrigger cacheMetricsTrigger(CacheProperties properties,
-                                                   CacheMetricsCollector cacheMetricsCollector,
-                                                   CacheMetricsPusher cacheMetricsPusher){
-        return new DefaultCacheMetricsTrigger(properties.getPeriod(), cacheMetricsPusher, cacheMetricsCollector);
+    public CacheMetricsScheduler cacheMetricsTrigger(CacheProperties properties,
+                                                     CacheMetricsCollector cacheMetricsCollector,
+                                                     CacheMetricsPusher cacheMetricsPusher){
+        return new DefaultCacheMetricsScheduler(cacheMetricsPusher, properties, cacheMetricsCollector);
     }
 
     @Bean

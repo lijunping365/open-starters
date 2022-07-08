@@ -24,13 +24,13 @@ public class CacheProperties {
      */
     private String namespace = "open-cache";
     /**
-     * 是否开启自动上报
+     * 是否开启自动缓存指标信息上报
      */
-    private boolean metrics = false;
+    private boolean enableMetricsReport = false;
     /**
-     * 自动上报周期，默认 100，单位秒
+     * 自动上报周期，默认 60，单位秒
      */
-    private long period = 100;
+    private long metricsReportCycle = 60;
     /**
      * 键值输入的最大空闲时间(毫秒)。
      */

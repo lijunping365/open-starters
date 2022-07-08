@@ -6,7 +6,7 @@ package com.saucesubfresh.starter.cache.metrics;
  * @author: 李俊平
  * @Date: 2022-06-25 12:07
  */
-public interface CacheMetricsTrigger {
+public interface CacheMetricsScheduler {
 
     /**
      * 触发缓存指标信息上报
