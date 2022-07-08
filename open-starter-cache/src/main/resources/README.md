@@ -1,108 +1,173 @@
-# 分布式缓存
+# 分布式缓存组件
 
-## 开篇
+## 分布式缓存介绍
 
-一级缓存是应用内缓存，二级缓存是比一级缓存更大的一个容器，它是应用集群获取缓存数据的统一载体。
+**为什么需要二级缓存**：
 
-二级缓存存在的意义就是如果二级缓存中有数据，集群中任一节点在本地缓存中没获取到数据的时候可以从二级缓存中直接获取到数据而不用查询数据库。
-
-**总结**：进程内缓存做为一级缓存，分布式缓存做为二级缓存，首先从一级缓存中查询，若能查询到数据则直接返回，
-
-否则从二级缓存中查询，若二级缓存中可以查询到数据，则回填到一级缓存中，并返回数据。
-
-若二级缓存也查询不到，则从数据源中查询，将结果分别回填到一级缓存，二级缓存中。
-
-## 缓存的有界和无界
-
-有界的缓存我们可以留下更多的空间和资源给服务器，让其处理的更快，因此我们需要使我们的缓存变成有界的。
-
-我们需要提供一些驱逐策略来使缓存占用的空间在一个合理的范围内
-
-## 多个应用使用统一的可视化程序进行管理
-
-假设我们有用户系统，有订单系统... 这些系统都是集群模式，我们需要使用一个统一的可视化程序进行管理这些系统的缓存
-
-1. 可以通过该程序手动清除某个系统的某个缓存
-2. 可以查看各个系统的缓存的命中率... 参数
-3. ...
-
-## 架构设计
-
-### 思考
-
-1. 前几天在准备做二级缓存的时候，就在想如果一级缓存里面有数据，还要二级缓存干啥？ 首先为什么要用缓存？
+就在想如果一级缓存里面有数据，还要二级缓存干啥？ 首先为什么要用缓存？
 
 不就是因为我们数据库压力太大了嘛，查询太慢了嘛，好办！我们给他加个缓存，为了尽量减轻服务器内存的压力，我们可以先加一个 redis 缓存，后来发现请求全跑到 redis 上了，
 
 redis 压力也很大， redis 也快扛不住了，我们为了减轻 redis 的压力，这个时候没办法了，我们必须要加一个本地缓存，占用服务器的一部分内存来做缓存，来减轻 redis 的压力，即一部分数据走本地缓存，一部分数据走 redis 缓存
 
-分流思想。
+一级缓存是应用内缓存，二级缓存是比一级缓存更大的一个容器，它是应用集群获取缓存数据的统一载体。
 
-因此，我们的就设计了这样一个二级缓存结构： 
+二级缓存存在的意义就是如果二级缓存中有数据，集群中任一节点在本地缓存中没获取到数据的时候可以从二级缓存中直接获取到数据而不用查询数据库。
 
-第一级缓存是：Caffeine , 第二级缓存是：Redisson。
+**查询数据的流程**：
 
-二级缓存，我们使用Redisson对Spring Cache的扩展类RedissonCache 。它的底层是RMap，底层存储是Hash。
+进程内缓存做为一级缓存，分布式缓存做为二级缓存，首先从一级缓存中查询，若能查询到数据则直接返回， 
 
-2. 考虑一二级缓存的配置是否要一致
+否则从二级缓存中查询，若二级缓存中可以查询到数据，则回填到一级缓存中，并返回数据。 
 
-
-**「查询」数据的流程**：
-
-先从本地缓存中查询数据，若能查询到，直接返回；
-
-本地缓存查询不到数据，查询分布式缓存，若可以查询出来，回填到本地缓存，并返回；
-
-若分布式缓存查询不到数据，则默认会执行被注解的方法。
+若二级缓存也查询不到，则从数据源中查询，将结果分别回填到一级缓存，二级缓存中。
 
 
-## 二级缓存需要考虑的点还很多
+## 说明
 
-### 1.如何保证分布式节点一级缓存的一致性？
+如果你只需要一级缓存，那这个组件可能并不适合，如果你需要一个既有分布式缓存能力还能通过api来操作缓存而且还能查看缓存的命中率等指标数据，那这款缓存组件就非常适合你了
 
-我们说一级缓存是应用内缓存，那么当你的项目部署在多个节点的时候，如何保证当你对某个key进行修改删除操作时，使其它节点的一级缓存一致呢？
+## 功能
 
-### 2.是否允许存储空值？
+- [x] 基于 spring aop 实现，二级缓存模式
 
-这个确实是需要考虑的点。因为如果某个查询缓存和数据库中都没有，那么就会导致频繁查询数据库，导致数据库Down,这也是我们常说的缓存穿透。
+- [x] 系统默认提供了两种缓存实现方式，caffeine + redis 和 caffeine + redisson，支持用户自定义
 
-但如果存储空值呢，因为可能会存储大量的空值，导致缓存变大，所以这个最好是可配置，按照业务来决定是否开启。
+- [x] 缓存配置参数 maxIdleTime，maxSize、ttl 支持 yaml 和 json 两种配置方式，且只针对本地缓存生效
 
-### 3.是否需要缓存预热？
+- [x] 缓存 key 生成策略支持用户自定义
 
-也就是说，我们会觉得某些key一开始就会非常的热，也就是热点数据，那么我们是否可以一开始就先存储到缓存中，避免缓存击穿。
+- [x] 本地缓存同步提供三种实现方式，分别是基于 redis 的 MQ、redisson 的 RTopic、Kafka，支持用户自定义
 
-### 4.一级缓存存储数量上限的考虑？
+- [x] 支持缓存预热，即同步二级缓存数据到本地缓存中
 
-既然一级缓存是应用内缓存，那你是否考虑一级缓存存储的数据给个限定最大值，避免存储太多的一级缓存导致OOM。
+- [x] 提供对外操作缓存的api，用户可通过该api进行缓存的清除，更新等操作
 
-### 5.一级缓存过期策略的考虑？
+- [x] 该插件默认会存储空值，无需配置
 
-我们说redis作为二级缓存，redis是淘汰策略来管理的。具体可参考redis的8种淘汰策略。那你的一级缓存策略呢？就好比你设置一级缓存
+- [x] 提供缓存的命中率指标查询，并自带缓存命中率等指标数据上报功能，是否上报即上报频率可配置，上报方式需用户自行实现
 
-数量最大为5000个,那当第5001个进来的时候，你是怎么处理呢？是直接不保存，还是说自定义LRU或者LFU算法去淘汰之前的数据？
+- [x] 支持多应用使用，不同的应用需配置不同的 namespace，相当于应用名称
 
-### 6.一级缓存过期了如何清除？
+## 快速开始
 
-我们说redis作为二级缓存，我们有它的缓存过期策略(定时、定期、惰性)，那你的一级缓存呢，过期如何清除呢？
+### 1. 添加 Maven 依赖
 
-这里4、5、6小点如果说用我们传统的Map显然实现是很费劲的，但现在有更好用的一级缓存库那就是Caffeine。
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-cache</artifactId>
+    <version>1.0.2</version>
+</dependency>
+```
 
-### 7. 缓存 item和缓存list的时候，更希望取列表时按item缓存
+### 2. 分布式缓存相关参数
 
-缓存 item和缓存list的时候，更希望取列表时按item缓存，因为可能列表和详情的字段内容是一样的，列表和详情在内存上重复了，造成了内存的浪费
+```yaml
+com:
+  saucesubfresh:
+    cache:
+      # 一级缓存配置文件地址
+      config-location: classpath:/open-cache-config.yaml
+      # 应用名称
+      namespace: applicationName
+      # 是否开启自动缓存指标信息上报
+      enable-metrics-report: true
+      # 自动上报周期，默认 60，单位秒
+      metrics-report-cycle: 60
+      # 键值输入的最大空闲时间(毫秒)。
+      max-idle-time: 720000
+      # 缓存容量（缓存数量最大值）
+      max-size: 100
+      # 键值条目的存活时间，以毫秒为单位。
+      ttl: 30000
+```
+
+### 3. OpenCacheable
+
+使用缓存，节选自 Open-Cache
+
+```java
+@Service
+public class UserServiceImpl implements UserService {
+
+    @OpenCacheable(cacheName = "test", key = "#id")
+    @Override
+    public UserDO loadUserById(Long id) {
+        UserDO userDO = new UserDO();
+        userDO.setId(18L);
+        userDO.setName("lijunping");
+        return userDO;
+    }
+}
+```
+
+## 扩展示例
+
+### 1. 自定义缓存实现方式（ClusterCache + CacheManager）
+
+比如要使用 Ehcache + Redis
+
+```java
+public class RedisEhcacheCache extends AbstractClusterCache {
+    
+}
+
+@Component
+public class RedisEhcacheManager extends AbstractCacheManager {
+    private final CacheProperties properties;
+    private final CacheMessageProducer producer;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public RedisEhcacheManager(CacheProperties properties,
+                               ConfigFactory configFactory,
+                               CacheMessageProducer producer,
+                               RedisTemplate<String, Object> redisTemplate) {
+        super(configFactory);
+        this.properties = properties;
+        this.producer = producer;
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Override
+    protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
+        String namespace = properties.getNamespace();
+        return new RedisEhcacheCache(cacheName, namespace, cacheConfig, producer, redisTemplate);
+    }
+}
+```
 
 
-https://www.cnblogs.com/makemylife/p/15796265.html
+### 2. 自定义缓存 key 生成方式（KeyGenerator）
 
+```java
+@Component
+public class CustomerKeyGenerator implements KeyGenerator{
+    
+    @Override
+    public String generate(String cacheKey, Method method, Object[] args) {
+        return null;
+    }
+}
+```
 
-# 目前还未实现的功能
+### 3. 自定义本地缓存同步实现方式（CacheMessageProducer，CacheMessageListener）
 
-1. 我们说一级缓存是应用内缓存，那么当你的项目部署在多个节点的时候，如何保证当你对某个key进行修改删除操作时，使其它节点的一级缓存一致呢？
-采用哪种通信方式，我们是采用 redisson 的，还是用自己的 rpc 框架？
+```java
+@Component
+public class RocketMqCacheMessageProducer implements CacheMessageProducer{
 
+    @Override
+    public void broadcastLocalCacheStore(CacheMessage message) {
+        
+    }
+}
 
-3. 指标数据采用数据上报还是采用查询的方式，目前还在思考中
+@Component
+public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
+    
+}
+```
 
 
 
