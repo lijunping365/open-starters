@@ -1,6 +1,6 @@
 package com.saucesubfresh.starter.schedule.trigger;
 
-import com.saucesubfresh.starter.schedule.core.ScheduleTaskManage;
+import com.saucesubfresh.starter.schedule.manage.ScheduleTaskManage;
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import lombok.extern.slf4j.Slf4j;

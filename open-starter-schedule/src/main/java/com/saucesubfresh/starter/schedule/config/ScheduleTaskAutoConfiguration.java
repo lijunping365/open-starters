@@ -1,8 +1,8 @@
 package com.saucesubfresh.starter.schedule.config;
 
 
-import com.saucesubfresh.starter.schedule.core.ScheduleTaskManage;
-import com.saucesubfresh.starter.schedule.core.RedisScheduleTaskManage;
+import com.saucesubfresh.starter.schedule.manage.ScheduleTaskManage;
+import com.saucesubfresh.starter.schedule.manage.RedisScheduleTaskManage;
 import com.saucesubfresh.starter.schedule.executor.DefaultScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;

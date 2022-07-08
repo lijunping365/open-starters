@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.schedule.core;
+package com.saucesubfresh.starter.schedule.manage;
 
 
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
@@ -14,25 +14,25 @@ public interface ScheduleTaskManage {
      * 获取即将被调度的任务
      * @return 调度任务集合
      */
-    List<ScheduleTask> takeScheduleTask();
+    ScheduleTask get(Long taskId);
 
     /**
      * 获取任务池中存在的全部任务
      * @return 任务池中存在的全部任务
      */
-    List<ScheduleTask> getScheduleTask();
+    List<ScheduleTask> getAll();
 
     /**
      * 添加任务
      * @param scheduleTask
      * @return
      */
-    void addScheduleTask(ScheduleTask scheduleTask);
+    void add(ScheduleTask scheduleTask);
 
     /**
      * 移除任务
      * @param scheduleTask
      * @return
      */
-    void removeScheduleTask(ScheduleTask scheduleTask);
+    void remove(ScheduleTask scheduleTask);
 }
