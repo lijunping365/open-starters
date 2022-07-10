@@ -33,26 +33,25 @@ public class DefaultTaskProducerScheduler implements TaskProducerScheduler, Init
     private void start(){
         producerScheduleThread = new Thread(()->{
             while (!producerScheduleThreadToStop) {
+                threadSleep();
                 //获取锁并加锁
                 Collection<ScheduleTask> taskList = scheduleTaskPoolManager.getAll();
                 if (CollectionUtils.isEmpty(taskList)){
-                    return;
+                    continue;
                 }
                 long nowTime = System.currentTimeMillis();
-                long maxTime = nowTime + 5000;
+                long maxTime = nowTime + 2000;
                 taskList = taskList.stream().filter(e->e.getNextTime() <= maxTime).collect(Collectors.toList());
                 if (CollectionUtils.isEmpty(taskList)){
-                    return;
+                    continue;
                 }
-
                 for (ScheduleTask scheduleTask : taskList) {
                     int key = (int)((scheduleTask.getNextTime()/1000)%60);
                     putTimeWheel(key, scheduleTask.getTaskId());
                     refreshNextTime(scheduleTask);
+                    log.info("producer schedule task key:{}, result {}", key, scheduleTask);
                 }
-
                 // 释放锁
-                threadSleep();
             }
         });
         producerScheduleThread.setDaemon(true);

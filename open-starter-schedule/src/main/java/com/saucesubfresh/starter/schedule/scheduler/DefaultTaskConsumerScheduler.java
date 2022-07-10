@@ -37,9 +37,9 @@ public class DefaultTaskConsumerScheduler implements TaskConsumerScheduler, Init
                 threadSleep();
                 int nowSecond = Calendar.getInstance().get(Calendar.SECOND);
                 List<Long> taskIds = takeTask((nowSecond) % 60);
-
+                log.info("load schedule task key:{}, result {}", (nowSecond) % 60, taskIds);
                 if (CollectionUtils.isEmpty(taskIds)){
-                    return;
+                    continue;
                 }
                 trigger(taskIds);
             }
