@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface ScheduleTaskExecutor {
 
-    void execute(List<ScheduleTask> scheduleTaskList);
+    void execute(List<Long> taskList);
 }

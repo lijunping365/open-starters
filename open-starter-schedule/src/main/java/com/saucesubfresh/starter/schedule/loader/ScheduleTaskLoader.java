@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.schedule.service;
+package com.saucesubfresh.starter.schedule.loader;
 
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 

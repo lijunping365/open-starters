@@ -1,24 +1,25 @@
 package com.saucesubfresh.starter.schedule.config;
 
 
-import com.saucesubfresh.starter.schedule.manage.ScheduleTaskManage;
-import com.saucesubfresh.starter.schedule.manage.RedisScheduleTaskManage;
 import com.saucesubfresh.starter.schedule.executor.DefaultScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
+import com.saucesubfresh.starter.schedule.initializer.DefaultScheduleTaskInitializer;
+import com.saucesubfresh.starter.schedule.initializer.ScheduleTaskInitializer;
+import com.saucesubfresh.starter.schedule.loader.DefaultScheduleTaskLoader;
+import com.saucesubfresh.starter.schedule.loader.ScheduleTaskLoader;
+import com.saucesubfresh.starter.schedule.manager.HashedWheelScheduleTaskQueueManager;
+import com.saucesubfresh.starter.schedule.manager.LocalScheduleTaskPoolManager;
+import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
+import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
-import com.saucesubfresh.starter.schedule.service.DefaultScheduleTaskLoader;
-import com.saucesubfresh.starter.schedule.service.ScheduleTaskLoader;
-import com.saucesubfresh.starter.schedule.thread.TaskThreadPoolExecutor;
-import com.saucesubfresh.starter.schedule.trigger.DefaultScheduleTaskTrigger;
-import com.saucesubfresh.starter.schedule.trigger.ScheduleTaskTrigger;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import com.saucesubfresh.starter.schedule.scheduler.DefaultTaskConsumerScheduler;
+import com.saucesubfresh.starter.schedule.scheduler.DefaultTaskProducerScheduler;
+import com.saucesubfresh.starter.schedule.scheduler.TaskConsumerScheduler;
+import com.saucesubfresh.starter.schedule.scheduler.TaskProducerScheduler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
-
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author : lijunping
@@ -31,11 +32,27 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  @ConditionalOnBean(RedisTemplate.class)
-  public ScheduleTaskManage scheduleTaskManage(ScheduleProperties scheduleProperties,
-                                               ScheduleTaskLoader scheduleTaskLoader,
-                                               RedisTemplate<String, Object> redisTemplate){
-    return new RedisScheduleTaskManage(scheduleProperties, scheduleTaskLoader, redisTemplate);
+  public ScheduleTaskPoolManager scheduleTaskManager(){
+    return new LocalScheduleTaskPoolManager();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ScheduleTaskQueueManager scheduleTaskQueueManager(){
+    return new HashedWheelScheduleTaskQueueManager();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ScheduleTaskLoader scheduleTaskLoader(){
+    return new DefaultScheduleTaskLoader();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ScheduleTaskInitializer taskInitializer(ScheduleTaskLoader scheduleTaskLoader,
+                                                 ScheduleTaskPoolManager scheduleTaskPoolManager){
+    return new DefaultScheduleTaskInitializer(scheduleTaskLoader, scheduleTaskPoolManager);
   }
 
   @Bean
@@ -46,21 +63,16 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskTrigger scheduleTaskTrigger(ThreadPoolExecutor executor,
-                                                 ScheduleTaskManage scheduleTaskManage,
-                                                 ScheduleTaskExecutor scheduleTaskExecutor){
-    return new DefaultScheduleTaskTrigger(executor, scheduleTaskManage, scheduleTaskExecutor);
+  public TaskProducerScheduler taskProducerScheduler(ScheduleTaskPoolManager scheduleTaskPoolManager,
+                                                     ScheduleTaskQueueManager scheduleTaskQueueManager){
+    return new DefaultTaskProducerScheduler(scheduleTaskPoolManager, scheduleTaskQueueManager);
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public ThreadPoolExecutor threadPoolExecutor(ScheduleProperties properties){
-    return new TaskThreadPoolExecutor(properties);
+  public TaskConsumerScheduler taskConsumerScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
+                                                     ScheduleTaskQueueManager scheduleTaskQueueManager){
+    return new DefaultTaskConsumerScheduler(scheduleTaskExecutor, scheduleTaskQueueManager);
   }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public ScheduleTaskLoader scheduleTaskLoader(){
-    return new DefaultScheduleTaskLoader();
-  }
 }

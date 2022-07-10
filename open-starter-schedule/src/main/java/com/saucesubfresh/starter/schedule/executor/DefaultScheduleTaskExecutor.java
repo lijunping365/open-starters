@@ -12,7 +12,7 @@ import java.util.List;
 public class DefaultScheduleTaskExecutor implements ScheduleTaskExecutor{
 
     @Override
-    public void execute(List<ScheduleTask> scheduleTaskList) {
-        log.info("execute task {}", scheduleTaskList);
+    public void execute(List<Long> taskList) {
+        log.info("execute task {}", taskList);
     }
 }
