@@ -1,11 +1,14 @@
 package com.saucesubfresh.starter.schedule.executor;
 
-import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
-
 import java.util.List;
 
 /**
- * 调度任务执行器
+ * <p>
+ *  调度任务执行器
+ *
+ *  建议使用多线程执行防止任务发生阻塞
+ * </p>
+ *
  * @author lijunping on 2022/1/20
  */
 public interface ScheduleTaskExecutor {
