@@ -4,6 +4,7 @@ import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
@@ -12,12 +13,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * 调度任务生产者，每秒执行一次
+ * 调度任务生产者
  * @author: 李俊平
  * @Date: 2022-07-10 15:23
  */
 @Slf4j
-public class DefaultTaskProducerScheduler implements TaskProducerScheduler, InitializingBean {
+public class DefaultTaskProducerScheduler implements TaskProducerScheduler, InitializingBean, DisposableBean {
     private Thread producerScheduleThread;
     public static final long PRE_READ_MS = 5000;
     private volatile boolean producerScheduleThreadToStop = false;
@@ -75,6 +76,13 @@ public class DefaultTaskProducerScheduler implements TaskProducerScheduler, Init
         log.info("producerScheduleThread start succeed");
     }
 
+    @Override
+    public void destroy() throws Exception {
+        producerScheduleThreadToStop = true;
+        stopThread(producerScheduleThread);
+        log.info("producerScheduleThread stop success");
+    }
+
     private void start(){
         producerScheduleThread = new Thread(()->{
             while (!producerScheduleThreadToStop) {
@@ -98,11 +106,44 @@ public class DefaultTaskProducerScheduler implements TaskProducerScheduler, Init
         }
     }
 
+    /**
+     * 放入到时间轮（任务队列）中
+     * @param key
+     * @param taskId
+     */
     private void putTimeWheel(int key, long taskId){
         scheduleTaskQueueManager.put(key, taskId);
     }
 
+    /**
+     * 更新任务的下次执行时间
+     * @param scheduleTask
+     */
     private void refreshNextTime(ScheduleTask scheduleTask){
         scheduleTaskPoolManager.add(scheduleTask);
+    }
+
+    /**
+     * 停止线程
+     * @param thread 要停止的线程
+     */
+    private void stopThread(Thread thread){
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        if (thread.getState() == Thread.State.TERMINATED){
+            return;
+        }
+
+        // interrupt and wait
+        thread.interrupt();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

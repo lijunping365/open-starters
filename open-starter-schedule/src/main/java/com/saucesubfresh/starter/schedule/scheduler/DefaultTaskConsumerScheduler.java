@@ -3,6 +3,7 @@ package com.saucesubfresh.starter.schedule.scheduler;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
@@ -11,12 +12,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 调度任务消费者，每秒执行一次
+ * 调度任务消费者
  * @author: 李俊平
  * @Date: 2022-07-10 15:23
  */
 @Slf4j
-public class DefaultTaskConsumerScheduler implements TaskConsumerScheduler, InitializingBean {
+public class DefaultTaskConsumerScheduler implements TaskConsumerScheduler, InitializingBean, DisposableBean {
 
     private Thread consumerScheduleThread;
     private volatile boolean consumerScheduleThreadToStop = false;
@@ -55,6 +56,13 @@ public class DefaultTaskConsumerScheduler implements TaskConsumerScheduler, Init
         log.info("consumerScheduleThread start succeed");
     }
 
+    @Override
+    public void destroy() throws Exception {
+        consumerScheduleThreadToStop = true;
+        stopThread(consumerScheduleThread);
+        log.info("consumerScheduleThread stop success");
+    }
+
     public void start(){
         consumerScheduleThread = new Thread(()->{
             while (!consumerScheduleThreadToStop) {
@@ -78,11 +86,44 @@ public class DefaultTaskConsumerScheduler implements TaskConsumerScheduler, Init
         }
     }
 
+    /**
+     * 从时间轮（任务队列）中取出对应的任务列表
+     * @param key
+     * @return
+     */
     private List<Long> takeTask(int key){
         return scheduleTaskQueueManager.remove(key);
     }
 
+    /**
+     * 触发任务执行
+     * @param taskIds
+     */
     private void trigger(List<Long> taskIds){
         scheduleTaskExecutor.execute(taskIds);
+    }
+
+    /**
+     * 停止线程
+     * @param thread 要停止的线程
+     */
+    private void stopThread(Thread thread){
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        if (thread.getState() == Thread.State.TERMINATED){
+            return;
+        }
+
+        // interrupt and wait
+        thread.interrupt();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }
