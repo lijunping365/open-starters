@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
+ * 适用于单节点
  * @author lijunping on 2022/7/8
  */
 public class LocalScheduleTaskPoolManager extends AbstractScheduleTaskPoolManager {

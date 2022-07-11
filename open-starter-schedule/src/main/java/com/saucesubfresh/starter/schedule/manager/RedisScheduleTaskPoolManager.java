@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 适用于多节点
  * @author lijunping on 2022/1/20
  */
 @Slf4j

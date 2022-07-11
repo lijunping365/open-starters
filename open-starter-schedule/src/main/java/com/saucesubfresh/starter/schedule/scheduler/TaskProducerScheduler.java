@@ -7,4 +7,5 @@ package com.saucesubfresh.starter.schedule.scheduler;
  */
 public interface TaskProducerScheduler {
 
+    void producer();
 }

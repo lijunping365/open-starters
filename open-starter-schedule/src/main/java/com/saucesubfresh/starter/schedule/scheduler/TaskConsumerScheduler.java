@@ -6,4 +6,5 @@ package com.saucesubfresh.starter.schedule.scheduler;
  */
 public interface TaskConsumerScheduler {
 
+    void consumer();
 }

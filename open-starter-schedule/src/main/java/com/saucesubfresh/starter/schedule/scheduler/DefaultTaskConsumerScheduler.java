@@ -31,28 +31,41 @@ public class DefaultTaskConsumerScheduler implements TaskConsumerScheduler, Init
         this.scheduleTaskQueueManager = scheduleTaskQueueManager;
     }
 
-    public void start(){
-        consumerScheduleThread = new Thread(()->{
-            while (!consumerScheduleThreadToStop) {
-                threadSleep();
-                int nowSecond = Calendar.getInstance().get(Calendar.SECOND);
-                List<Long> taskIds = takeTask((nowSecond) % 60);
-                log.info("load schedule task key:{}, result {}", (nowSecond) % 60, taskIds);
-                if (CollectionUtils.isEmpty(taskIds)){
-                    continue;
-                }
-                trigger(taskIds);
+    @Override
+    public void consumer() {
+        try {
+            int nowSecond = Calendar.getInstance().get(Calendar.SECOND);
+            List<Long> taskIds = takeTask((nowSecond) % 60);
+            log.info("load schedule task key:{}, result {}", (nowSecond) % 60, taskIds);
+            if (CollectionUtils.isEmpty(taskIds)){
+                return;
             }
-        });
-        consumerScheduleThread.setDaemon(true);
-        consumerScheduleThread.setName("consumerScheduleThread");
-        consumerScheduleThread.start();
+            trigger(taskIds);
+            taskIds.clear();
+        }catch (Exception e){
+            if (!consumerScheduleThreadToStop) {
+                log.error("consumerScheduleThread error:{}", e.getMessage(), e);
+            }
+        }
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         start();
         log.info("consumerScheduleThread start succeed");
+    }
+
+    public void start(){
+        consumerScheduleThread = new Thread(()->{
+            while (!consumerScheduleThreadToStop) {
+                threadSleep();
+                this.consumer();
+            }
+            log.info("consumerScheduleThread stop");
+        });
+        consumerScheduleThread.setDaemon(true);
+        consumerScheduleThread.setName("consumerScheduleThread");
+        consumerScheduleThread.start();
     }
 
     private void threadSleep(){
