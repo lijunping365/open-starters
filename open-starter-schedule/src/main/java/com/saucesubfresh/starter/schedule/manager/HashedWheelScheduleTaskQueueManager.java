@@ -18,9 +18,14 @@ public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueMan
 
     @Override
     public void put(Integer key, Long taskId) {
+        boolean exist = true;
         List<Long> taskList = timeWheel.get(key);
         if (CollectionUtils.isEmpty(taskList)) {
             taskList = new ArrayList<>();
+            exist = false;
+        }
+        if (exist && taskList.contains(taskId)){
+            return;
         }
         taskList.add(taskId);
         timeWheel.put(key, taskList);
