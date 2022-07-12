@@ -20,9 +20,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultTaskProducerScheduler implements TaskProducerScheduler, InitializingBean, DisposableBean {
     private Thread producerScheduleThread;
-    public static final long PRE_READ_MS = 5000;
+    public static final long PRE_READ_MS = 1000;
     private volatile boolean producerScheduleThreadToStop = false;
-
     private final ScheduleTaskPoolManager scheduleTaskPoolManager;
     private final ScheduleTaskQueueManager scheduleTaskQueueManager;
 
@@ -41,25 +40,17 @@ public class DefaultTaskProducerScheduler implements TaskProducerScheduler, Init
                 return;
             }
             long nowTime = System.currentTimeMillis();
-            long maxTime = nowTime + PRE_READ_MS;
-            taskList = taskList.stream().filter(e->e.getNextTime() <= maxTime).collect(Collectors.toList());
+            log.info("生产线程当前时间: {}", nowTime);
+            taskList = taskList.stream()
+                    .filter(e->e.getNextTime() >= nowTime && e.getNextTime() < nowTime + PRE_READ_MS)
+                    .collect(Collectors.toList());
             if (CollectionUtils.isEmpty(taskList)){
                 return;
             }
             for (ScheduleTask scheduleTask : taskList) {
-                if (nowTime > scheduleTask.getNextTime() + PRE_READ_MS) {
-                    log.info("刷新下次执行时间");
-                    refreshNextTime(scheduleTask);
-                } else if (nowTime > scheduleTask.getNextTime()) {
-                    // 触发
-                    log.info("应该触发任务");
-                    refreshNextTime(scheduleTask);
-                } else {
-                    int key = (int)((scheduleTask.getNextTime()/1000)%60);
-                    putTimeWheel(key, scheduleTask.getTaskId());
-                    refreshNextTime(scheduleTask);
-                    log.info("producer schedule task key:{}, result {}", key, scheduleTask);
-                }
+                int key = (int)((scheduleTask.getNextTime() / 1000) % 60);
+                putTimeWheel(key, scheduleTask.getTaskId());
+                log.info("producer schedule task key:{}, result {}", key, scheduleTask);
             }
         } catch (Exception e){
             if (!producerScheduleThreadToStop) {
@@ -113,14 +104,6 @@ public class DefaultTaskProducerScheduler implements TaskProducerScheduler, Init
      */
     private void putTimeWheel(int key, long taskId){
         scheduleTaskQueueManager.put(key, taskId);
-    }
-
-    /**
-     * 更新任务的下次执行时间
-     * @param scheduleTask
-     */
-    private void refreshNextTime(ScheduleTask scheduleTask){
-        scheduleTaskPoolManager.add(scheduleTask);
     }
 
     /**

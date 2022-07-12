@@ -38,7 +38,6 @@ public class DefaultTaskRefreshScheduler implements TaskRefreshScheduler, Initia
             long nowTime = System.currentTimeMillis();
             log.info("刷新线程当前时间: {}", nowTime);
             taskList = taskList.stream().filter(e->e.getNextTime() <= nowTime).collect(Collectors.toList());
-
             if (CollectionUtils.isEmpty(taskList)){
                 return;
             }

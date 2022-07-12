@@ -12,10 +12,7 @@ import com.saucesubfresh.starter.schedule.manager.LocalScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
-import com.saucesubfresh.starter.schedule.scheduler.DefaultTaskConsumerScheduler;
-import com.saucesubfresh.starter.schedule.scheduler.DefaultTaskProducerScheduler;
-import com.saucesubfresh.starter.schedule.scheduler.TaskConsumerScheduler;
-import com.saucesubfresh.starter.schedule.scheduler.TaskProducerScheduler;
+import com.saucesubfresh.starter.schedule.scheduler.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -73,6 +70,12 @@ public class ScheduleTaskAutoConfiguration {
   public TaskConsumerScheduler taskConsumerScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
                                                      ScheduleTaskQueueManager scheduleTaskQueueManager){
     return new DefaultTaskConsumerScheduler(scheduleTaskExecutor, scheduleTaskQueueManager);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public TaskRefreshScheduler taskRefreshScheduler(ScheduleTaskPoolManager scheduleTaskPoolManager){
+    return new DefaultTaskRefreshScheduler(scheduleTaskPoolManager);
   }
 
 }
