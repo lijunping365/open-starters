@@ -15,11 +15,11 @@ import java.util.Objects;
  *  2. 创建时间
  * @author lijunping on 2022/7/13
  */
-public abstract class AbstractFillPipeline implements FillPipeline{
+public abstract class AbstractValuePipeline implements ValuePipeline {
 
     private final KeyGenerator keyGenerator;
 
-    protected AbstractFillPipeline(KeyGenerator keyGenerator) {
+    protected AbstractValuePipeline(KeyGenerator keyGenerator) {
         this.keyGenerator = keyGenerator;
     }
 

@@ -44,8 +44,8 @@ public class CrawlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public FillPipeline fillPipeline(KeyGenerator keyGenerator){
-        return new DefaultFillPipeline(keyGenerator);
+    public ValuePipeline fillPipeline(KeyGenerator keyGenerator){
+        return new DefaultValuePipeline(keyGenerator);
     }
 
     @Bean

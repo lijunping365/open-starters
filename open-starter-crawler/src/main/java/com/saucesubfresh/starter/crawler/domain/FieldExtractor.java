@@ -25,6 +25,11 @@ public class FieldExtractor {
     private String fieldName;
 
     /**
+     * 字段默认值，如果未采到使用该默认值
+     */
+    private String defaultValue;
+
+    /**
      * 定义提取器是否返回多个结果，对应【循环】
      */
     private boolean multi = false;

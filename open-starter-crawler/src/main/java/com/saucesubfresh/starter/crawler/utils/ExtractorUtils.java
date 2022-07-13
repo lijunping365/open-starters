@@ -42,5 +42,21 @@ public class ExtractorUtils {
         return fieldExtractors;
     }
 
-
+    public static Selector getSelector(ExpressionType type, String value) {
+        Selector selector;
+        switch (type) {
+            case Css:
+                selector = new CssSelector(value);
+                break;
+            case Regex:
+                selector = new RegexSelector(value);
+                break;
+            case JsonPath:
+                selector = new JsonPathSelector(value);
+                break;
+            default:
+                selector = new XpathSelector(value);
+        }
+        return selector;
+    }
 }

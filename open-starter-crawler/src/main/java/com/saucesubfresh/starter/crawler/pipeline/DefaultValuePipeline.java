@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 /**
  * @author lijunping on 2022/7/13
  */
-public class DefaultFillPipeline extends AbstractFillPipeline{
+public class DefaultValuePipeline extends AbstractValuePipeline {
 
     private static final String ID = "id";
     private static final String CREATE_TIME = "createTime";
 
-    public DefaultFillPipeline(KeyGenerator keyGenerator) {
+    public DefaultValuePipeline(KeyGenerator keyGenerator) {
         super(keyGenerator);
     }
 
