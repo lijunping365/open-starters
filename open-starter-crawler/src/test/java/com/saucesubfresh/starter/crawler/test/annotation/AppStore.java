@@ -5,7 +5,7 @@ import com.saucesubfresh.starter.crawler.annotation.ExtractBy;
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
-import com.saucesubfresh.starter.crawler.parser.ExtractorUtils;
+import com.saucesubfresh.starter.crawler.utils.ExtractorUtils;
 import lombok.Data;
 
 import java.util.List;

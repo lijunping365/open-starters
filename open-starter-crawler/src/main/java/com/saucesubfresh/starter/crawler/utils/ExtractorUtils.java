@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.crawler.parser;
+package com.saucesubfresh.starter.crawler.utils;
 
 
 import com.saucesubfresh.starter.crawler.annotation.ExtractBy;
