@@ -1,8 +1,11 @@
 package com.saucesubfresh.starter.crawler.parser.provider;
 
+import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.ReadContext;
 import com.saucesubfresh.starter.crawler.parser.Selector;
+import com.saucesubfresh.starter.crawler.utils.JSON;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -21,7 +24,8 @@ public class JsonPathSelector implements Selector {
     private final ReadContext ctx;
 
     public JsonPathSelector(String jsonPathStr) {
-        ctx = JsonPath.parse(jsonPathStr);
+        Configuration conf = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
+        ctx = JsonPath.using(conf).parse(jsonPathStr);
     }
 
     @Override
@@ -37,14 +41,6 @@ public class JsonPathSelector implements Selector {
             }
         }
         return object.toString();
-    }
-
-    private String toString(Object object) {
-        if (object instanceof Map) {
-            return JSON.toJSON(object);
-        } else {
-            return String.valueOf(object);
-        }
     }
 
     @Override
@@ -63,5 +59,13 @@ public class JsonPathSelector implements Selector {
             list.add(toString(object));
         }
         return list;
+    }
+
+    private String toString(Object object) {
+        if (object instanceof Map) {
+            return JSON.toJSON(object);
+        } else {
+            return String.valueOf(object);
+        }
     }
 }

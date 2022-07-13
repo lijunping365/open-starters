@@ -2,13 +2,18 @@ package com.saucesubfresh.starter.crawler.annotation;
 
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * xxxx
+ */
 
-@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+@Documented
 @Target(ElementType.FIELD)
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 public @interface ExtractBy {
 
     /**

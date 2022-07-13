@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author lijunping on 2022/4/18
  */
-public abstract class BaseElementSelector implements Selector, ElementSelector{
+public abstract class BaseElementSelector implements ElementSelector{
 
     @Override
     public String select(String text) {
@@ -28,14 +28,14 @@ public abstract class BaseElementSelector implements Selector, ElementSelector{
         }
     }
 
-    public Element selectElement(String text) {
+    protected Element selectElement(String text) {
         if (text != null) {
             return selectElement(Jsoup.parse(text));
         }
         return null;
     }
 
-    public List<Element> selectElements(String text) {
+    protected List<Element> selectElements(String text) {
         if (text != null) {
             return selectElements(Jsoup.parse(text));
         } else {

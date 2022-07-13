@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author lijunping on 2022/4/18
  */
-public interface ElementSelector {
+public interface ElementSelector extends Selector{
 
     /**
      * Extract single result in text.<br>

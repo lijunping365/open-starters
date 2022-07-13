@@ -20,7 +20,7 @@ public class CssSelector extends BaseElementSelector {
 
     private String selectorText;
 
-    private String attrName;
+    private String attrName = "innerHtml";
 
     public CssSelector(String selectorText) {
         this.selectorText = selectorText;
@@ -29,31 +29,6 @@ public class CssSelector extends BaseElementSelector {
     public CssSelector(String selectorText, String attrName) {
         this.selectorText = selectorText;
         this.attrName = attrName;
-    }
-
-    private String getValue(Element element) {
-        if (attrName == null) {
-            return element.outerHtml();
-        } else if ("innerHtml".equalsIgnoreCase(attrName)) {
-            return element.html();
-        } else if ("text".equalsIgnoreCase(attrName)) {
-            return getText(element);
-        } else if ("allText".equalsIgnoreCase(attrName)) {
-            return element.text();
-        } else {
-            return element.attr(attrName);
-        }
-    }
-
-    protected String getText(Element element) {
-        StringBuilder accum = new StringBuilder();
-        for (Node node : element.childNodes()) {
-            if (node instanceof TextNode) {
-                TextNode textNode = (TextNode) node;
-                accum.append(textNode.text());
-            }
-        }
-        return accum.toString();
     }
 
     @Override
@@ -97,5 +72,30 @@ public class CssSelector extends BaseElementSelector {
     @Override
     public boolean hasAttribute() {
         return attrName != null;
+    }
+
+    private String getValue(Element element) {
+        if (attrName == null) {
+            return element.outerHtml();
+        } else if ("innerHtml".equalsIgnoreCase(attrName)) {
+            return element.html();
+        } else if ("text".equalsIgnoreCase(attrName)) {
+            return getText(element);
+        } else if ("allText".equalsIgnoreCase(attrName)) {
+            return element.text();
+        } else {
+            return element.attr(attrName);
+        }
+    }
+
+    protected String getText(Element element) {
+        StringBuilder accum = new StringBuilder();
+        for (Node node : element.childNodes()) {
+            if (node instanceof TextNode) {
+                TextNode textNode = (TextNode) node;
+                accum.append(textNode.text());
+            }
+        }
+        return accum.toString();
     }
 }

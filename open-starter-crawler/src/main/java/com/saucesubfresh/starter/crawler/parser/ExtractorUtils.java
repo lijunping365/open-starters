@@ -1,9 +1,10 @@
-package com.saucesubfresh.starter.crawler.utils;
+package com.saucesubfresh.starter.crawler.parser;
 
 
 import com.saucesubfresh.starter.crawler.annotation.ExtractBy;
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
+import com.saucesubfresh.starter.crawler.parser.Selector;
 import com.saucesubfresh.starter.crawler.parser.provider.CssSelector;
 import com.saucesubfresh.starter.crawler.parser.provider.JsonPathSelector;
 import com.saucesubfresh.starter.crawler.parser.provider.RegexSelector;
@@ -41,21 +42,5 @@ public class ExtractorUtils {
         return fieldExtractors;
     }
 
-    public static Selector getSelector(ExpressionType type, String value) {
-        Selector selector;
-        switch (type) {
-            case Css:
-                selector = new CssSelector(value);
-                break;
-            case Regex:
-                selector = new RegexSelector(value);
-                break;
-            case JsonPath:
-                selector = new JsonPathSelector(value);
-                break;
-            default:
-                selector = new XpathSelector(value);
-        }
-        return selector;
-    }
+
 }

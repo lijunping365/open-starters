@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class XpathSelector extends BaseElementSelector {
 
-    private XPathEvaluator xPathEvaluator;
+    private final XPathEvaluator xPathEvaluator;
 
     public XpathSelector(String xpathStr) {
         this.xPathEvaluator = Xsoup.compile(xpathStr);

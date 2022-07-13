@@ -3,6 +3,7 @@ package com.saucesubfresh.starter.crawler.domain;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,9 +47,9 @@ public class SpiderRequest implements Serializable {
      */
     private String handlerName;
     /**
-     * 数据抽取规则， json 字符串
+     * 数据抽取规则
      */
-    private String extractRule;
+    private List<FieldExtractor> extract;
     /**
      * 下载重试次数
      */
