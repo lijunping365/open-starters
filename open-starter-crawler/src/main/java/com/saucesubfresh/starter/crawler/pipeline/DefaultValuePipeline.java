@@ -4,6 +4,7 @@ import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -49,7 +50,9 @@ public class DefaultValuePipeline extends AbstractValuePipeline {
             rowData.putIfAbsent(CREATE_TIME, time);
             // 处理默认值
             for (FieldExtractor extractor : fieldExtractors) {
-                rowData.putIfAbsent(extractor.getFieldName(), extractor.getDefaultValue());
+                if (StringUtils.isNotBlank(extractor.getDefaultValue())){
+                    rowData.putIfAbsent(extractor.getFieldName(), extractor.getDefaultValue());
+                }
             }
         }
     }
