@@ -47,6 +47,10 @@ public class DefaultValuePipeline extends AbstractValuePipeline {
             String uniqueId = super.getUniqueId(rowData, uniqueKeys, request.getSpiderId());
             rowData.putIfAbsent(ID, uniqueId);
             rowData.putIfAbsent(CREATE_TIME, time);
+            // 处理默认值
+            for (FieldExtractor extractor : fieldExtractors) {
+                rowData.putIfAbsent(extractor.getFieldName(), extractor.getDefaultValue());
+            }
         }
     }
 }
