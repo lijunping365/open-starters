@@ -18,4 +18,4 @@
   </a>
 </p>
 
-每个 starter 都有各自的 README 文件
+每个 starter 都有各自的 README 文件，欢迎 star，欢迎提交 pr
