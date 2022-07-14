@@ -40,11 +40,12 @@ public abstract class AbstractParserPipeline implements ParserPipeline {
         Map<String, Object> fields = new HashMap<>();
         JsonPathSelector jsonPathSelector = new JsonPathSelector(json);
         for (FieldExtractor extractor : fieldExtractors) {
+            String expressionValue = extractor.getExpressionValue();
             if (extractor.isMulti()){
-                List<String> results = jsonPathSelector.selectList(extractor.getExpressionValue());
+                List<String> results = jsonPathSelector.selectList(expressionValue);
                 fields.put(extractor.getFieldName(), results);
             }else {
-                String result = jsonPathSelector.select(extractor.getExpressionValue());
+                String result = jsonPathSelector.select(expressionValue);
                 fields.put(extractor.getFieldName(), result);
             }
         }
