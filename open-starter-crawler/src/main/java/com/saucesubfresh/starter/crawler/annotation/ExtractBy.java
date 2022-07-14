@@ -8,9 +8,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * xxxx
+ * 用于实体类
+ * @author lijunping on 2022/4/19
  */
-
 @Documented
 @Target(ElementType.FIELD)
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
