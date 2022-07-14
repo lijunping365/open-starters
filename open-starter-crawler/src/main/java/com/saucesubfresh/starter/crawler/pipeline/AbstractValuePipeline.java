@@ -7,10 +7,7 @@ import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -21,6 +18,8 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractValuePipeline implements ValuePipeline {
 
+    private static final String ID = "id";
+    private static final String CREATE_TIME = "createTime";
     private final KeyGenerator keyGenerator;
 
     protected AbstractValuePipeline(KeyGenerator keyGenerator) {
@@ -29,7 +28,23 @@ public abstract class AbstractValuePipeline implements ValuePipeline {
 
     @Override
     public void process(SpiderRequest request, SpiderResponse response) {
-        doFillValue(request, response);
+        List<FieldExtractor> fieldExtractors = request.getExtract();
+        List<Map<String, Object>> formatResult = response.getFormatResult();
+        if (CollectionUtils.isEmpty(formatResult)){
+            return;
+        }
+
+        List<String> uniqueKeys = getUniqueKeys(fieldExtractors);
+        for (Map<String, Object> rowData : formatResult) {
+            String uniqueId = getUniqueId(rowData, uniqueKeys, request.getSpiderId());
+            long time = new Date().getTime();
+            rowData.putIfAbsent(ID, uniqueId);
+            rowData.putIfAbsent(CREATE_TIME, time);
+            fieldExtractors.stream().filter(e-> StringUtils.isNotBlank(e.getDefaultValue())).forEach(e->{
+                rowData.putIfAbsent(e.getFieldName(), e.getDefaultValue());
+            });
+            doFillValue(request, rowData);
+        }
     }
 
     /**
@@ -64,6 +79,6 @@ public abstract class AbstractValuePipeline implements ValuePipeline {
         return keyGenerator.generate(spiderId + sb.toString());
     }
 
-    protected abstract void doFillValue(SpiderRequest request, SpiderResponse response);
+    protected abstract void doFillValue(SpiderRequest request, Map<String, Object> rowData);
 
 }
