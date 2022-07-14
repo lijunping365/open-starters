@@ -25,7 +25,7 @@ public abstract class AbstractValuePipeline implements ValuePipeline {
 
     @Override
     public void process(SpiderRequest request, SpiderResponse response) {
-        doFill(request, response);
+        doFillValue(request, response);
     }
 
     /**
@@ -44,6 +44,6 @@ public abstract class AbstractValuePipeline implements ValuePipeline {
         return keyGenerator.generate(spiderId + sb.toString());
     }
 
-    protected abstract void doFill(SpiderRequest request, SpiderResponse response);
+    protected abstract void doFillValue(SpiderRequest request, SpiderResponse response);
 
 }

@@ -32,6 +32,7 @@ public class ExtractorUtils {
 
             FieldExtractor fieldExtractor = new FieldExtractor();
             fieldExtractor.setExpressionType(extractBy.type().name());
+            fieldExtractor.setDefaultValue(extractBy.defaultValue());
             fieldExtractor.setExpressionValue(extractBy.value());
             fieldExtractor.setFieldName(field.getName());
             fieldExtractor.setMulti(extractBy.multi());

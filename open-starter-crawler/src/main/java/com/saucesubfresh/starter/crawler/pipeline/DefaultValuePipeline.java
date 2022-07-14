@@ -26,7 +26,7 @@ public class DefaultValuePipeline extends AbstractValuePipeline {
     }
 
     @Override
-    protected void doFill(SpiderRequest request, SpiderResponse response) {
+    protected void doFillValue(SpiderRequest request, SpiderResponse response) {
         List<FieldExtractor> fieldExtractors = request.getExtract();
         List<Map<String, Object>> formatResult = response.getFormatResult();
         if (CollectionUtils.isEmpty(formatResult)){
