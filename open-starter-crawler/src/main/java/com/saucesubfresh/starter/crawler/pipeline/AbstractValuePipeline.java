@@ -1,13 +1,17 @@
 package com.saucesubfresh.starter.crawler.pipeline;
 
+import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 数据填充
@@ -26,6 +30,22 @@ public abstract class AbstractValuePipeline implements ValuePipeline {
     @Override
     public void process(SpiderRequest request, SpiderResponse response) {
         doFillValue(request, response);
+    }
+
+    /**
+     * 如果未指定唯一 id，将使用第一个字段为唯一 id
+     *
+     * @return
+     */
+    protected List<String> getUniqueKeys(List<FieldExtractor> fieldExtractors){
+        List<String> uniqueKeys = fieldExtractors.stream()
+                .filter(FieldExtractor::isUnique)
+                .map(FieldExtractor::getFieldName)
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(uniqueKeys)){
+            uniqueKeys = Collections.singletonList(fieldExtractors.get(0).getFieldName());
+        }
+        return uniqueKeys;
     }
 
     /**
