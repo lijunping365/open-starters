@@ -8,5 +8,10 @@ import com.saucesubfresh.starter.cache.exception.CacheException;
  */
 public interface CacheExecutorErrorHandler {
 
+    /**
+     * 缓存操作执行失败后被调用
+     *
+     * @param cacheException 异常信息
+     */
     void onExecuteError(CacheException cacheException);
 }
