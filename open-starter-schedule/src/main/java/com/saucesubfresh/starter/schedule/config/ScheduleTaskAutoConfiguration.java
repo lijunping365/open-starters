@@ -1,8 +1,8 @@
 package com.saucesubfresh.starter.schedule.config;
 
 
-import com.saucesubfresh.starter.schedule.DefaultTaskScheduler;
-import com.saucesubfresh.starter.schedule.TaskScheduler;
+import com.saucesubfresh.starter.schedule.DefaultTaskJobScheduler;
+import com.saucesubfresh.starter.schedule.TaskJobScheduler;
 import com.saucesubfresh.starter.schedule.executor.DefaultScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.initializer.DefaultScheduleTaskInitializer;
@@ -54,18 +54,18 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskScheduler taskScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
-                                     ScheduleTaskPoolManager scheduleTaskPoolManager,
-                                     ScheduleTaskQueueManager scheduleTaskQueueManager){
-    return new DefaultTaskScheduler(scheduleTaskExecutor, scheduleTaskPoolManager, scheduleTaskQueueManager);
+  public TaskJobScheduler taskJobScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
+                                           ScheduleTaskPoolManager scheduleTaskPoolManager,
+                                           ScheduleTaskQueueManager scheduleTaskQueueManager){
+    return new DefaultTaskJobScheduler(scheduleTaskExecutor, scheduleTaskPoolManager, scheduleTaskQueueManager);
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskInitializer taskInitializer(TaskScheduler taskScheduler,
+  public ScheduleTaskInitializer taskInitializer(TaskJobScheduler taskJobScheduler,
                                                  ScheduleTaskLoader scheduleTaskLoader,
                                                  ScheduleTaskPoolManager scheduleTaskPoolManager,
                                                  ScheduleTaskQueueManager scheduleTaskQueueManager){
-    return new DefaultScheduleTaskInitializer(taskScheduler, scheduleTaskLoader, scheduleTaskPoolManager, scheduleTaskQueueManager);
+    return new DefaultScheduleTaskInitializer(taskJobScheduler, scheduleTaskLoader, scheduleTaskPoolManager, scheduleTaskQueueManager);
   }
 }

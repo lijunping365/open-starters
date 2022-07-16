@@ -6,7 +6,7 @@ package com.saucesubfresh.starter.schedule;
  * @author: 李俊平
  * @Date: 2022-07-16 11:49
  */
-public interface TaskScheduler {
+public interface TaskJobScheduler {
 
     /**
      * 启动定时器

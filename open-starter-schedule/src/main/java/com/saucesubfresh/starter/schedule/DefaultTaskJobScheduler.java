@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2022-07-16 11:49
  */
 @Slf4j
-public class DefaultTaskScheduler implements TaskScheduler{
+public class DefaultTaskJobScheduler implements TaskJobScheduler {
 
     private Thread scheduleThread;
     private volatile boolean scheduleThreadToStop = false;
@@ -25,9 +25,9 @@ public class DefaultTaskScheduler implements TaskScheduler{
     private final ScheduleTaskPoolManager scheduleTaskPoolManager;
     private final ScheduleTaskQueueManager scheduleTaskQueueManager;
 
-    public DefaultTaskScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
-                                ScheduleTaskPoolManager scheduleTaskPoolManager,
-                                ScheduleTaskQueueManager scheduleTaskQueueManager) {
+    public DefaultTaskJobScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
+                                   ScheduleTaskPoolManager scheduleTaskPoolManager,
+                                   ScheduleTaskQueueManager scheduleTaskQueueManager) {
         this.scheduleTaskExecutor = scheduleTaskExecutor;
         this.scheduleTaskPoolManager = scheduleTaskPoolManager;
         this.scheduleTaskQueueManager = scheduleTaskQueueManager;

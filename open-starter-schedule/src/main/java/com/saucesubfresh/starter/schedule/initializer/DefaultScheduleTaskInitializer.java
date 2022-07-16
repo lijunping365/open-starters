@@ -5,7 +5,7 @@ import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.loader.ScheduleTaskLoader;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
-import com.saucesubfresh.starter.schedule.TaskScheduler;
+import com.saucesubfresh.starter.schedule.TaskJobScheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,16 +19,16 @@ import java.util.List;
 @Slf4j
 public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, InitializingBean, DisposableBean {
 
-    private final TaskScheduler taskScheduler;
+    private final TaskJobScheduler taskJobScheduler;
     private final ScheduleTaskLoader scheduleTaskLoader;
     private final ScheduleTaskPoolManager scheduleTaskPoolManager;
     private final ScheduleTaskQueueManager scheduleTaskQueueManager;
 
-    public DefaultScheduleTaskInitializer(TaskScheduler taskScheduler,
+    public DefaultScheduleTaskInitializer(TaskJobScheduler taskJobScheduler,
                                           ScheduleTaskLoader scheduleTaskLoader,
                                           ScheduleTaskPoolManager scheduleTaskPoolManager,
                                           ScheduleTaskQueueManager scheduleTaskQueueManager) {
-        this.taskScheduler = taskScheduler;
+        this.taskJobScheduler = taskJobScheduler;
         this.scheduleTaskLoader = scheduleTaskLoader;
         this.scheduleTaskPoolManager = scheduleTaskPoolManager;
         this.scheduleTaskQueueManager = scheduleTaskQueueManager;
@@ -42,7 +42,7 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
             long nextTime = CronHelper.getNextTime(task.getCronExpression());
             scheduleTaskQueueManager.put(task.getTaskId(), nextTime);
         }
-        taskScheduler.start();
+        taskJobScheduler.start();
     }
 
     @Override
@@ -57,6 +57,6 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
 
     @Override
     public void destroy() throws Exception {
-        taskScheduler.stop();
+        taskJobScheduler.stop();
     }
 }
