@@ -10,15 +10,16 @@ public interface ScheduleTaskQueueManager {
 
     /**
      * 任务放入到队列
-     * @param key
+     *
      * @param taskId
+     * @param nextTime
      */
-    void put(Integer key, Long taskId);
+    void put(Long taskId, Long nextTime);
 
     /**
-     * 将任务从队列移除并返回被移除的任务
-     * @param key
+     * 从任务队列获取任务
+     *
      * @return
      */
-    List<Long> remove(Integer key);
+    List<Long> take();
 }

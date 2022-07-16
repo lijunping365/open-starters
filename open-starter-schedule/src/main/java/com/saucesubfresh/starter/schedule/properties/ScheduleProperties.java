@@ -14,5 +14,5 @@ public class ScheduleProperties {
     /**
      * 任务队列名称 （zset）
      */
-    private String taskQueueName = "schedule:task:queue";
+    private String taskPoolName = "schedule:task:pool";
 }

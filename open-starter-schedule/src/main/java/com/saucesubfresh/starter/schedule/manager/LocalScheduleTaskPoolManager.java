@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * 适用于单节点
  * @author lijunping on 2022/7/8
  */
-public class LocalScheduleTaskPoolManager extends AbstractScheduleTaskPoolManager {
+public class LocalScheduleTaskPoolManager implements ScheduleTaskPoolManager {
 
     private final ConcurrentMap<Long, ScheduleTask> taskMap = new ConcurrentHashMap<>(16);
 
@@ -22,9 +22,6 @@ public class LocalScheduleTaskPoolManager extends AbstractScheduleTaskPoolManage
     public void addAll(List<ScheduleTask> taskList) {
         if (CollectionUtils.isEmpty(taskList)){
             return;
-        }
-        for (ScheduleTask scheduleTask : taskList) {
-            setNextTime(scheduleTask);
         }
         Map<Long, ScheduleTask> taskMap = taskList.stream().collect(Collectors.toMap(ScheduleTask::getTaskId, o -> o));
         this.taskMap.putAll(taskMap);
@@ -42,7 +39,6 @@ public class LocalScheduleTaskPoolManager extends AbstractScheduleTaskPoolManage
 
     @Override
     public void add(ScheduleTask scheduleTask) {
-        setNextTime(scheduleTask);
         taskMap.put(scheduleTask.getTaskId(), scheduleTask);
     }
 

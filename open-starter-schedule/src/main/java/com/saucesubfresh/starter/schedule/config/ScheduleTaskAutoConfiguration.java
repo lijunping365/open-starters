@@ -47,35 +47,24 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskInitializer taskInitializer(ScheduleTaskLoader scheduleTaskLoader,
-                                                 ScheduleTaskPoolManager scheduleTaskPoolManager){
-    return new DefaultScheduleTaskInitializer(scheduleTaskLoader, scheduleTaskPoolManager);
-  }
-
-  @Bean
-  @ConditionalOnMissingBean
   public ScheduleTaskExecutor scheduleTaskExecutor(){
     return new DefaultScheduleTaskExecutor();
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskProducerScheduler taskProducerScheduler(ScheduleTaskPoolManager scheduleTaskPoolManager,
-                                                     ScheduleTaskQueueManager scheduleTaskQueueManager){
-    return new DefaultTaskProducerScheduler(scheduleTaskPoolManager, scheduleTaskQueueManager);
+  public TaskScheduler taskScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
+                                     ScheduleTaskPoolManager scheduleTaskPoolManager,
+                                     ScheduleTaskQueueManager scheduleTaskQueueManager){
+    return new DefaultTaskScheduler(scheduleTaskExecutor, scheduleTaskPoolManager, scheduleTaskQueueManager);
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskConsumerScheduler taskConsumerScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
-                                                     ScheduleTaskQueueManager scheduleTaskQueueManager){
-    return new DefaultTaskConsumerScheduler(scheduleTaskExecutor, scheduleTaskQueueManager);
+  public ScheduleTaskInitializer taskInitializer(TaskScheduler taskScheduler,
+                                                 ScheduleTaskLoader scheduleTaskLoader,
+                                                 ScheduleTaskPoolManager scheduleTaskPoolManager,
+                                                 ScheduleTaskQueueManager scheduleTaskQueueManager){
+    return new DefaultScheduleTaskInitializer(taskScheduler, scheduleTaskLoader, scheduleTaskPoolManager, scheduleTaskQueueManager);
   }
-
-  @Bean
-  @ConditionalOnMissingBean
-  public TaskRefreshScheduler taskRefreshScheduler(ScheduleTaskPoolManager scheduleTaskPoolManager){
-    return new DefaultTaskRefreshScheduler(scheduleTaskPoolManager);
-  }
-
 }

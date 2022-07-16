@@ -16,11 +16,6 @@ public class ScheduleTask implements Serializable {
     private Long taskId;
 
     /**
-     * 下次执行时间
-     */
-    private Long nextTime;
-
-    /**
      * cron 表达式
      */
     private String cronExpression;

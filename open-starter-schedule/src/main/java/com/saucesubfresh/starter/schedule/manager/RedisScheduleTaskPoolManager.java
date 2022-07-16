@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author lijunping on 2022/1/20
  */
 @Slf4j
-public class RedisScheduleTaskPoolManager extends AbstractScheduleTaskPoolManager {
+public class RedisScheduleTaskPoolManager implements ScheduleTaskPoolManager {
 
     private final String taskPoolName;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -24,20 +24,17 @@ public class RedisScheduleTaskPoolManager extends AbstractScheduleTaskPoolManage
     public RedisScheduleTaskPoolManager(ScheduleProperties scheduleProperties,
                                         RedisTemplate<String, Object> redisTemplate){
         this.redisTemplate = redisTemplate;
-        String taskQueueName = scheduleProperties.getTaskQueueName();
-        if (StringUtils.isBlank(taskQueueName)){
-            throw new ScheduleException("The taskQueueName cannot be empty.");
+        String taskPoolName = scheduleProperties.getTaskPoolName();
+        if (StringUtils.isBlank(taskPoolName)){
+            throw new ScheduleException("The TaskPoolName cannot be empty.");
         }
-        this.taskPoolName = taskQueueName;
+        this.taskPoolName = taskPoolName;
     }
 
     @Override
     public void addAll(List<ScheduleTask> taskList) {
         if (CollectionUtils.isEmpty(taskList)){
             return;
-        }
-        for (ScheduleTask scheduleTask : taskList) {
-            setNextTime(scheduleTask);
         }
         Map<Long, ScheduleTask> taskMap = taskList.stream().collect(Collectors.toMap(ScheduleTask::getTaskId, o -> o));
         redisTemplate.opsForHash().putAll(taskPoolName, taskMap);
@@ -63,7 +60,6 @@ public class RedisScheduleTaskPoolManager extends AbstractScheduleTaskPoolManage
 
     @Override
     public void add(ScheduleTask scheduleTask) {
-        setNextTime(scheduleTask);
         redisTemplate.opsForHash().put(taskPoolName, scheduleTask.getTaskId(), scheduleTask);
     }
 
