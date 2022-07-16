@@ -21,12 +21,9 @@ public class DefaultTaskScheduler implements TaskScheduler{
 
     private Thread scheduleThread;
     private volatile boolean scheduleThreadToStop = false;
-
     private final ScheduleTaskExecutor scheduleTaskExecutor;
     private final ScheduleTaskPoolManager scheduleTaskPoolManager;
     private final ScheduleTaskQueueManager scheduleTaskQueueManager;
-
-
 
     public DefaultTaskScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
                                 ScheduleTaskPoolManager scheduleTaskPoolManager,
@@ -41,7 +38,7 @@ public class DefaultTaskScheduler implements TaskScheduler{
         scheduleThread = new Thread(()->{
             while (!scheduleThreadToStop) {
                 threadSleep();
-                this.scheduler();
+                this.takeTask();
             }
             log.info("scheduleThread stop");
         });
@@ -56,10 +53,6 @@ public class DefaultTaskScheduler implements TaskScheduler{
         scheduleThreadToStop = true;
         stopThread(scheduleThread);
         log.info("scheduleThread stop success");
-    }
-
-    private void scheduler(){
-        takeTask();
     }
 
     /**
