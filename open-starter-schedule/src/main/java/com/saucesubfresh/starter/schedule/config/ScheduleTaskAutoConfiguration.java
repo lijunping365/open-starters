@@ -1,6 +1,8 @@
 package com.saucesubfresh.starter.schedule.config;
 
 
+import com.saucesubfresh.starter.schedule.DefaultTaskScheduler;
+import com.saucesubfresh.starter.schedule.TaskScheduler;
 import com.saucesubfresh.starter.schedule.executor.DefaultScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.initializer.DefaultScheduleTaskInitializer;
@@ -12,7 +14,6 @@ import com.saucesubfresh.starter.schedule.manager.LocalScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
-import com.saucesubfresh.starter.schedule.scheduler.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

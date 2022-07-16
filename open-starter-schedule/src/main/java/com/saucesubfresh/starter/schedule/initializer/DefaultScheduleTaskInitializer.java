@@ -5,7 +5,7 @@ import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.loader.ScheduleTaskLoader;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
-import com.saucesubfresh.starter.schedule.scheduler.TaskScheduler;
+import com.saucesubfresh.starter.schedule.TaskScheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;

@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.schedule.scheduler;
+package com.saucesubfresh.starter.schedule;
 
 /**
  * 定时器

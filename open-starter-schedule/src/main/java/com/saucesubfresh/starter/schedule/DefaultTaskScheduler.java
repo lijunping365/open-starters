@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.schedule.scheduler;
+package com.saucesubfresh.starter.schedule;
 
 import com.saucesubfresh.starter.schedule.cron.CronHelper;
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
