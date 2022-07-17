@@ -2,6 +2,7 @@ package com.saucesubfresh.starter.schedule.manager;
 
 import com.saucesubfresh.starter.schedule.domain.WheelEntity;
 import com.saucesubfresh.starter.schedule.exception.ScheduleException;
+import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -16,7 +17,16 @@ import java.util.stream.Collectors;
  */
 public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueManager{
 
+    private final long tickDuration;
     private static final Map<Integer, Set<WheelEntity>> timeWheel = new ConcurrentHashMap<>();
+
+    public HashedWheelScheduleTaskQueueManager(ScheduleProperties scheduleProperties){
+        long tickDuration = scheduleProperties.getTickDuration();
+        if (tickDuration <= 0){
+            throw new ScheduleException("The TaskPoolName cannot be empty.");
+        }
+        this.tickDuration = tickDuration;
+    }
 
     @Override
     public void put(Long taskId, Long nextTime) {
@@ -25,8 +35,8 @@ public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueMan
             throw new ScheduleException("");
         }
         long diff = nextTime - nowTime;
-        long round = diff / 60;
-        int tick = (int) (nextTime % 60);
+        long round = diff / tickDuration;
+        int tick = (int) (nextTime % tickDuration);
 
         Set<WheelEntity> taskSet = timeWheel.get(tick);
         if (CollectionUtils.isEmpty(taskSet)) {

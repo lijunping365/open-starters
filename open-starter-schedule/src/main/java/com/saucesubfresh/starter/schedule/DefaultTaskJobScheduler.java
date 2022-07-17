@@ -45,7 +45,7 @@ public class DefaultTaskJobScheduler implements TaskJobScheduler {
         scheduleThread.setDaemon(true);
         scheduleThread.setName("scheduleThread");
         scheduleThread.start();
-        log.info("scheduleThread start succeed");
+        log.info("scheduleThread start success");
     }
 
     @Override
@@ -61,7 +61,6 @@ public class DefaultTaskJobScheduler implements TaskJobScheduler {
     private void takeTask(){
         try {
             List<Long> taskIds = scheduleTaskQueueManager.take();
-            log.info("take schedule task :{}", taskIds);
             if (CollectionUtils.isEmpty(taskIds)){
                 return;
             }

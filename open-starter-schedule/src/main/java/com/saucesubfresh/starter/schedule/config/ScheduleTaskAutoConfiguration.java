@@ -36,8 +36,8 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskQueueManager scheduleTaskQueueManager(){
-    return new HashedWheelScheduleTaskQueueManager();
+  public ScheduleTaskQueueManager scheduleTaskQueueManager(ScheduleProperties scheduleProperties){
+    return new HashedWheelScheduleTaskQueueManager(scheduleProperties);
   }
 
   @Bean
