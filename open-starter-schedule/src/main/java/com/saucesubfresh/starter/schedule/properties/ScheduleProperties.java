@@ -12,6 +12,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ScheduleProperties {
 
     /**
+     * 时间轮槽数
+     */
+    private long tickDuration = 60;
+
+    /**
      * 任务池名称 （hash）
      */
     private String taskPoolName = "schedule:task:pool";

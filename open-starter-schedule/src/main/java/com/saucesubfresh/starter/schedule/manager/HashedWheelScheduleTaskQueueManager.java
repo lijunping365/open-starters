@@ -1,12 +1,12 @@
 package com.saucesubfresh.starter.schedule.manager;
 
+import com.saucesubfresh.starter.schedule.domain.WheelEntity;
+import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 基于时间轮算法的分布式任务调度系统
@@ -16,27 +16,52 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueManager{
 
-    private static final Map<Integer, List<Long>> timeWheel = new ConcurrentHashMap<>();
+    private static final Map<Integer, Set<WheelEntity>> timeWheel = new ConcurrentHashMap<>();
 
     @Override
     public void put(Long taskId, Long nextTime) {
-        boolean exist = true;
-        int nowSecond = Calendar.getInstance().get(Calendar.SECOND);
-        List<Long> taskList = timeWheel.get(nowSecond);
-        if (CollectionUtils.isEmpty(taskList)) {
-            taskList = new ArrayList<>();
-            exist = false;
+        long nowTime = System.currentTimeMillis() / 1000;
+        if (nextTime <= nowTime){
+            throw new ScheduleException("");
         }
-        if (exist && taskList.contains(taskId)){
-            return;
+        long diff = nextTime - nowTime;
+        long round = diff / 60;
+        int tick = (int) (nextTime % 60);
+
+        Set<WheelEntity> taskSet = timeWheel.get(tick);
+        if (CollectionUtils.isEmpty(taskSet)) {
+            taskSet = new HashSet<>();
         }
-        taskList.add(taskId);
-        timeWheel.put(nowSecond, taskList);
+
+        WheelEntity wheelEntity = new WheelEntity();
+        wheelEntity.setRound(round);
+        wheelEntity.setTaskId(taskId);
+        taskSet.add(wheelEntity);
+        timeWheel.put(tick, taskSet);
     }
 
     @Override
     public List<Long> take() {
         int nowSecond = Calendar.getInstance().get(Calendar.SECOND);
-        return timeWheel.remove(nowSecond);
+        Set<WheelEntity> entities = timeWheel.get(nowSecond);
+        if (CollectionUtils.isEmpty(entities)){
+            return Collections.emptyList();
+        }
+
+        Set<WheelEntity> tasks = entities.stream()
+                .filter(e -> Objects.equals(e.getRound(), 0L))
+                .collect(Collectors.toSet());
+
+        if (CollectionUtils.isEmpty(tasks)){
+            return Collections.emptyList();
+        }
+
+        entities.removeAll(tasks);
+        for (WheelEntity entity : entities) {
+            entity.setRound(entity.getRound() - 1L);
+        }
+
+        timeWheel.put(nowSecond, entities);
+        return tasks.stream().map(WheelEntity::getTaskId).collect(Collectors.toList());
     }
 }

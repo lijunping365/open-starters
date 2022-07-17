@@ -49,7 +49,7 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
     public void afterPropertiesSet() throws Exception {
         try {
             initialize();
-            log.info("Schedule task initialize successed");
+            log.info("Schedule task initialize succeed");
         }catch (Exception e){
             log.error("Schedule task initialize failed, {}", e.getMessage());
         }
