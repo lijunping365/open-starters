@@ -32,7 +32,7 @@ public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueMan
     public void put(Long taskId, Long nextTime) {
         long nowTime = System.currentTimeMillis() / 1000;
         if (nextTime <= nowTime){
-            throw new ScheduleException("");
+            throw new ScheduleException("The nextTime must more than the nowTime");
         }
         long diff = nextTime - nowTime;
         long round = diff / tickDuration;
