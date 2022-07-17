@@ -1,5 +1,8 @@
 package com.saucesubfresh.starter.schedule.manager;
 
+import com.saucesubfresh.starter.schedule.exception.ScheduleException;
+import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
@@ -16,21 +19,28 @@ import java.util.stream.Collectors;
  */
 public class RedisZSetScheduleTaskQueueManager implements ScheduleTaskQueueManager{
 
+    private final String taskQueueName;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisZSetScheduleTaskQueueManager(RedisTemplate<String, Object> redisTemplate) {
+    public RedisZSetScheduleTaskQueueManager(ScheduleProperties scheduleProperties,
+                                             RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+        String taskQueueName = scheduleProperties.getTaskQueueName();
+        if (StringUtils.isBlank(taskQueueName)){
+            throw new ScheduleException("The TaskQueueName cannot be empty.");
+        }
+        this.taskQueueName = taskQueueName;
     }
 
     @Override
     public void put(Long taskId, Long nextTime) {
-        redisTemplate.opsForZSet().add("key", taskId, nextTime);
+        redisTemplate.opsForZSet().add(taskQueueName, taskId, nextTime);
     }
 
     @Override
     public List<Long> take() {
-        long nowTime = System.currentTimeMillis() / 1000 * 1000;
-        Set<Object> value = redisTemplate.opsForZSet().rangeByScore("key", nowTime, nowTime);
+        long nowTime = System.currentTimeMillis() / 1000;
+        Set<Object> value = redisTemplate.opsForZSet().rangeByScore(taskQueueName, nowTime, nowTime);
         if (CollectionUtils.isEmpty(value)){
             return Collections.emptyList();
         }

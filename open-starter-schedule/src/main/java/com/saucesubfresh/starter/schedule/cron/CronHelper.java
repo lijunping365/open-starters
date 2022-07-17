@@ -16,8 +16,12 @@ public class CronHelper {
     /**
      * 根据 cronExpression 生成下次执行时间
      *
+     * 注意：调用 {@link CronExpression#getNextValidTimeAfter(Date)} 返回的时间毫秒位是 0
+     *
+     * 所以这里返回的下次执行时间去掉了毫秒位，只保留到秒
+     *
      * @param cronExpression cron 表达式
-     * @return 下次执行时间
+     * @return 下次执行时间 精确到秒
      * @throws ScheduleException
      */
     public static long getNextTime(String cronExpression) throws ScheduleException{
@@ -30,6 +34,6 @@ public class CronHelper {
             throw new ScheduleException("CronExpression exception:" + e.getMessage());
         }
 
-        return nextDate.getTime();
+        return nextDate.getTime() / 1000;
     }
 }
