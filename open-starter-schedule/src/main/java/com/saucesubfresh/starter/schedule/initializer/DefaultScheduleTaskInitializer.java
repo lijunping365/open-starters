@@ -9,6 +9,7 @@ import com.saucesubfresh.starter.schedule.TaskJobScheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -37,10 +38,12 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
     @Override
     public void initialize() {
         List<ScheduleTask> scheduleTasks = scheduleTaskLoader.loadScheduleTask();
-        scheduleTaskPoolManager.addAll(scheduleTasks);
-        for (ScheduleTask task : scheduleTasks) {
-            long nextTime = CronHelper.getNextTime(task.getCronExpression());
-            scheduleTaskQueueManager.put(task.getTaskId(), nextTime);
+        if (!CollectionUtils.isEmpty(scheduleTasks)){
+            scheduleTaskPoolManager.addAll(scheduleTasks);
+            for (ScheduleTask task : scheduleTasks) {
+                long nextTime = CronHelper.getNextTime(task.getCronExpression());
+                scheduleTaskQueueManager.put(task.getTaskId(), nextTime);
+            }
         }
         taskJobScheduler.start();
     }
