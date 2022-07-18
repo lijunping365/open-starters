@@ -44,6 +44,6 @@ public class RedisZSetScheduleTaskQueueManager implements ScheduleTaskQueueManag
         if (CollectionUtils.isEmpty(value)){
             return Collections.emptyList();
         }
-        return value.stream().map(e->(Long)e).collect(Collectors.toList());
+        return value.stream().map(e->Long.valueOf(String.valueOf(e))).collect(Collectors.toList());
     }
 }
