@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author: 李俊平
  * @Date: 2022-07-16 11:49
@@ -14,6 +16,7 @@ import org.redisson.api.RedissonClient;
 @Slf4j
 public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
 
+    private final String lockName = "distributed-scheduler";
     private final RedissonClient redissonClient;
 
     public DistributedTaskJobScheduler(RedissonClient redissonClient,
@@ -26,10 +29,18 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
 
     @Override
     protected void run() {
-
+        RLock lock = getLock(true);
+        try {
+            lock.lock(-1, TimeUnit.MILLISECONDS);
+            super.takeTask();
+        } finally {
+            if (lock != null && lock.isLocked()) {
+                lock.unlock();
+            }
+        }
     }
 
-    private RLock getLock(String lockName, boolean fairLock) {
+    private RLock getLock(boolean fairLock) {
         RLock lock;
         if (fairLock) {
             lock = redissonClient.getFairLock(lockName);

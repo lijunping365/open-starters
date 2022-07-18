@@ -38,7 +38,7 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
         scheduleThread = new Thread(()->{
             while (!scheduleThreadToStop) {
                 threadSleep();
-                this.takeTask();
+                this.run();
             }
             log.info("scheduleThread stop");
         });
@@ -58,19 +58,19 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
     /**
      * 从队列中获取当前秒数的任务列表去执行
      */
-    private void takeTask(){
+    protected void takeTask(){
+        List<Long> taskIds = scheduleTaskQueueManager.take();
+        if (CollectionUtils.isEmpty(taskIds)){
+            return;
+        }
         try {
-            List<Long> taskIds = scheduleTaskQueueManager.take();
-            if (CollectionUtils.isEmpty(taskIds)){
-                return;
-            }
             scheduleTaskExecutor.execute(taskIds);
-            refreshNextTime(taskIds);
         }catch (Exception e){
             if (!scheduleThreadToStop) {
-                log.error("scheduleThread error:{}", e.getMessage(), e);
+                log.error("Execute task error:{}", e.getMessage(), e);
             }
         }
+        refreshNextTime(taskIds);
     }
 
     /**
@@ -78,14 +78,20 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
      *
      * @param taskIds
      */
-    private void refreshNextTime(List<Long> taskIds) {
+    protected void refreshNextTime(List<Long> taskIds) {
         for (Long taskId : taskIds) {
             ScheduleTask task = scheduleTaskPoolManager.get(taskId);
             if (Objects.isNull(task)){
                 continue;
             }
-            long nextTime = CronHelper.getNextTime(task.getCronExpression());
-            scheduleTaskQueueManager.put(taskId, nextTime);
+            try {
+                long nextTime = CronHelper.getNextTime(task.getCronExpression());
+                scheduleTaskQueueManager.put(taskId, nextTime);
+            }catch (Exception e){
+                if (!scheduleThreadToStop) {
+                    log.error("Refresh task error:{}", e.getMessage(), e);
+                }
+            }
         }
     }
 
