@@ -10,4 +10,4 @@
 
 1. OkHttp 去掉 retryOnConnectionFailure 属性
 
-2. 优化注入方式以及配置
+2. 优化注入方式以及配置，默认注入的是 OkHttpExecutor
