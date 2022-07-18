@@ -59,18 +59,18 @@ public class DefaultTaskJobScheduler implements TaskJobScheduler {
      * 从队列中获取当前秒数的任务列表去执行
      */
     private void takeTask(){
+        List<Long> taskIds = scheduleTaskQueueManager.take();
+        if (CollectionUtils.isEmpty(taskIds)){
+            return;
+        }
         try {
-            List<Long> taskIds = scheduleTaskQueueManager.take();
-            if (CollectionUtils.isEmpty(taskIds)){
-                return;
-            }
             scheduleTaskExecutor.execute(taskIds);
-            refreshNextTime(taskIds);
         }catch (Exception e){
             if (!scheduleThreadToStop) {
-                log.error("scheduleThread error:{}", e.getMessage(), e);
+                log.error("Execute task error:{}", e.getMessage(), e);
             }
         }
+        refreshNextTime(taskIds);
     }
 
     /**
@@ -79,18 +79,18 @@ public class DefaultTaskJobScheduler implements TaskJobScheduler {
      * @param taskIds
      */
     private void refreshNextTime(List<Long> taskIds) {
-        try {
-            for (Long taskId : taskIds) {
-                ScheduleTask task = scheduleTaskPoolManager.get(taskId);
-                if (Objects.isNull(task)){
-                    continue;
-                }
+        for (Long taskId : taskIds) {
+            ScheduleTask task = scheduleTaskPoolManager.get(taskId);
+            if (Objects.isNull(task)){
+                continue;
+            }
+            try {
                 long nextTime = CronHelper.getNextTime(task.getCronExpression());
                 scheduleTaskQueueManager.put(taskId, nextTime);
-            }
-        }catch (Exception e){
-            if (!scheduleThreadToStop) {
-                log.error("scheduleThread error:{}", e.getMessage(), e);
+            }catch (Exception e){
+                if (!scheduleThreadToStop) {
+                    log.error("Refresh task error:{}", e.getMessage(), e);
+                }
             }
         }
     }
