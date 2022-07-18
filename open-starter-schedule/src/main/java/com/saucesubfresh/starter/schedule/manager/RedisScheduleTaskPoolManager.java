@@ -36,7 +36,7 @@ public class RedisScheduleTaskPoolManager implements ScheduleTaskPoolManager {
         if (CollectionUtils.isEmpty(taskList)){
             return;
         }
-        Map<Long, ScheduleTask> taskMap = taskList.stream().collect(Collectors.toMap(ScheduleTask::getTaskId, o -> o));
+        Map<String, ScheduleTask> taskMap = taskList.stream().collect(Collectors.toMap(e->String.valueOf(e.getTaskId()), o -> o));
         redisTemplate.opsForHash().putAll(taskPoolName, taskMap);
     }
 
