@@ -33,8 +33,12 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
         try {
             lock.lock(-1, TimeUnit.MILLISECONDS);
             super.takeTask();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         } finally {
-            if (lock != null && lock.isLocked()) {
+            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
+                super.threadSleep();
+                log.info("释放了锁");
                 lock.unlock();
             }
         }

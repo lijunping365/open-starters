@@ -37,7 +37,6 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
     public void start() {
         scheduleThread = new Thread(()->{
             while (!scheduleThreadToStop) {
-                threadSleep();
                 this.run();
             }
             log.info("scheduleThread stop");
@@ -95,7 +94,7 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
         }
     }
 
-    private void threadSleep(){
+    protected void threadSleep(){
         try {
             TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis() % 1000);
         } catch (InterruptedException e) {
