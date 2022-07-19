@@ -32,14 +32,13 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
         RLock lock = getLock(true);
         try {
             long timeout = 1000 - System.currentTimeMillis() % 1000;
+            lock.lock(-1, TimeUnit.MILLISECONDS);
             super.threadSleep(timeout);
-            lock.lock(timeout, TimeUnit.MILLISECONDS);
             super.takeTask();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-
                 log.info("释放了锁");
                 lock.unlock();
             }
