@@ -55,16 +55,16 @@ public class RedisScheduleTaskPoolManager implements ScheduleTaskPoolManager {
 
     @Override
     public ScheduleTask get(Long taskId) {
-        return (ScheduleTask) redisTemplate.opsForHash().get(taskPoolName, taskId);
+        return (ScheduleTask) redisTemplate.opsForHash().get(taskPoolName, String.valueOf(taskId));
     }
 
     @Override
     public void add(ScheduleTask scheduleTask) {
-        redisTemplate.opsForHash().put(taskPoolName, scheduleTask.getTaskId(), scheduleTask);
+        redisTemplate.opsForHash().put(taskPoolName, String.valueOf(scheduleTask.getTaskId()), scheduleTask);
     }
 
     @Override
     public void remove(Long taskId) {
-        redisTemplate.opsForHash().delete(taskPoolName, taskId);
+        redisTemplate.opsForHash().delete(taskPoolName, String.valueOf(taskId));
     }
 }
