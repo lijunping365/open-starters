@@ -94,9 +94,9 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
         }
     }
 
-    protected void threadSleep(){
+    protected void threadSleep(long timeout){
         try {
-            TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis() % 1000);
+            TimeUnit.MILLISECONDS.sleep(timeout);
         } catch (InterruptedException e) {
             if (!scheduleThreadToStop) {
                 log.error(e.getMessage(), e);

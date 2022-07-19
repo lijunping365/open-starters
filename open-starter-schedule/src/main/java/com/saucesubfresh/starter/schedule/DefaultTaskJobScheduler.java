@@ -20,7 +20,7 @@ public class DefaultTaskJobScheduler extends AbstractTaskJobScheduler {
 
     @Override
     protected void run() {
-        super.threadSleep();
+        super.threadSleep(1000 - System.currentTimeMillis() % 1000);
         super.takeTask();
     }
 }

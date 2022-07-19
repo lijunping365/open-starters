@@ -31,13 +31,15 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
     protected void run() {
         RLock lock = getLock(true);
         try {
-            lock.lock(-1, TimeUnit.MILLISECONDS);
+            long timeout = 1000 - System.currentTimeMillis() % 1000;
+            super.threadSleep(timeout);
+            lock.lock(timeout, TimeUnit.MILLISECONDS);
             super.takeTask();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                super.threadSleep();
+
                 log.info("释放了锁");
                 lock.unlock();
             }
