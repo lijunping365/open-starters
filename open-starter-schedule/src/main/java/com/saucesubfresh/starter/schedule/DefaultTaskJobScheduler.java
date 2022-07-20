@@ -5,6 +5,8 @@ import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 /**
  * @author: 李俊平
  * @Date: 2022-07-16 11:49
@@ -12,15 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultTaskJobScheduler extends AbstractTaskJobScheduler {
 
+    private final ScheduleTaskExecutor scheduleTaskExecutor;
+
     public DefaultTaskJobScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
                                    ScheduleTaskPoolManager scheduleTaskPoolManager,
                                    ScheduleTaskQueueManager scheduleTaskQueueManager) {
-        super(scheduleTaskExecutor, scheduleTaskPoolManager, scheduleTaskQueueManager);
+        super(scheduleTaskPoolManager, scheduleTaskQueueManager);
+        this.scheduleTaskExecutor = scheduleTaskExecutor;
     }
 
     @Override
-    protected void run() {
-        super.threadSleep(1000 - System.currentTimeMillis() % 1000);
-        super.takeTask();
+    protected void runTask(List<Long> taskIds) {
+        scheduleTaskExecutor.execute(taskIds);
     }
 }

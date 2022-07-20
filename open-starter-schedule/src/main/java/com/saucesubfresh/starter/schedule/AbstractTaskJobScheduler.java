@@ -21,14 +21,11 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
 
     private Thread scheduleThread;
     private volatile boolean scheduleThreadToStop = false;
-    private final ScheduleTaskExecutor scheduleTaskExecutor;
     private final ScheduleTaskPoolManager scheduleTaskPoolManager;
     private final ScheduleTaskQueueManager scheduleTaskQueueManager;
 
-    public AbstractTaskJobScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
-                                    ScheduleTaskPoolManager scheduleTaskPoolManager,
+    public AbstractTaskJobScheduler(ScheduleTaskPoolManager scheduleTaskPoolManager,
                                     ScheduleTaskQueueManager scheduleTaskQueueManager) {
-        this.scheduleTaskExecutor = scheduleTaskExecutor;
         this.scheduleTaskPoolManager = scheduleTaskPoolManager;
         this.scheduleTaskQueueManager = scheduleTaskQueueManager;
     }
@@ -37,7 +34,19 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
     public void start() {
         scheduleThread = new Thread(()->{
             while (!scheduleThreadToStop) {
-                this.run();
+                threadSleep();
+                List<Long> taskIds = scheduleTaskQueueManager.take();
+                if (CollectionUtils.isEmpty(taskIds)){
+                    continue;
+                }
+                refreshNextTime(taskIds);
+                try {
+                    this.runTask(taskIds);
+                }catch (Exception e){
+                    if (!scheduleThreadToStop) {
+                        log.error("Execute task error:{}", e.getMessage(), e);
+                    }
+                }
             }
             log.info("scheduleThread stop");
         });
@@ -52,24 +61,6 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
         scheduleThreadToStop = true;
         stopThread(scheduleThread);
         log.info("scheduleThread stop success");
-    }
-
-    /**
-     * 从队列中获取当前秒数的任务列表去执行
-     */
-    protected void takeTask(){
-        List<Long> taskIds = scheduleTaskQueueManager.take();
-        if (CollectionUtils.isEmpty(taskIds)){
-            return;
-        }
-        try {
-            scheduleTaskExecutor.execute(taskIds);
-        }catch (Exception e){
-            if (!scheduleThreadToStop) {
-                log.error("Execute task error:{}", e.getMessage(), e);
-            }
-        }
-        refreshNextTime(taskIds);
     }
 
     /**
@@ -94,9 +85,9 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
         }
     }
 
-    protected void threadSleep(long timeout){
+    protected void threadSleep(){
         try {
-            TimeUnit.MILLISECONDS.sleep(timeout);
+            TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis() % 1000);
         } catch (InterruptedException e) {
             if (!scheduleThreadToStop) {
                 log.error(e.getMessage(), e);
@@ -128,5 +119,5 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
         }
     }
 
-    protected abstract void run();
+    protected abstract void runTask(List<Long> taskIds);
 }

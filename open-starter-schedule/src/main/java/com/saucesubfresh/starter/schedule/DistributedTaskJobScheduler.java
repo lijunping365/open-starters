@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,23 +19,23 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
 
     private final String lockName = "distributed-scheduler";
     private final RedissonClient redissonClient;
+    private final ScheduleTaskExecutor scheduleTaskExecutor;
 
     public DistributedTaskJobScheduler(RedissonClient redissonClient,
                                        ScheduleTaskExecutor scheduleTaskExecutor,
                                        ScheduleTaskPoolManager scheduleTaskPoolManager,
                                        ScheduleTaskQueueManager scheduleTaskQueueManager) {
-        super(scheduleTaskExecutor, scheduleTaskPoolManager, scheduleTaskQueueManager);
+        super(scheduleTaskPoolManager, scheduleTaskQueueManager);
         this.redissonClient = redissonClient;
+        this.scheduleTaskExecutor = scheduleTaskExecutor;
     }
 
     @Override
-    protected void run() {
+    protected void runTask(List<Long> taskIds) {
         RLock lock = getLock(true);
         try {
-            long timeout = 1000 - System.currentTimeMillis() % 1000;
             lock.lock(-1, TimeUnit.MILLISECONDS);
-            super.threadSleep(timeout);
-            super.takeTask();
+            scheduleTaskExecutor.execute(taskIds);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
