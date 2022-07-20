@@ -11,6 +11,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 基于分布式锁实现分布式调度,避免同一个任务在多个节点同时执行
+ *
+ * 注意: {@link RLock#tryLock(long, long, TimeUnit)}, 当 waitTime 不为 -1 的时候,
+ *
+ * 在尝试获取锁的时候会阻塞当前线程, 阻塞时长是 waitTime,
+ *
+ * 当 leaseTime 不为 -1 的时候, 当前线程会一直持有锁到 leaseTime 为 0 时会自动释放锁
+ *
+ *
  * @author: 李俊平
  * @Date: 2022-07-16 11:49
  */
@@ -35,21 +44,11 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
         RLock lock = redissonClient.getLock(lockName);
         long waitTime = 1000 - System.currentTimeMillis() % 1000;
         try {
-            if (lock.tryLock(waitTime, -1, TimeUnit.MILLISECONDS)){
+            if (lock.tryLock(waitTime, waitTime, TimeUnit.MILLISECONDS)){
                 scheduleTaskExecutor.execute(taskIds);
-                threadSleep();
-            }else {
-                log.info("排队中");
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        } finally {
-            if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
-                log.info("释放了锁");
-                lock.unlock();
-            }
         }
     }
-
-
 }
