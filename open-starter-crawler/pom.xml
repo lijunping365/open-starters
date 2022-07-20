@@ -12,7 +12,7 @@
     <artifactId>open-starter-crawler</artifactId>
 
     <properties>
-        <jsoup.version>1.13.1</jsoup.version>
+        <jsoup.version>1.15.2</jsoup.version>
         <xsoup.version>0.3.2</xsoup.version>
         <guava.version>31.0.1-jre</guava.version>
     </properties>
