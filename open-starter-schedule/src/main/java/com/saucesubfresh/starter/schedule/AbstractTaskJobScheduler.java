@@ -34,7 +34,6 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
     public void start() {
         scheduleThread = new Thread(()->{
             while (!scheduleThreadToStop) {
-                threadSleep();
                 List<Long> taskIds = scheduleTaskQueueManager.take();
                 if (CollectionUtils.isEmpty(taskIds)){
                     continue;

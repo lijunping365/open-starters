@@ -32,10 +32,15 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
 
     @Override
     protected void runTask(List<Long> taskIds) {
-        RLock lock = getLock(true);
+        RLock lock = redissonClient.getLock(lockName);
+        long waitTime = 1000 - System.currentTimeMillis() % 1000;
         try {
-            lock.lock(-1, TimeUnit.MILLISECONDS);
-            scheduleTaskExecutor.execute(taskIds);
+            if (lock.tryLock(waitTime, -1, TimeUnit.MILLISECONDS)){
+                scheduleTaskExecutor.execute(taskIds);
+                threadSleep();
+            }else {
+                log.info("排队中");
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
@@ -46,13 +51,5 @@ public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
         }
     }
 
-    private RLock getLock(boolean fairLock) {
-        RLock lock;
-        if (fairLock) {
-            lock = redissonClient.getFairLock(lockName);
-        } else {
-            lock = redissonClient.getLock(lockName);
-        }
-        return lock;
-    }
+
 }
