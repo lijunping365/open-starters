@@ -1,9 +1,12 @@
 package com.saucesubfresh.starter.schedule;
 
+import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
+import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
@@ -17,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  *
  * 在尝试获取锁的时候会阻塞当前线程, 阻塞时长是 waitTime,
  *
- * 当 leaseTime 不为 -1 的时候, 当前线程会一直持有锁到 leaseTime 为 0 时会自动释放锁
+ * 当 leaseTime 不为 -1 的时候, 当前线程会一直持有锁且阻塞当前线程到 leaseTime 为 0 时会自动释放锁
  *
  *
  * @author: 李俊平
@@ -26,17 +29,23 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
 
-    private final String lockName = "distributed-scheduler";
+    private final String lockName;
     private final RedissonClient redissonClient;
     private final ScheduleTaskExecutor scheduleTaskExecutor;
 
     public DistributedTaskJobScheduler(RedissonClient redissonClient,
+                                       ScheduleProperties scheduleProperties,
                                        ScheduleTaskExecutor scheduleTaskExecutor,
                                        ScheduleTaskPoolManager scheduleTaskPoolManager,
                                        ScheduleTaskQueueManager scheduleTaskQueueManager) {
         super(scheduleTaskPoolManager, scheduleTaskQueueManager);
         this.redissonClient = redissonClient;
         this.scheduleTaskExecutor = scheduleTaskExecutor;
+        String lockName = scheduleProperties.getLockName();
+        if (StringUtils.isBlank(lockName)){
+            throw new ScheduleException("The LockName cannot be empty.");
+        }
+        this.lockName = lockName;
     }
 
     @Override

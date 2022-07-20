@@ -20,4 +20,9 @@ public class ScheduleProperties {
      * 任务池名称 （hash）
      */
     private String taskPoolName = "schedule:task:pool";
+
+    /**
+     * 分布式锁名称
+     */
+    private String lockName = "schedule:lock";
 }
