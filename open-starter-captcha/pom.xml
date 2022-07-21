@@ -13,7 +13,7 @@
     <description>各种验证码生成和校验 starter</description>
 
     <properties>
-        <google.zxing.version>3.3.3</google.zxing.version>
+        <google.zxing.version>3.5.0</google.zxing.version>
         <filters.version>2.0.235-1</filters.version>
     </properties>
 
@@ -28,12 +28,6 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>${google.zxing.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
             <version>${google.zxing.version}</version>
         </dependency>
 
