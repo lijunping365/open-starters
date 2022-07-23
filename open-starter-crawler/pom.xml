@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>open-starter-crawler</artifactId>
+    <description>一个企业级的爬虫插件</description>
 
     <properties>
         <jsoup.version>1.15.2</jsoup.version>
