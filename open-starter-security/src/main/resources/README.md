@@ -18,7 +18,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-security</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 

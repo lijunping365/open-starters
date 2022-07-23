@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-captcha</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
