@@ -1,6 +1,84 @@
-# 使用方法
+# 爬虫插件
 
-v1.0.0 
+一个企业级的爬虫插件
+
+## 功能
+
+- [x] 支持 XPath、JsonPath、Css、Regex 四种爬取方式
+
+- [x] 解析规则支持值传递和类注解两种方式
+
+- [x] 爬虫过程采用 pipeline 方式实现，pipeline 支持自定义
+
+- [x] 数据 id 生成支持自定义
+
+- [x] 爬虫入参和出参支持自定义
+
+## 快速开始
+
+### 1. 添加 Maven 依赖
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-crawler</artifactId>
+    <version>1.0.2</version>
+</dependency>
+```
+
+### 2. 配置参数
+
+暂无
+
+### 3. 解析规则值传递实例
+
+节选自 Open-Crawler
+
+```java
+
+@Slf4j
+@SpiderHandler(name = "autoCrawlerHandler")
+public class AutoCrawlerSpiderHandler extends AbstractCrawlerSpiderHandler {
+
+    private final List<Pipeline> pipelines;
+
+    public AutoCrawlerSpiderHandler(DownloadPipeline downloadPipeline,
+                                    ParserPipeline parserPipeline,
+                                    FormatPipeline formatPipeline,
+                                    ValuePipeline valuePipeline,
+                                    FilterPipeline filterPipeline,
+                                    SerializePipeline serializePipeline,
+                                    PersistencePipeline persistencePipeline) {
+        List<Pipeline> pipelines = new ArrayList<>();
+        pipelines.add(downloadPipeline);
+        pipelines.add(parserPipeline);
+        pipelines.add(formatPipeline);
+        pipelines.add(valuePipeline);
+        pipelines.add(filterPipeline);
+        pipelines.add(serializePipeline);
+        pipelines.add(persistencePipeline);
+        this.pipelines = pipelines;
+    }
+
+    @Override
+    protected List<Pipeline> getPipeline() {
+        return pipelines;
+    }
+}
+
+```
+
+### 4. 解析规则类注解实例
+
+节选自 Open-Crawler
+
+```java
+
+
+```
+
+
+## 1.0.0 版本
 
 采用固定流程进行操作：下载-> 解析-> 持久化
 
@@ -48,7 +126,7 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 }
 ```
 
-v1.0.1
+## 1.0.2 版本更新说明
 
 采用固定的流程进行操作，此法存在弊端
 
@@ -62,13 +140,23 @@ v1.0.1
 
 系统默认的流水线是：下载-> 解析-> 格式化-> 值处理-> 持久化
 
-# 注意事项
+## 注意事项
 
-注意点
-
-1. jsonPath 不可以与其他解析方法混用
+1. JsonPath 不可以与其他解析方法混用
 
 2. 默认解析中如果所有字段都勾选了循环将进行转置，否则将不会转置
 
-3. id 生成规则：如果指定了 id 字段，则指定的 id 字段将会被当作主键，如果没有指定 id 字段而是在某些字段上勾选了主键
-   则将会拼接这些字段的值进行散列生成一个 8 位的唯一字符串当作主键，如果以上都没做，将使用第一个字段进行散列生成唯一id当作主键
+3. id 生成规则：如果指定了 id 字段，则指定的 id 字段将会被当作主键，
+
+如果没有指定 id 字段而是在某些字段上勾选了主键则将会拼接这些字段的值进行散列生成一个 8 位的唯一字符串当作主键，
+
+如果以上都没做，将使用第一个字段进行散列生成唯一id当作主键
+
+
+## 免责声明
+
+请勿将 open-starter-crawler 应用到任何可能会违反法律规定和道德约束的工作中,
+
+请友善使用 open-starter-crawler，遵守蜘蛛协议，不要将 open-starter-crawler 用于任何非法用途。
+
+如您选择使用 open-starter-crawler 即代表您遵守此协议，作者不承担任何由于您违反此协议带来任何的法律风险和损失，一切后果由您承担。
