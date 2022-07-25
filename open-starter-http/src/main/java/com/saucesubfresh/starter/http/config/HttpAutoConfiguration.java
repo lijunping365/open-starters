@@ -28,14 +28,12 @@ import java.util.concurrent.TimeUnit;
 public class HttpAutoConfiguration {
 
     @Bean
-    @ConditionalOnBean(OkHttpExecutor.class)
     @ConditionalOnMissingBean
     public ConnectionPool connectionPool(HttpProperties properties) {
         return new ConnectionPool(properties.getPoolSize(), properties.getKeepAlive(), TimeUnit.MINUTES);
     }
 
     @Bean
-    @ConditionalOnBean(OkHttpExecutor.class)
     @ConditionalOnMissingBean
     public OkHttpClient okHttpClient(ConnectionPool connectionPool, HttpProperties properties) {
         return new OkHttpClient.Builder()
@@ -48,12 +46,11 @@ public class HttpAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public HttpExecutor okHttpExecutor(OkHttpClient okHttpClient){
+    public OkHttpExecutor okHttpExecutor(OkHttpClient okHttpClient){
         return new OkHttpExecutor(okHttpClient);
     }
 
     @Bean
-    @ConditionalOnBean(HttpClientExecutor.class)
     @ConditionalOnMissingBean
     public PoolingHttpClientConnectionManager connectionManager(HttpProperties properties){
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
@@ -63,7 +60,6 @@ public class HttpAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnBean(HttpClientExecutor.class)
     @ConditionalOnMissingBean
     public CloseableHttpClient httpClient(PoolingHttpClientConnectionManager connectionManager,
                                           HttpProperties properties){
