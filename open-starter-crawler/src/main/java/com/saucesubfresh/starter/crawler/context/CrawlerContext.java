@@ -13,10 +13,19 @@ import java.util.List;
 @Data
 public class CrawlerContext {
 
+    /**
+     * request
+     */
     private SpiderRequest request;
 
+    /**
+     * response
+     */
     private SpiderResponse response;
 
+    /**
+     * pipeline
+     */
     private List<Pipeline> pipelines;
 
 }
