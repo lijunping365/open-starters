@@ -1,8 +1,7 @@
 package com.saucesubfresh.starter.crawler.handler;
 
 
-import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
+import com.saucesubfresh.starter.crawler.context.CrawlerContext;
 
 /**
  * @author lijunping on 2022/1/19
@@ -10,10 +9,9 @@ import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 public interface CrawlerSpiderHandler {
 
     /**
-     * Execute jobHandler
+     * 执行爬虫
      *
-     * @param request params
-     * @param response response
+     * @param crawlerContext 爬虫上下文
      */
-    void handle(SpiderRequest request, SpiderResponse response);
+    void handle(CrawlerContext crawlerContext);
 }
