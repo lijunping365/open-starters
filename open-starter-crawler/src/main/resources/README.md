@@ -37,20 +37,26 @@
 ```java
 
 @Slf4j
-@SpiderHandler(name = "autoCrawlerHandler")
-public class AutoCrawlerSpiderHandler extends AbstractCrawlerSpiderHandler {
+@Component
+public class DefaultCrawlerExecutor implements CrawlerExecutor{
 
     private final List<Pipeline> pipelines;
-
-    public AutoCrawlerSpiderHandler(DownloadPipeline downloadPipeline,
-                                    ParserPipeline parserPipeline,
-                                    FormatPipeline formatPipeline,
-                                    ValuePipeline valuePipeline,
-                                    FilterPipeline filterPipeline,
-                                    SerializePipeline serializePipeline,
-                                    PersistencePipeline persistencePipeline) {
+    private final ThreadPoolExecutor executor;
+    private final CrawlerSpiderHandler crawlerSpiderHandler;
+    public DefaultCrawlerExecutor(DownloadPipeline downloadPipeline,
+                                  CustomizeSubPipeline subPipeline,
+                                  CustomizeReplacePipeline replacePipeline,
+                                  ParserPipeline parserPipeline,
+                                  FormatPipeline formatPipeline,
+                                  ValuePipeline valuePipeline,
+                                  FilterPipeline filterPipeline,
+                                  SerializePipeline serializePipeline,
+                                  PersistencePipeline persistencePipeline,
+                                  CrawlerSpiderHandler crawlerSpiderHandler) {
         List<Pipeline> pipelines = new ArrayList<>();
         pipelines.add(downloadPipeline);
+        pipelines.add(subPipeline);
+        pipelines.add(replacePipeline);
         pipelines.add(parserPipeline);
         pipelines.add(formatPipeline);
         pipelines.add(valuePipeline);
@@ -58,22 +64,153 @@ public class AutoCrawlerSpiderHandler extends AbstractCrawlerSpiderHandler {
         pipelines.add(serializePipeline);
         pipelines.add(persistencePipeline);
         this.pipelines = pipelines;
+        this.crawlerSpiderHandler = crawlerSpiderHandler;
+        this.executor = new ThreadPoolExecutor(
+                Runtime.getRuntime().availableProcessors() * 2,
+                Runtime.getRuntime().availableProcessors() * 4,
+                60L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(200),
+                new ThreadFactory() {
+                    public Thread newThread(Runnable r) {
+                        Thread thread = new Thread(r);
+                        thread.setDaemon(false);
+                        thread.setName("crawler-spider");
+                        return thread;
+                    }
+                },
+                new ThreadPoolExecutor.AbortPolicy());
     }
 
     @Override
-    protected List<Pipeline> getPipeline() {
-        return pipelines;
+    public ISpiderResponse execute(ISpiderRequest request) {
+        CrawlerContext context = new CrawlerContext();
+        ISpiderResponse response = new ISpiderResponse();
+        context.setRequest(request);
+        context.setResponse(response);
+        context.setPipelines(pipelines.subList(0, pipelines.size() -1));
+        try {
+            crawlerSpiderHandler.handle(context);
+        }catch (Exception e){
+            throw new CrawlerException(e.getMessage());
+        }
+        return response;
+    }
+
+    @Override
+    public void executeAsync(List<ISpiderRequest> requests) {
+        executor.execute(()->{
+            for (ISpiderRequest request : requests) {
+                CrawlerContext context = new CrawlerContext();
+                ISpiderResponse response = new ISpiderResponse();
+                context.setRequest(request);
+                context.setResponse(response);
+                context.setPipelines(pipelines);
+                try {
+                    crawlerSpiderHandler.handle(context);
+                }catch (Exception e){
+                    throw new CrawlerException(e.getMessage());
+                }
+            }
+        });
     }
 }
-
 ```
 
 ### 4. 解析规则类注解实例
 
 节选自 Open-Crawler
 
+1. 定义类
+
+```java
+@Data
+public class AppStore {
+
+    @ExtractBy(type = ExpressionType.JsonPath, value = "$.data.list[*].title", multi = true, unique = true)
+    private String title;
+
+    @ExtractBy(type = ExpressionType.JsonPath, value = "$.data.list[*].digest", multi = true)
+    private String content;
+}
+
+```
+
+2. 爬取
+
 ```java
 
+@Slf4j
+@Component
+public class CrawlerTest {
+
+    private final List<Pipeline> pipelines;
+    private final ThreadPoolExecutor executor;
+    private final CrawlerSpiderHandler crawlerSpiderHandler;
+    public CrawlerTest(DownloadPipeline downloadPipeline,
+                       CustomizeSubPipeline subPipeline,
+                       CustomizeReplacePipeline replacePipeline,
+                       ParserPipeline parserPipeline,
+                       FormatPipeline formatPipeline,
+                       ValuePipeline valuePipeline,
+                       CrawlerSpiderHandler crawlerSpiderHandler) {
+        List<Pipeline> pipelines = new ArrayList<>();
+        pipelines.add(downloadPipeline);
+        pipelines.add(subPipeline);
+        pipelines.add(replacePipeline);
+        pipelines.add(parserPipeline);
+        pipelines.add(formatPipeline);
+        pipelines.add(valuePipeline);
+        this.pipelines = pipelines;
+        this.crawlerSpiderHandler = crawlerSpiderHandler;
+        this.executor = new ThreadPoolExecutor(
+                Runtime.getRuntime().availableProcessors() * 2,
+                Runtime.getRuntime().availableProcessors() * 4,
+                60L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(200),
+                new ThreadFactory() {
+                    public Thread newThread(Runnable r) {
+                        Thread thread = new Thread(r);
+                        thread.setDaemon(false);
+                        thread.setName("crawler-spider");
+                        return thread;
+                    }
+                },
+                new ThreadPoolExecutor.AbortPolicy());
+    }
+
+    @PostConstruct
+    public void test(){
+        List<ISpiderRequest> spiderRequests = buildRequest();
+        executor.execute(()->{
+            for (ISpiderRequest request : spiderRequests) {
+                CrawlerContext context = new CrawlerContext();
+                ISpiderResponse response = new ISpiderResponse();
+                context.setRequest(request);
+                context.setResponse(response);
+                context.setPipelines(pipelines);
+                try {
+                    crawlerSpiderHandler.handle(context);
+                }catch (Exception e){
+                    log.error(e.getMessage(), e);
+                }
+                log.info("结果 {}----------{}",request.getUrl(), response.getFormatResult());
+            }
+        });
+
+    }
+
+    public List<ISpiderRequest> buildRequest(){
+        List<ISpiderRequest> requestList = new ArrayList<>();
+        ISpiderRequest request = new ISpiderRequest();
+        List<FieldExtractor> fieldExtractors = ExtractorUtils.getFieldExtractors(AppStore.class);
+        request.setExtract(fieldExtractors);
+        request.setUrl("https://news.10jqka.com.cn/tapp/news/push/stock/?page=1&tag=&track=website&pagesize=20");
+        requestList.add(request);
+        return requestList;
+    }
+}
 
 ```
 
