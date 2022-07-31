@@ -15,7 +15,7 @@ public class LotteryResponse {
     private boolean lucky;
 
     /**
-     * 抽奖奖品
+     * 中奖奖品
      */
     private LotteryAward award;
 }

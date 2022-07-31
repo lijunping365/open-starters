@@ -1,7 +1,6 @@
 package com.saucesubfresh.starter.lottery.filter;
 
 
-import com.saucesubfresh.starter.lottery.domain.LotteryRequest;
 import com.saucesubfresh.starter.lottery.service.LotteryService;
 import com.saucesubfresh.starter.lottery.utils.MapComparable;
 import org.springframework.beans.BeansException;
@@ -15,25 +14,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author lijunping on 2022/1/10
  */
-public class FilterFactory<T extends LotteryRequest> implements ApplicationContextAware, InitializingBean {
-
-    private ApplicationContext applicationContext;
+public class FilterFactory implements ApplicationContextAware, InitializingBean {
 
     private LotteryService lotteryService;
+    private ApplicationContext applicationContext;
+    private final Map<String, LotteryFilter> filterMap = new ConcurrentHashMap<>();
+    private final Map<String, Integer> filterSortMap = new ConcurrentHashMap<>();
+    private final Map<Long, List<LotteryFilter>> LOTTERY_FILTER = new ConcurrentHashMap<>();
 
-    private final Map<String, LotteryFilter<T>> filterMap = new HashMap<>();
-
-    private final Map<String, Integer> filterSortMap = new HashMap<>();
-
-    private final ConcurrentMap<Long, List<LotteryFilter<T>>> LOTTERY_FILTER = new ConcurrentHashMap<>();
-
-    public List<LotteryFilter<T>> getFilters(Long actId){
-        List<LotteryFilter<T>> lotteryFilters = LOTTERY_FILTER.get(actId);
+    public List<LotteryFilter> getFilters(Long actId){
+        List<LotteryFilter> lotteryFilters = LOTTERY_FILTER.get(actId);
         if (!CollectionUtils.isEmpty(lotteryFilters)){
             return lotteryFilters;
         }
@@ -43,16 +37,15 @@ public class FilterFactory<T extends LotteryRequest> implements ApplicationConte
             return Collections.emptyList();
         }
 
-        Map<String, LotteryFilter<T>> map = new HashMap<>();
+        Map<String, LotteryFilter> map = new HashMap<>();
         actFilterChain.forEach(key-> map.put(filterSortMap.get(key) + key, filterMap.get(key)));
-        Map<String, LotteryFilter<T>> sortByKey = MapComparable.sortByKey(map, true);
-        List<LotteryFilter<T>> values = (List<LotteryFilter<T>>) sortByKey.values();
+        Map<String, LotteryFilter> sortByKey = MapComparable.sortByKey(map, true);
+        List<LotteryFilter> values = (List<LotteryFilter>) sortByKey.values();
         LOTTERY_FILTER.put(actId, values);
         return values;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         this.lotteryService = applicationContext.getBean(LotteryService.class);
         Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(Filter.class);
@@ -61,7 +54,7 @@ public class FilterFactory<T extends LotteryRequest> implements ApplicationConte
         }
         beansWithAnnotation.forEach((k,v)->{
             Filter annotation = v.getClass().getAnnotation(Filter.class);
-            filterMap.put(annotation.value(), (LotteryFilter<T>) v);
+            filterMap.put(annotation.value(), (LotteryFilter) v);
             filterSortMap.put(annotation.value(), annotation.order());
         });
     }

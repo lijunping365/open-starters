@@ -9,16 +9,16 @@ import java.util.List;
  * 一旦某个过滤器抛出异常就会中断抽奖的执行
  * @author lijunping on 2021/12/27
  */
-public class LotteryFilterChain<T extends LotteryRequest>{
+public class LotteryFilterChain{
 
-    private final FilterFactory<T> filterFactory;
+    private final FilterFactory filterFactory;
 
-    public LotteryFilterChain(FilterFactory<T> filterFactory) {
+    public LotteryFilterChain(FilterFactory filterFactory) {
         this.filterFactory = filterFactory;
     }
 
-    public void doFilter(T request){
-        List<LotteryFilter<T>> filters = filterFactory.getFilters(request.getActId());
+    public void doFilter(LotteryRequest request){
+        List<LotteryFilter> filters = filterFactory.getFilters(request.getActId());
         filters.forEach(e->e.doFilter(request));
     }
 }
