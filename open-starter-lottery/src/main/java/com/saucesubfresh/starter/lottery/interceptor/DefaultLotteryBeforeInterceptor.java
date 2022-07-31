@@ -3,7 +3,6 @@ package com.saucesubfresh.starter.lottery.interceptor;
 import com.saucesubfresh.starter.lottery.domain.LotteryRequest;
 import com.saucesubfresh.starter.lottery.filter.LotteryFilterChain;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author : lijunping
@@ -13,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class DefaultLotteryBeforeInterceptor<Req extends LotteryRequest> implements LotteryBeforeInterceptor<Req> {
 
-  @Autowired
-  private LotteryFilterChain<Req> filterChain;
+  private final LotteryFilterChain<Req> filterChain;
+
+  public DefaultLotteryBeforeInterceptor(LotteryFilterChain<Req> filterChain) {
+    this.filterChain = filterChain;
+  }
 
   /**
    * 1 执行过滤器链

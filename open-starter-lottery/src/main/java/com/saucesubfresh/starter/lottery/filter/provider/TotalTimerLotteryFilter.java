@@ -3,7 +3,6 @@ package com.saucesubfresh.starter.lottery.filter.provider;
 import com.saucesubfresh.starter.lottery.domain.LotteryRequest;
 import com.saucesubfresh.starter.lottery.exception.LotteryException;
 import com.saucesubfresh.starter.lottery.filter.Filter;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
