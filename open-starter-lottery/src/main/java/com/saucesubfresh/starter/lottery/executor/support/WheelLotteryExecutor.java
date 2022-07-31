@@ -1,17 +1,21 @@
 package com.saucesubfresh.starter.lottery.executor.support;
 
 import com.saucesubfresh.starter.lottery.algorithm.WheelHashAlgorithm;
+import com.saucesubfresh.starter.lottery.component.LotteryExecuteFailureHandler;
+import com.saucesubfresh.starter.lottery.component.LotteryExecuteSuccessHandler;
 import com.saucesubfresh.starter.lottery.domain.WheelLotteryRequest;
 import com.saucesubfresh.starter.lottery.domain.WheelLotteryResponse;
 import com.saucesubfresh.starter.lottery.exception.LotteryException;
 import com.saucesubfresh.starter.lottery.executor.AbstractLotteryExecutor;
 import com.saucesubfresh.starter.lottery.initializer.LotteryInitializer;
+import com.saucesubfresh.starter.lottery.interceptor.LotteryAfterInterceptor;
+import com.saucesubfresh.starter.lottery.interceptor.LotteryBeforeInterceptor;
 import com.saucesubfresh.starter.lottery.manager.AwardStock;
 import com.saucesubfresh.starter.lottery.manager.LotteryManager;
 import com.saucesubfresh.starter.lottery.manager.WheelAwardStock;
 import com.saucesubfresh.starter.lottery.service.AwardService;
-import com.saucesubfresh.starter.lottery.service.LotteryAward;
-import com.saucesubfresh.starter.lottery.service.WheelAward;
+import com.saucesubfresh.starter.lottery.domain.LotteryAward;
+import com.saucesubfresh.starter.lottery.domain.WheelAward;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
@@ -39,12 +43,16 @@ public class WheelLotteryExecutor extends AbstractLotteryExecutor<WheelLotteryRe
 
     public WheelLotteryExecutor(AwardService awardService,
                                 RedissonClient redissonClient,
-                                RedisTemplate<String, Object> redisTemplate) {
+                                RedisTemplate<String, Object> redisTemplate,
+                                LotteryBeforeInterceptor<WheelLotteryRequest> lotteryBeforeInterceptor,
+                                LotteryAfterInterceptor<WheelLotteryRequest, WheelLotteryResponse> lotteryAfterInterceptor,
+                                LotteryExecuteSuccessHandler<WheelLotteryRequest, WheelLotteryResponse> lotteryExecuteSuccessHandler,
+                                LotteryExecuteFailureHandler<WheelLotteryRequest> lotteryExecuteFailureHandler) {
+        super(lotteryBeforeInterceptor, lotteryAfterInterceptor, lotteryExecuteSuccessHandler, lotteryExecuteFailureHandler);
         this.awardService = awardService;
         this.redissonClient = redissonClient;
         this.redisTemplate = redisTemplate;
     }
-
 
     @Override
     protected WheelLotteryResponse execDraw(WheelLotteryRequest request) {
@@ -54,8 +62,8 @@ public class WheelLotteryExecutor extends AbstractLotteryExecutor<WheelLotteryRe
         return response;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Optional<T> take(Long actId) {
         // 随机索引
         int randomVal = WheelHashAlgorithm.generateSecureRandomIntCode(100);

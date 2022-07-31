@@ -1,5 +1,7 @@
 package com.saucesubfresh.starter.lottery.service;
 
+import com.saucesubfresh.starter.lottery.domain.LotteryAward;
+
 import java.util.List;
 import java.util.Optional;
 

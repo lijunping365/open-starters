@@ -1,16 +1,20 @@
 package com.saucesubfresh.starter.lottery.executor.support;
 
 import com.saucesubfresh.starter.lottery.algorithm.RedPacketDivideAlgorithm;
+import com.saucesubfresh.starter.lottery.component.LotteryExecuteFailureHandler;
+import com.saucesubfresh.starter.lottery.component.LotteryExecuteSuccessHandler;
 import com.saucesubfresh.starter.lottery.domain.RedPacketLotteryRequest;
 import com.saucesubfresh.starter.lottery.domain.RedPacketLotteryResponse;
 import com.saucesubfresh.starter.lottery.exception.LotteryException;
 import com.saucesubfresh.starter.lottery.executor.AbstractLotteryExecutor;
 import com.saucesubfresh.starter.lottery.initializer.LotteryInitializer;
+import com.saucesubfresh.starter.lottery.interceptor.LotteryAfterInterceptor;
+import com.saucesubfresh.starter.lottery.interceptor.LotteryBeforeInterceptor;
 import com.saucesubfresh.starter.lottery.manager.AwardStock;
 import com.saucesubfresh.starter.lottery.manager.LotteryManager;
 import com.saucesubfresh.starter.lottery.manager.RedPacketAwardStock;
 import com.saucesubfresh.starter.lottery.service.AwardService;
-import com.saucesubfresh.starter.lottery.service.RedPacketAward;
+import com.saucesubfresh.starter.lottery.domain.RedPacketAward;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
@@ -31,7 +35,13 @@ public class RedPacketLotteryExecutor extends AbstractLotteryExecutor<RedPacketL
     private final AwardService awardService;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedPacketLotteryExecutor(AwardService awardService, RedisTemplate<String, Object> redisTemplate) {
+    public RedPacketLotteryExecutor(AwardService awardService,
+                                    RedisTemplate<String, Object> redisTemplate,
+                                    LotteryBeforeInterceptor<RedPacketLotteryRequest> lotteryBeforeInterceptor,
+                                    LotteryAfterInterceptor<RedPacketLotteryRequest, RedPacketLotteryResponse> lotteryAfterInterceptor,
+                                    LotteryExecuteSuccessHandler<RedPacketLotteryRequest, RedPacketLotteryResponse> lotteryExecuteSuccessHandler,
+                                    LotteryExecuteFailureHandler<RedPacketLotteryRequest> lotteryExecuteFailureHandler) {
+        super(lotteryBeforeInterceptor, lotteryAfterInterceptor, lotteryExecuteSuccessHandler, lotteryExecuteFailureHandler);
         this.awardService = awardService;
         this.redisTemplate = redisTemplate;
     }

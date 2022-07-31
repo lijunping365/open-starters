@@ -1,5 +1,6 @@
-package com.saucesubfresh.starter.lottery.service;
+package com.saucesubfresh.starter.lottery.domain;
 
+import com.saucesubfresh.starter.lottery.domain.LotteryAward;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
  * @author lijunping on 2022/1/13
  */
 @Data
-public class WheelAward extends LotteryAward{
+public class WheelAward extends LotteryAward {
     /**
      * 奖品 id
      */

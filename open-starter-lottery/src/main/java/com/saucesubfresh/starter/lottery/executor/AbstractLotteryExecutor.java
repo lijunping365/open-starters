@@ -7,7 +7,6 @@ import com.saucesubfresh.starter.lottery.domain.LotteryResponse;
 import com.saucesubfresh.starter.lottery.exception.LotteryException;
 import com.saucesubfresh.starter.lottery.interceptor.LotteryAfterInterceptor;
 import com.saucesubfresh.starter.lottery.interceptor.LotteryBeforeInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
@@ -18,17 +17,20 @@ import java.util.Optional;
  */
 public abstract class AbstractLotteryExecutor<Req extends LotteryRequest, Resp extends LotteryResponse> implements LotteryExecutor<Req, Resp> {
 
-    @Autowired
-    private LotteryExecuteSuccessHandler<Req, Resp> lotteryExecuteSuccessHandler;
+    private final LotteryBeforeInterceptor<Req> lotteryBeforeInterceptor;
+    private final LotteryAfterInterceptor<Req, Resp> lotteryAfterInterceptor;
+    private final LotteryExecuteSuccessHandler<Req, Resp> lotteryExecuteSuccessHandler;
+    private final LotteryExecuteFailureHandler<Req> lotteryExecuteFailureHandler;
 
-    @Autowired
-    private LotteryExecuteFailureHandler<Req> lotteryExecuteFailureHandler;
-
-    @Autowired
-    private LotteryBeforeInterceptor<Req> lotteryBeforeInterceptor;
-
-    @Autowired
-    private LotteryAfterInterceptor<Req, Resp> lotteryAfterInterceptor;
+    protected AbstractLotteryExecutor(LotteryBeforeInterceptor<Req> lotteryBeforeInterceptor,
+                                      LotteryAfterInterceptor<Req, Resp> lotteryAfterInterceptor,
+                                      LotteryExecuteSuccessHandler<Req, Resp> lotteryExecuteSuccessHandler,
+                                      LotteryExecuteFailureHandler<Req> lotteryExecuteFailureHandler) {
+        this.lotteryBeforeInterceptor = lotteryBeforeInterceptor;
+        this.lotteryAfterInterceptor = lotteryAfterInterceptor;
+        this.lotteryExecuteSuccessHandler = lotteryExecuteSuccessHandler;
+        this.lotteryExecuteFailureHandler = lotteryExecuteFailureHandler;
+    }
 
     @Override
     public Resp doDraw(Req request) throws LotteryException {
@@ -45,6 +47,11 @@ public abstract class AbstractLotteryExecutor<Req extends LotteryRequest, Resp e
             onComplete(request, drawResult, throwable);
         }
         return drawResult;
+    }
+
+    @Override
+    public void doDrawAsync(Req request) throws LotteryException {
+        this.doDraw(request);
     }
 
     protected void onBefore(Req request) throws Throwable {

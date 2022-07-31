@@ -1,7 +1,7 @@
 package com.saucesubfresh.starter.lottery.algorithm;
 
 
-import com.saucesubfresh.starter.lottery.service.WheelAward;
+import com.saucesubfresh.starter.lottery.domain.WheelAward;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;

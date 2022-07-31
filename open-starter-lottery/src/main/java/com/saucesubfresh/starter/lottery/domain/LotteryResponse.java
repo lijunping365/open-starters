@@ -1,6 +1,5 @@
 package com.saucesubfresh.starter.lottery.domain;
 
-import com.saucesubfresh.starter.lottery.service.LotteryAward;
 import lombok.Data;
 
 /**
