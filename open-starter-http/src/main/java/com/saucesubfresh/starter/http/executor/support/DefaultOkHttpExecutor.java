@@ -3,6 +3,7 @@ package com.saucesubfresh.starter.http.executor.support;
 
 import com.saucesubfresh.starter.http.exception.HttpException;
 import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
+import com.saucesubfresh.starter.http.executor.OkHttpExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
 import com.saucesubfresh.starter.http.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +16,11 @@ import java.util.Objects;
  * Created by lijunping
  **/
 @Slf4j
-public class OkHttpExecutor extends AbstractHttpExecutor {
+public class DefaultOkHttpExecutor extends AbstractHttpExecutor implements OkHttpExecutor {
 
     private final OkHttpClient client;
 
-    public OkHttpExecutor(OkHttpClient client) {
+    public DefaultOkHttpExecutor(OkHttpClient client) {
         this.client = client;
     }
 

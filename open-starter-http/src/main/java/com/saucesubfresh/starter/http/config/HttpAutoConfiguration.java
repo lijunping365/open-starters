@@ -1,8 +1,10 @@
 package com.saucesubfresh.starter.http.config;
 
 import com.saucesubfresh.starter.http.constants.HttpConstant;
-import com.saucesubfresh.starter.http.executor.support.HttpClientExecutor;
-import com.saucesubfresh.starter.http.executor.support.OkHttpExecutor;
+import com.saucesubfresh.starter.http.executor.HttpClientExecutor;
+import com.saucesubfresh.starter.http.executor.OkHttpExecutor;
+import com.saucesubfresh.starter.http.executor.support.DefaultHttpClientExecutor;
+import com.saucesubfresh.starter.http.executor.support.DefaultOkHttpExecutor;
 import com.saucesubfresh.starter.http.properties.HttpProperties;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -44,7 +46,7 @@ public class HttpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public OkHttpExecutor okHttpExecutor(OkHttpClient okHttpClient){
-        return new OkHttpExecutor(okHttpClient);
+        return new DefaultOkHttpExecutor(okHttpClient);
     }
 
     @Bean
@@ -78,6 +80,6 @@ public class HttpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public HttpClientExecutor httpClientExecutor(CloseableHttpClient httpClient){
-        return new HttpClientExecutor(httpClient);
+        return new DefaultHttpClientExecutor(httpClient);
     }
 }

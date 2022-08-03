@@ -2,6 +2,7 @@ package com.saucesubfresh.starter.http.executor.support;
 
 import com.saucesubfresh.starter.http.exception.HttpException;
 import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
+import com.saucesubfresh.starter.http.executor.HttpClientExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
 import com.saucesubfresh.starter.http.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,11 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 @Slf4j
-public class HttpClientExecutor extends AbstractHttpExecutor {
+public class DefaultHttpClientExecutor extends AbstractHttpExecutor implements HttpClientExecutor {
 
     private final CloseableHttpClient client;
 
-    public HttpClientExecutor(CloseableHttpClient client) {
+    public DefaultHttpClientExecutor(CloseableHttpClient client) {
         this.client = client;
     }
 
