@@ -10,5 +10,5 @@ import com.saucesubfresh.starter.executor.domain.Task;
  */
 public interface TaskExecuteSuccessHandler {
 
-  void onTaskExecuteSuccess(Task task);
+  void onTaskExecuteSuccess(Task task, Object result);
 }

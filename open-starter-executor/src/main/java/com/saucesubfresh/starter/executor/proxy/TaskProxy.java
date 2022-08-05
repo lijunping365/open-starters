@@ -49,17 +49,12 @@ public class TaskProxy implements InvocationHandler, TaskDecorator {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) {
-
     Throwable throwable = null;
-
     Object result = null;
-
     try {
       onBefore();
-
       result = method.invoke(command, args);
-
-      onSuccess();
+      onSuccess(result);
     } catch (Throwable t) {
       throwable = t;
       onError(throwable);
@@ -73,8 +68,8 @@ public class TaskProxy implements InvocationHandler, TaskDecorator {
     taskBeforeInterceptor.before(task);
   }
 
-  protected void onSuccess() {
-    taskExecuteSuccessHandler.onTaskExecuteSuccess(task);
+  protected void onSuccess(Object result) {
+    taskExecuteSuccessHandler.onTaskExecuteSuccess(task, result);
   }
 
   protected void onError(Throwable throwable) {

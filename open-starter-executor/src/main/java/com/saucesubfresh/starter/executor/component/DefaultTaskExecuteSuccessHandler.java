@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultTaskExecuteSuccessHandler implements TaskExecuteSuccessHandler {
   @Override
-  public void onTaskExecuteSuccess(Task task) {
+  public void onTaskExecuteSuccess(Task task, Object result) {
     log.info("任务执行成功了");
   }
 }
