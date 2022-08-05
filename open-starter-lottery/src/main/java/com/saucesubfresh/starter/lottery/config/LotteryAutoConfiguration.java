@@ -4,8 +4,10 @@ import com.saucesubfresh.starter.lottery.component.DefaultLotteryExecuteFailureH
 import com.saucesubfresh.starter.lottery.component.DefaultLotteryExecuteSuccessHandler;
 import com.saucesubfresh.starter.lottery.component.LotteryExecuteFailureHandler;
 import com.saucesubfresh.starter.lottery.component.LotteryExecuteSuccessHandler;
-import com.saucesubfresh.starter.lottery.executor.support.RedPacketLotteryExecutor;
-import com.saucesubfresh.starter.lottery.executor.support.WheelLotteryExecutor;
+import com.saucesubfresh.starter.lottery.executor.DefaultRedPacketLotteryExecutor;
+import com.saucesubfresh.starter.lottery.executor.DefaultWheelLotteryExecutor;
+import com.saucesubfresh.starter.lottery.executor.RedPacketLotteryExecutor;
+import com.saucesubfresh.starter.lottery.executor.WheelLotteryExecutor;
 import com.saucesubfresh.starter.lottery.filter.FilterFactory;
 import com.saucesubfresh.starter.lottery.filter.LotteryFilterChain;
 import com.saucesubfresh.starter.lottery.interceptor.DefaultLotteryAfterInterceptor;
@@ -40,37 +42,13 @@ public class LotteryAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public LotteryBeforeInterceptor beforeInterceptor(LotteryFilterChain filterChain){
-        return new DefaultLotteryBeforeInterceptor(filterChain);
+    public RedPacketLotteryExecutor redPacketLotteryExecutor(){
+        return new DefaultRedPacketLotteryExecutor();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LotteryAfterInterceptor afterInterceptor(){
-        return new DefaultLotteryAfterInterceptor();
+    public WheelLotteryExecutor wheelLotteryExecutor(){
+        return new DefaultWheelLotteryExecutor()
     }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public LotteryExecuteSuccessHandler executeSuccessHandler(){
-        return new DefaultLotteryExecuteSuccessHandler();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public LotteryExecuteFailureHandler executeFailureHandler(){
-        return new DefaultLotteryExecuteFailureHandler();
-    }
-
-//    @Bean
-//    @ConditionalOnMissingBean
-//    public RedPacketLotteryExecutor redPacketLotteryExecutor(){
-//        return new RedPacketLotteryExecutor()
-//    }
-//
-//    @Bean
-//    @ConditionalOnMissingBean
-//    public WheelLotteryExecutor wheelLotteryExecutor(){
-//        return new WheelLotteryExecutor()
-//    }
 }

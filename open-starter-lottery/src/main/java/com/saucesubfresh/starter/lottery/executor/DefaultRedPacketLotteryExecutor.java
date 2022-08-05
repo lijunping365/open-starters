@@ -1,15 +1,10 @@
-package com.saucesubfresh.starter.lottery.executor.support;
+package com.saucesubfresh.starter.lottery.executor;
 
 import com.saucesubfresh.starter.lottery.algorithm.RedPacketDivideAlgorithm;
-import com.saucesubfresh.starter.lottery.component.LotteryExecuteFailureHandler;
-import com.saucesubfresh.starter.lottery.component.LotteryExecuteSuccessHandler;
 import com.saucesubfresh.starter.lottery.domain.RedPacketLotteryRequest;
 import com.saucesubfresh.starter.lottery.domain.RedPacketLotteryResponse;
 import com.saucesubfresh.starter.lottery.exception.LotteryException;
-import com.saucesubfresh.starter.lottery.executor.AbstractLotteryExecutor;
 import com.saucesubfresh.starter.lottery.initializer.LotteryInitializer;
-import com.saucesubfresh.starter.lottery.interceptor.LotteryAfterInterceptor;
-import com.saucesubfresh.starter.lottery.interceptor.LotteryBeforeInterceptor;
 import com.saucesubfresh.starter.lottery.manager.AwardStock;
 import com.saucesubfresh.starter.lottery.manager.LotteryManager;
 import com.saucesubfresh.starter.lottery.manager.RedPacketAwardStock;
@@ -28,34 +23,28 @@ import java.util.Optional;
  * @author lijunping on 2022/1/7
  */
 @Slf4j
-public class RedPacketLotteryExecutor extends AbstractLotteryExecutor<RedPacketLotteryRequest, RedPacketLotteryResponse> implements LotteryInitializer, LotteryManager {
+public class DefaultRedPacketLotteryExecutor implements RedPacketLotteryExecutor, LotteryManager {
 
     private static final String PREFIX = "RED_PACKET_QUEUE:";
 
     private final AwardService awardService;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedPacketLotteryExecutor(AwardService awardService,
-                                    RedisTemplate<String, Object> redisTemplate,
-                                    LotteryBeforeInterceptor<RedPacketLotteryRequest> lotteryBeforeInterceptor,
-                                    LotteryAfterInterceptor<RedPacketLotteryRequest, RedPacketLotteryResponse> lotteryAfterInterceptor,
-                                    LotteryExecuteSuccessHandler<RedPacketLotteryRequest, RedPacketLotteryResponse> lotteryExecuteSuccessHandler,
-                                    LotteryExecuteFailureHandler<RedPacketLotteryRequest> lotteryExecuteFailureHandler) {
-        super(lotteryBeforeInterceptor, lotteryAfterInterceptor, lotteryExecuteSuccessHandler, lotteryExecuteFailureHandler);
+    public DefaultRedPacketLotteryExecutor(AwardService awardService,
+                                           RedisTemplate<String, Object> redisTemplate) {
         this.awardService = awardService;
         this.redisTemplate = redisTemplate;
     }
 
 
     @Override
-    protected RedPacketLotteryResponse execDraw(RedPacketLotteryRequest request) {
+    public RedPacketLotteryResponse doDraw(RedPacketLotteryRequest request){
         RedPacketLotteryResponse response = new RedPacketLotteryResponse();
         final Optional<Long> takeResult = this.take(request.getActId());
         response.setLuckyAmount(takeResult.orElse(0L));
         return response;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public <T> Optional<T> take(Long actId) {
         final Object o = redisTemplate.opsForList().rightPop(PREFIX + actId);
