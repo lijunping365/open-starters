@@ -22,7 +22,7 @@ public abstract class AbstractCacheProcessor implements CacheProcessor {
 
     protected Object fromStoreValue(Object storeValue) {
         if (storeValue == NullValue.INSTANCE) {
-            return null;
+            return NullValue.INSTANCE.get();
         }
         return storeValue;
     }

@@ -9,16 +9,28 @@ import java.io.Serializable;
  */
 @Data
 public class CacheMessage implements Serializable {
-
+    /**
+     * The cache name
+     */
     private String cacheName;
-
-    private Long instanceId;
-
-    private String msgId;
-
+    /**
+     * The cache key
+     */
     private Object key;
-
+    /**
+     * The cache value
+     */
     private Object value;
-
+    /**
+     * The cache instance id
+     */
+    private Long instanceId;
+    /**
+     * The message id
+     */
+    private String msgId;
+    /**
+     * The message command
+     */
     private CacheCommand command;
 }
