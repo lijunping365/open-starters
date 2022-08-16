@@ -169,7 +169,13 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 }
 ```
 
+## 1.0.2 版本更新说明
 
+1.0.2 是该组件的第一个版本，包含该组件的全部功能。
+
+## 1.0.3 版本更新说明
+
+修复了重复广播同步消息的 bug。
 
 
 
