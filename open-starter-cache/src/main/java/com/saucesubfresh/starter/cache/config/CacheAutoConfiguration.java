@@ -40,9 +40,8 @@ public class CacheAutoConfiguration {
     @ConditionalOnBean(RedissonClient.class)
     public CacheManager cacheManager(CacheProperties properties,
                                      ConfigFactory configFactory,
-                                     RedissonClient redissonClient,
-                                     CacheMessageProducer producer){
-        return new RedissonCaffeineCacheManager(properties, configFactory, redissonClient, producer);
+                                     RedissonClient redissonClient){
+        return new RedissonCaffeineCacheManager(properties, configFactory, redissonClient);
     }
 
     @Bean
@@ -53,8 +52,9 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CacheProcessor cacheProcessor(CacheManager cacheManager){
-        return new DefaultCacheProcessor(cacheManager);
+    public CacheProcessor cacheProcessor(CacheManager cacheManager,
+                                         CacheMessageProducer cacheMessageProducer){
+        return new DefaultCacheProcessor(cacheManager, cacheMessageProducer);
     }
 
     @Bean

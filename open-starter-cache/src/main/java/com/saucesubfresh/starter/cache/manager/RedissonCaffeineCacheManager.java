@@ -13,24 +13,20 @@ import org.redisson.api.RedissonClient;
  * @Date: 2022-05-29 13:38
  */
 public class RedissonCaffeineCacheManager extends AbstractCacheManager {
-
     private final RedissonClient client;
     private final CacheProperties properties;
-    private final CacheMessageProducer producer;
 
     public RedissonCaffeineCacheManager(CacheProperties properties,
                                         ConfigFactory configFactory,
-                                        RedissonClient redissonClient,
-                                        CacheMessageProducer producer) {
+                                        RedissonClient redissonClient) {
         super(configFactory);
         this.properties = properties;
         this.client = redissonClient;
-        this.producer = producer;
     }
 
     @Override
     protected ClusterCache createCache(String cacheName, CacheConfig cacheConfig) {
         String namespace = properties.getNamespace();
-        return new RedissonCaffeineCache(cacheName, namespace, cacheConfig, client, producer);
+        return new RedissonCaffeineCache(cacheName, namespace, cacheConfig, client);
     }
 }

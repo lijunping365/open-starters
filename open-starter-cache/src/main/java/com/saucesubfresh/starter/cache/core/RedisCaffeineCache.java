@@ -3,9 +3,6 @@ package com.saucesubfresh.starter.cache.core;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
-import com.saucesubfresh.starter.cache.message.CacheMessage;
-import com.saucesubfresh.starter.cache.message.CacheCommand;
-import com.saucesubfresh.starter.cache.message.CacheMessageProducer;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisCaffeineCache extends AbstractClusterCache {
 
-    private final String cacheName;
     private final String cacheHashKey;
     private final Cache<Object, Object> cache;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -34,10 +30,8 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     public RedisCaffeineCache(String cacheName,
                               String namespace,
                               CacheConfig cacheConfig,
-                              CacheMessageProducer messageProducer,
                               RedisTemplate<String, Object> redisTemplate) {
-        super(new ConcurrentStatsCounter(), messageProducer);
-        this.cacheName = cacheName;
+        super(new ConcurrentStatsCounter());
         this.cacheHashKey = super.generate(namespace, cacheName);
         this.redisTemplate = redisTemplate;
         this.cache = Caffeine.newBuilder()
@@ -52,15 +46,7 @@ public class RedisCaffeineCache extends AbstractClusterCache {
         if (CollectionUtils.isEmpty(entries)){
             return;
         }
-        entries.forEach((key, value)->{
-            CacheMessage cacheMessage = new CacheMessage();
-            cacheMessage.setCacheName(cacheName);
-            cacheMessage.setCommand(CacheCommand.UPDATE);
-            cacheMessage.setKey(key);
-            cacheMessage.setValue(value);
-            super.publish(cacheMessage);
-            cache.put(key, value);
-        });
+        entries.forEach(cache::put);
     }
 
     @Override
@@ -83,12 +69,6 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     public void put(Object key, Object value) {
         value = toStoreValue(value);
         redisTemplate.opsForHash().put(cacheHashKey, key, value);
-        CacheMessage cacheMessage = new CacheMessage();
-        cacheMessage.setCacheName(cacheName);
-        cacheMessage.setCommand(CacheCommand.UPDATE);
-        cacheMessage.setKey(key);
-        cacheMessage.setValue(value);
-        super.publish(cacheMessage);
         cache.put(key, value);
         this.afterPut();
     }
@@ -96,21 +76,12 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     @Override
     public void evict(Object key) {
         redisTemplate.opsForHash().delete(cacheHashKey, key);
-        CacheMessage cacheMessage = new CacheMessage();
-        cacheMessage.setCacheName(cacheName);
-        cacheMessage.setCommand(CacheCommand.INVALIDATE);
-        cacheMessage.setKey(key);
-        super.publish(cacheMessage);
         cache.invalidate(key);
     }
 
     @Override
     public void clear() {
         redisTemplate.delete(cacheHashKey);
-        CacheMessage cacheMessage = new CacheMessage();
-        cacheMessage.setCacheName(cacheName);
-        cacheMessage.setCommand(CacheCommand.CLEAR);
-        super.publish(cacheMessage);
         cache.invalidateAll();
     }
 }
