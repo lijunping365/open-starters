@@ -4,8 +4,8 @@ import com.saucesubfresh.starter.http.exception.HttpException;
 import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
 import com.saucesubfresh.starter.http.executor.HttpClientExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
-import com.saucesubfresh.starter.http.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -51,7 +51,7 @@ public class DefaultHttpClientExecutor extends AbstractHttpExecutor implements H
     public String doPost(HttpRequest request) throws HttpException{
         HttpPost httpPost = new HttpPost(request.getUrl());
         try {
-            handlerData(httpPost, request.getParams());
+            handlerData(httpPost, request.getData());
             setHeader(httpPost, request.getHeaders());
         } catch (IOException e) {
             log.error("HttpClient_build_exception",e);
@@ -87,9 +87,9 @@ public class DefaultHttpClientExecutor extends AbstractHttpExecutor implements H
         }
     }
 
-    private void handlerData(HttpPost httpPost, Map<String, String> data) throws UnsupportedEncodingException {
-        if (data != null){
-            StringEntity entity = new StringEntity(JSON.toJSON(data), ContentType.APPLICATION_JSON);
+    private void handlerData(HttpPost httpPost, String data) throws UnsupportedEncodingException {
+        if (StringUtils.isNotBlank(data)){
+            StringEntity entity = new StringEntity(data, ContentType.APPLICATION_JSON);
             httpPost.setEntity(entity);
         }
     }

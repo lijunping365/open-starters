@@ -5,7 +5,6 @@ import com.saucesubfresh.starter.http.exception.HttpException;
 import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
 import com.saucesubfresh.starter.http.executor.OkHttpExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
-import com.saucesubfresh.starter.http.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
@@ -37,7 +36,7 @@ public class DefaultOkHttpExecutor extends AbstractHttpExecutor implements OkHtt
     @Override
     public String doPost(HttpRequest httpRequest) throws HttpException{
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-        RequestBody body = FormBody.create(JSON.toJSON(httpRequest.getParams()), mediaType);
+        RequestBody body = FormBody.create(httpRequest.getData(), mediaType);
         Request request = new Request.Builder()
                 .url(httpRequest.getUrl())
                 .headers(Headers.of(httpRequest.getHeaders()))

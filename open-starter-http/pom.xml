@@ -10,8 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>open-starter-http</artifactId>
-    <version>1.0.4</version>
     <description>一个简单封装了 httpClient 和 okHttp 的工具</description>
+    <version>1.0.4</version>
 
     <dependencies>
         <dependency>
