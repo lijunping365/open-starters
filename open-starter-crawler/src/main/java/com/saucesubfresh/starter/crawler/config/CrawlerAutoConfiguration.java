@@ -2,8 +2,6 @@ package com.saucesubfresh.starter.crawler.config;
 
 import com.saucesubfresh.starter.crawler.generator.DefaultKeyGenerator;
 import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
-import com.saucesubfresh.starter.crawler.handler.CrawlerSpiderHandler;
-import com.saucesubfresh.starter.crawler.handler.DefaultCrawlerSpiderHandler;
 import com.saucesubfresh.starter.crawler.pipeline.*;
 import com.saucesubfresh.starter.crawler.properties.CrawlerProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -52,11 +50,5 @@ public class CrawlerAutoConfiguration {
     @ConditionalOnMissingBean
     public PersistencePipeline persistencePipeline(){
         return new DefaultPersistencePipeline();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public CrawlerSpiderHandler crawlerSpiderHandler(){
-        return new DefaultCrawlerSpiderHandler();
     }
 }

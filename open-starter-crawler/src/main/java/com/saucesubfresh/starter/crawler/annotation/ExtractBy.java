@@ -29,6 +29,7 @@ public @interface ExtractBy {
      * @return default value
      */
     String defaultValue() default "";
+
     /**
      * Extractor type, support XPath, CSS Selector and regex.
      *
