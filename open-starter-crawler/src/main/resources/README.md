@@ -30,19 +30,20 @@
 
 暂无
 
-### 3. 解析规则值传递实例
+### 3. 动态解析规则实例
 
-节选自 Open-Crawler
+节选自 Open-Crawler，搭载 open-starter-executor 组件进行多线程采集，效率更高，还可自定义采集前后拦截器，进行采集时间统计。
 
 ```java
 
+import java.util.ArrayList;
+
 @Slf4j
 @Component
-public class DefaultCrawlerExecutor implements CrawlerExecutor{
+public class DefaultCrawlerExecutor implements CrawlerExecutor {
 
-    private final List<Pipeline> pipelines;
-    private final ThreadPoolExecutor executor;
-    private final CrawlerSpiderHandler crawlerSpiderHandler;
+    private final List<Pipeline> pipelines = new ArrayList<>();
+    private final TaskProcessor<ISpiderRequest> taskProcessor;
     public DefaultCrawlerExecutor(DownloadPipeline downloadPipeline,
                                   CustomizeSubPipeline subPipeline,
                                   CustomizeReplacePipeline replacePipeline,
@@ -52,8 +53,7 @@ public class DefaultCrawlerExecutor implements CrawlerExecutor{
                                   FilterPipeline filterPipeline,
                                   SerializePipeline serializePipeline,
                                   PersistencePipeline persistencePipeline,
-                                  CrawlerSpiderHandler crawlerSpiderHandler) {
-        List<Pipeline> pipelines = new ArrayList<>();
+                                  TaskProcessor<ISpiderRequest> taskProcessor) {
         pipelines.add(downloadPipeline);
         pipelines.add(subPipeline);
         pipelines.add(replacePipeline);
@@ -63,61 +63,25 @@ public class DefaultCrawlerExecutor implements CrawlerExecutor{
         pipelines.add(filterPipeline);
         pipelines.add(serializePipeline);
         pipelines.add(persistencePipeline);
-        this.pipelines = pipelines;
-        this.crawlerSpiderHandler = crawlerSpiderHandler;
-        this.executor = new ThreadPoolExecutor(
-                Runtime.getRuntime().availableProcessors() * 2,
-                Runtime.getRuntime().availableProcessors() * 4,
-                60L,
-                TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(200),
-                new ThreadFactory() {
-                    public Thread newThread(Runnable r) {
-                        Thread thread = new Thread(r);
-                        thread.setDaemon(false);
-                        thread.setName("crawler-spider");
-                        return thread;
-                    }
-                },
-                new ThreadPoolExecutor.AbortPolicy());
-    }
-
-    @Override
-    public ISpiderResponse execute(ISpiderRequest request) {
-        CrawlerContext context = new CrawlerContext();
-        ISpiderResponse response = new ISpiderResponse();
-        context.setRequest(request);
-        context.setResponse(response);
-        context.setPipelines(pipelines.subList(0, pipelines.size() -1));
-        try {
-            crawlerSpiderHandler.handle(context);
-        }catch (Exception e){
-            throw new CrawlerException(e.getMessage());
-        }
-        return response;
+        this.taskProcessor = taskProcessor;
     }
 
     @Override
     public void executeAsync(List<ISpiderRequest> requests) {
-        executor.execute(()->{
-            for (ISpiderRequest request : requests) {
-                CrawlerContext context = new CrawlerContext();
-                ISpiderResponse response = new ISpiderResponse();
-                context.setRequest(request);
-                context.setResponse(response);
-                context.setPipelines(pipelines);
-                try {
-                    crawlerSpiderHandler.handle(context);
-                }catch (Exception e){
-                    throw new CrawlerException(e.getMessage());
-                }
-            }
-        });
+        taskProcessor.execute(requests, (task -> {
+            ISpiderResponse response = new ISpiderResponse();
+            response.setSerializeClass(CrawlerData.class);
+            this.doExecute(pipelines, (SpiderRequest) task, response);
+        }));
+    }
+
+    private void doExecute(List<Pipeline> pipelines, SpiderRequest request, SpiderResponse response){
+        pipelines.forEach(pipeline -> pipeline.process(request, response));
     }
 }
 ```
 
-### 4. 解析规则类注解实例
+### 4. 类注解解析规则实例
 
 节选自 Open-Crawler
 
@@ -140,73 +104,52 @@ public class AppStore {
 
 ```java
 
+import java.util.ArrayList;
+
 @Slf4j
 @Component
 public class CrawlerTest {
 
-    private final List<Pipeline> pipelines;
-    private final ThreadPoolExecutor executor;
-    private final CrawlerSpiderHandler crawlerSpiderHandler;
+    private final List<Pipeline> pipelines = new ArrayList<>();
+    private final TaskProcessor<ISpiderRequest> taskProcessor;
+
     public CrawlerTest(DownloadPipeline downloadPipeline,
                        CustomizeSubPipeline subPipeline,
                        CustomizeReplacePipeline replacePipeline,
                        ParserPipeline parserPipeline,
                        FormatPipeline formatPipeline,
                        ValuePipeline valuePipeline,
-                       CrawlerSpiderHandler crawlerSpiderHandler) {
-        List<Pipeline> pipelines = new ArrayList<>();
+                       TaskProcessor<ISpiderRequest> taskProcessor) {
         pipelines.add(downloadPipeline);
         pipelines.add(subPipeline);
         pipelines.add(replacePipeline);
         pipelines.add(parserPipeline);
         pipelines.add(formatPipeline);
         pipelines.add(valuePipeline);
-        this.pipelines = pipelines;
-        this.crawlerSpiderHandler = crawlerSpiderHandler;
-        this.executor = new ThreadPoolExecutor(
-                Runtime.getRuntime().availableProcessors() * 2,
-                Runtime.getRuntime().availableProcessors() * 4,
-                60L,
-                TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(200),
-                new ThreadFactory() {
-                    public Thread newThread(Runnable r) {
-                        Thread thread = new Thread(r);
-                        thread.setDaemon(false);
-                        thread.setName("crawler-spider");
-                        return thread;
-                    }
-                },
-                new ThreadPoolExecutor.AbortPolicy());
+        this.taskProcessor = taskProcessor;
     }
 
     @PostConstruct
-    public void test(){
+    public void test() {
         List<ISpiderRequest> spiderRequests = buildRequest();
-        executor.execute(()->{
-            for (ISpiderRequest request : spiderRequests) {
-                CrawlerContext context = new CrawlerContext();
-                ISpiderResponse response = new ISpiderResponse();
-                context.setRequest(request);
-                context.setResponse(response);
-                context.setPipelines(pipelines);
-                try {
-                    crawlerSpiderHandler.handle(context);
-                }catch (Exception e){
-                    log.error(e.getMessage(), e);
-                }
-                log.info("结果 {}----------{}",request.getUrl(), response.getFormatResult());
-            }
-        });
+        taskProcessor.execute(spiderRequests, (task -> {
+            ISpiderResponse response = new ISpiderResponse();
+            response.setSerializeClass(CrawlerData.class);
+            this.doExecute(pipelines, (SpiderRequest) task, response);
+        }));
 
     }
 
-    public List<ISpiderRequest> buildRequest(){
+    private void doExecute(List<Pipeline> pipelines, SpiderRequest request, SpiderResponse response){
+        pipelines.forEach(pipeline -> pipeline.process(request, response));
+    }
+
+    public List<ISpiderRequest> buildRequest() {
         List<ISpiderRequest> requestList = new ArrayList<>();
         ISpiderRequest request = new ISpiderRequest();
         List<FieldExtractor> fieldExtractors = ExtractorUtils.getFieldExtractors(AppStore.class);
         request.setExtract(fieldExtractors);
-        request.setUrl("https://news.10jqka.com.cn/tapp/news/push/stock/?page=1&tag=&track=website&pagesize=20");
+        request.setUrl("http://www.ccc.com");
         requestList.add(request);
         return requestList;
     }
@@ -215,7 +158,7 @@ public class CrawlerTest {
 ```
 
 
-## 1.0.0 版本
+## 1.0.0 版本说明
 
 采用固定流程进行操作：下载-> 解析-> 持久化
 
@@ -276,6 +219,10 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 因此，我们使用类似流水线的处理方式，每条流水线中各个处理环节的顺序可以是不同的，数量也可以是不同的
 
 系统默认的流水线是：下载-> 解析-> 格式化-> 值处理-> 持久化
+
+## 1.0.3 版本更新说明
+
+爬虫执行优化，建议搭载 open-starter-executor 组件进行多线程采集，效率更高，还可自定义采集前后拦截器，统计采集时间。
 
 ## 注意事项
 
