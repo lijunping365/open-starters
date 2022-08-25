@@ -1,7 +1,7 @@
 package com.saucesubfresh.starter.limiter.config;
 
-import com.saucesubfresh.starter.limiter.core.RateLimiter;
-import com.saucesubfresh.starter.limiter.core.RedissonRateLimiter;
+import com.saucesubfresh.starter.limiter.process.RateLimiter;
+import com.saucesubfresh.starter.limiter.process.RedissonRateLimiter;
 import com.saucesubfresh.starter.limiter.properties.LimiterProperties;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

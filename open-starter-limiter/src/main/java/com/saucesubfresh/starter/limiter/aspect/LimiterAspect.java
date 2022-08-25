@@ -1,7 +1,7 @@
 package com.saucesubfresh.starter.limiter.aspect;
 
 import com.saucesubfresh.starter.limiter.annotation.Limiter;
-import com.saucesubfresh.starter.limiter.process.RateLimitProcessor;
+import com.saucesubfresh.starter.limiter.process.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -20,10 +20,10 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 public class LimiterAspect {
 
-    private final RateLimitProcessor rateLimitProcessor;
+    private final RateLimiter rateLimiter;
 
-    public LimiterAspect(RateLimitProcessor rateLimitProcessor) {
-        this.rateLimitProcessor = rateLimitProcessor;
+    public LimiterAspect(RateLimiter rateLimiter) {
+        this.rateLimiter = rateLimiter;
     }
 
     @Pointcut("@annotation(com.saucesubfresh.starter.limiter.annotation.Limiter)")
@@ -46,9 +46,9 @@ public class LimiterAspect {
         long waitTime = annotation.waitTime();
         TimeUnit timeUnit = annotation.timeUnit();
         if (tryLock) {
-            return rateLimitProcessor.tryLock(()-> proceed(pjp), lockName, waitTime, leaseTime, timeUnit, fairLock);
+            return rateLimiter.tryLock(()-> proceed(pjp), lockName, waitTime, leaseTime, timeUnit, fairLock);
         } else {
-            return rateLimitProcessor.lock(()-> proceed(pjp), lockName, leaseTime, timeUnit, fairLock);
+            return rateLimiter.lock(()-> proceed(pjp), lockName, leaseTime, timeUnit, fairLock);
         }
     }
 
