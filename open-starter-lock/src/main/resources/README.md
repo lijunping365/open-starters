@@ -533,7 +533,15 @@ private void renewExpiration() {
 
 
 
+## 版本更新说明
 
+1.0.2 
+
+支持 redisson 
+
+1.0.3
+
+支持 redis + lua 方式
 
 
 
