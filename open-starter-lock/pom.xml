@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>open-starter-distributed-lock</artifactId>
+    <artifactId>open-starter-lock</artifactId>
     <description>简单的分布式锁插件</description>
 
     <properties>
