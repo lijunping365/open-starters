@@ -159,53 +159,202 @@ else
 end
 ```
 
-network
+
+## Redis和Lua实现分布式限流器的方法详解
+
+原文连接：https://www.h5w3.com/254282.html
+
+主要是依靠 redis + lua 来实现限流器, 使用 lua 的原因是将多条命令合并在一起作为一个原子操作, 无需过多考虑并发.
+
+### 计数器模式
+
+原理
+
+计数器算法是指在一段窗口时间内允许通过的固定数量的请求, 比如10次/秒, 500次/30秒.
+
+如果设置的时间粒度越细, 那么限流会更平滑.
+
+实现
+
+所使用的 Lua 脚本
 
 ```lua
---利用redis的hash结构，存储key所对应令牌桶的上次获取时间和上次获取后桶中令牌数量
-local ratelimit_info = redis.pcall('HMGET',KEYS[1],'last_time','current_token_num')
-local last_time = ratelimit_info[1]
-local current_token_num = tonumber(ratelimit_info[2])
+-- 计数器限流
 
-redis.replicate_commands()
-local now = redis.call('time')[1]
-redis.call('SET','now',now);
+-- 此处支持的最小单位时间是秒, 若将 expire 改成 pexpire 则可支持毫秒粒度.
 
+-- KEYS[1] string 限流的key
 
+-- ARGV[1] int  限流数
 
---tonumber是将value转换为数字，此步是取出桶中最大令牌数、生成令牌的速率(每秒生成多少个)、当前时间
-local max_token_num = tonumber(ARGV[1])
-local token_rate = tonumber(ARGV[2])
---local current_time = tonumber(ARGV[3])
-local current_time = now
---reverse_time 即多少毫秒生成一个令牌
-local reverse_time = 1000/token_rate
+-- ARGV[2] int  单位时间(秒)
 
---如果current_token_num不存在则说明令牌桶首次获取或已过期，即说明它是满的
-if current_token_num == nil then
-  current_token_num = max_token_num
-  last_time = current_time
-else
-  --计算出距上次获取已过去多长时间
-  local past_time = current_time-last_time
-  --在这一段时间内可产生多少令牌
-  local reverse_token_num = math.floor(past_time/reverse_time)
-  current_token_num = current_token_num +reverse_token_num
-  last_time = reverse_time * reverse_token_num + last_time
-  if current_token_num > max_token_num then
-    current_token_num = max_token_num
-  end
-end
+local cnt = tonumber(redis.call("incr", KEYS[1]))
 
-local result = 0
-if(current_token_num > 0) then
-  result = 1
-  current_token_num = current_token_num - 1
-end
+if (cnt == 1) then
 
---将最新得出的令牌获取时间和当前令牌数量进行存储,并设置过期时间
-redis.call('HMSET',KEYS[1],'last_time',last_time,'current_token_num',current_token_num)
-redis.call('pexpire',KEYS[1],math.ceil(reverse_time*(max_token_num - current_token_num)+(current_time-last_time)))
+ -- cnt 值为1说明之前不存在该值, 因此需要设置其过期时间
 
-return result
+ redis.call("expire", KEYS[1], tonumber(ARGV[2]))
+
+elseif (cnt > tonumber(ARGV[1])) then
+
+ return -1
+
+end 
+
+return cnt
 ```
+
+返回 -1 表示超过限流, 否则返回当前单位时间已通过的请求数
+
+key 可以但不限于以下的情况
+
+ip + 接口
+user_id + 接口
+优点
+
+实现简单
+缺点
+
+粒度不够细的情况下, 会出现在同一个窗口时间内出现双倍请求数
+
+注意
+
+尽量保持时间粒度精细
+场景分析
+
+eg. 1000/3s 的限流
+
+极端情况1:
+
+第1秒请求数 10
+
+第2秒请求数 10
+
+第3秒请求数 980
+
+第4秒请求数 900
+
+第5秒请求数 100
+
+第6秒请求数 0
+
+此时注意第3~5秒内的总请求数高达 1980
+
+极端情况2:
+
+第1秒请求数 1000
+
+第2秒请求数 0
+
+第3秒请求数 0
+
+此时后续的第2~3秒会出现大量拒绝请求
+
+### 令牌桶模式
+
+令牌桶的桶中保存有令牌, 存在上限, 且一开始是满的,每次请求都要消耗令牌(可根据不同请求消耗不同数量的令牌)
+
+每隔一段时间(固定速率)会往桶中放令牌
+
+桶的实现还分为:
+
+可预消费
+
+提前预支令牌数: 前人挖坑, 后人跳
+
+不可预消费
+
+令牌数不够直接拒绝
+
+实现
+
+此处实现的不可预消费的令牌桶, 具体Lua代码:
+
+```lua
+-- 令牌桶限流: 不支持预消费, 初始桶是满的
+
+-- KEYS[1] string 限流的key
+
+-- ARGV[1] int  桶最大容量
+
+-- ARGV[2] int  每次添加令牌数
+
+-- ARGV[3] int  令牌添加间隔(秒)
+
+-- ARGV[4] int  当前时间戳
+
+local bucket_capacity = tonumber(ARGV[1])
+
+local add_token = tonumber(ARGV[2])
+
+local add_interval = tonumber(ARGV[3])
+
+local now = tonumber(ARGV[4])
+
+-- 保存上一次更新桶的时间的key
+
+local LAST_TIME_KEY = KEYS[1].."_time";   
+
+-- 获取当前桶中令牌数
+
+local token_cnt = redis.call("get", KEYS[1]) 
+
+-- 桶完全恢复需要的最大时长
+
+local reset_time = math.ceil(bucket_capacity / add_token) * add_interval;
+
+if token_cnt then -- 令牌桶存在
+
+ -- 上一次更新桶的时间
+
+ local last_time = redis.call('get', LAST_TIME_KEY)
+
+ -- 恢复倍数
+
+ local multiple = math.floor((now - last_time) / add_interval)
+
+ -- 恢复令牌数
+
+ local recovery_cnt = multiple * add_token
+
+ -- 确保不超过桶容量
+
+ local token_cnt = math.min(bucket_capacity, token_cnt + recovery_cnt) - 1
+
+ if token_cnt < 0 then
+
+  return -1;
+
+ end
+
+ -- 重新设置过期时间, 避免key过期
+
+ redis.call('set', KEYS[1], token_cnt, 'EX', reset_time)      
+
+ redis.call('set', LAST_TIME_KEY, last_time + multiple * add_interval, 'EX', reset_time)
+
+ return token_cnt
+
+else -- 令牌桶不存在
+
+ token_cnt = bucket_capacity - 1
+
+ -- 设置过期时间避免key一直存在
+
+ redis.call('set', KEYS[1], token_cnt, 'EX', reset_time);
+
+ redis.call('set', LAST_TIME_KEY, now, 'EX', reset_time + 1); 
+
+ return token_cnt 
+
+end
+```
+
+令牌桶的关键是以下几个参数:
+
+桶最大容量
+每次放入的令牌数
+放入令牌的间隔时间
+令牌桶的实现不会出现计数器模式中单位时间内双倍流量的问题.

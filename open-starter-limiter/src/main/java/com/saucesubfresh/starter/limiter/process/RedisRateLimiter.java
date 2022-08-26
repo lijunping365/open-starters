@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.limiter.process;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 
@@ -18,11 +19,11 @@ import java.util.function.Supplier;
 public class RedisRateLimiter implements RateLimiter{
 
     private final RedisScript<Long> script;
-    private final StringRedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     public RedisRateLimiter(RedisScript<Long> script,
-                            StringRedisTemplate redisTemplate) {
+                            RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.script = script;
     }
