@@ -5,7 +5,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 基于令牌桶算法
@@ -21,9 +23,8 @@ public class RedisRateLimiter implements RateLimiter{
 
     public RedisRateLimiter(RedisScript<Long> script,
                             StringRedisTemplate redisTemplate) {
-        this.script = script;
         this.redisTemplate = redisTemplate;
-
+        this.script = script;
     }
 
     static List<String> getKeys(String id) {
@@ -39,24 +40,19 @@ public class RedisRateLimiter implements RateLimiter{
         return Arrays.asList(tokenKey, timestampKey);
     }
 
+
     @Override
-    public boolean acquire(List<String> keys, int count) {
-        return false;
+    public <T> T tryAcquire(Supplier<T> callback, String keys, int count) {
+        return null;
     }
 
     @Override
-    public boolean tryAcquire(List<String> keys, int count) {
-        final Long execute = this.redisTemplate.execute(this.script, keys, count);
-        return false;
-    }
-
-    @Override
-    public boolean tryAcquire(List<String> keys, int count, int period) {
-        return false;
-    }
-
-    @Override
-    public boolean tryAcquire(String keys, int count, int period) {
-        return false;
+    public <T> T tryAcquire(Supplier<T> callback, String keys, int permits, int period, double rate) {
+        Long count = this.redisTemplate.execute(this.script, Collections.singletonList(keys), permits);
+        log.info("[令牌桶限流交易请求],key:{},返回:{},{}秒内,限制次数:{}",keys, permits, period, rate);
+        if (count != null && count.intValue() == 1) {
+            return callback.get();
+        }
+        return null;
     }
 }

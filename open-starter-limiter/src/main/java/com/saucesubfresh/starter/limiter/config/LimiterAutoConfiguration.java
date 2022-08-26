@@ -1,5 +1,8 @@
 package com.saucesubfresh.starter.limiter.config;
 
+import com.saucesubfresh.starter.limiter.aspect.LimiterAspect;
+import com.saucesubfresh.starter.limiter.generator.KeyGenerator;
+import com.saucesubfresh.starter.limiter.generator.SimpleKeyGenerator;
 import com.saucesubfresh.starter.limiter.process.RateLimiter;
 import com.saucesubfresh.starter.limiter.process.RedissonRateLimiter;
 import com.saucesubfresh.starter.limiter.properties.LimiterProperties;
@@ -19,11 +22,21 @@ public class LimiterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public KeyGenerator limitKeyGenerator(){
+        return new SimpleKeyGenerator();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
     public RateLimiter rateLimiter(RedissonClient client){
         return new RedissonRateLimiter(client);
     }
 
 
+    @Bean
+    public LimiterAspect limiterAspect(RateLimiter rateLimiter, KeyGenerator keyGenerator){
+        return new LimiterAspect(rateLimiter, keyGenerator);
+    }
 
 }

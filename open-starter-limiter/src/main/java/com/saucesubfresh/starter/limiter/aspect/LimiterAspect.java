@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.limiter.aspect;
 
 import com.saucesubfresh.starter.limiter.annotation.Limiter;
+import com.saucesubfresh.starter.limiter.generator.KeyGenerator;
 import com.saucesubfresh.starter.limiter.process.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -21,9 +22,11 @@ import java.util.concurrent.TimeUnit;
 public class LimiterAspect {
 
     private final RateLimiter rateLimiter;
+    private final KeyGenerator keyGenerator;
 
-    public LimiterAspect(RateLimiter rateLimiter) {
+    public LimiterAspect(RateLimiter rateLimiter, KeyGenerator keyGenerator) {
         this.rateLimiter = rateLimiter;
+        this.keyGenerator = keyGenerator;
     }
 
     @Pointcut("@annotation(com.saucesubfresh.starter.limiter.annotation.Limiter)")
@@ -34,22 +37,16 @@ public class LimiterAspect {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
-        String lockName = keyGenerator.generate(method, joinPoint.getArgs());
-        return limit(joinPoint, method, lockName);
+        String limitKey = keyGenerator.generate(method, joinPoint.getArgs());
+        return tryAcquire(joinPoint, method, limitKey);
     }
 
-    private Object limit(ProceedingJoinPoint pjp, Method method, final String lockName) throws Throwable{
+    private Object tryAcquire(ProceedingJoinPoint pjp, Method method, final String limitKey) throws Throwable{
         Limiter annotation = method.getAnnotation(Limiter.class);
-        boolean tryLock = annotation.tryLock();
-        boolean fairLock = annotation.fairLock();
-        long leaseTime = annotation.leaseTime();
-        long waitTime = annotation.waitTime();
-        TimeUnit timeUnit = annotation.timeUnit();
-        if (tryLock) {
-            return rateLimiter.tryLock(()-> proceed(pjp), lockName, waitTime, leaseTime, timeUnit, fairLock);
-        } else {
-            return rateLimiter.lock(()-> proceed(pjp), lockName, leaseTime, timeUnit, fairLock);
-        }
+        final double rate = annotation.rate();
+        final int permits = annotation.permits();
+        final int capacity = annotation.capacity();
+        return rateLimiter.tryAcquire(()-> proceed(pjp), limitKey, capacity, permits, rate);
     }
 
     private Object proceed(ProceedingJoinPoint pjp) {

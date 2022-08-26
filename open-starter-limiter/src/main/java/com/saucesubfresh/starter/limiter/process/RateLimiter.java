@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.limiter.process;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 限流
@@ -8,8 +9,8 @@ import java.util.List;
  */
 public interface RateLimiter {
 
-    boolean tryAcquire(List<String> keys, int count);
+    <T> T tryAcquire(Supplier<T> callback, String keys, int count);
 
-    boolean tryAcquire(List<String> keys, int count, int period);
+    <T> T tryAcquire(Supplier<T> callback, String keys, int count, int period, double rate);
 
 }
