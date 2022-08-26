@@ -6,9 +6,6 @@ import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
 import org.redisson.api.RedissonClient;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -19,14 +16,10 @@ import java.util.function.Supplier;
 @Slf4j
 public class RedissonRateLimiter implements RateLimiter{
 
-    private static final Map<String, RRateLimiter> map = new ConcurrentHashMap<>();
-
-    private final RRateLimiter rateLimiter;
+    private final RedissonClient client;
 
     public RedissonRateLimiter(RedissonClient client) {
-        RRateLimiter rateLimiter = client.getRateLimiter("rate_limiter");
-        rateLimiter.trySetRate(RateType.OVERALL,5,2, RateIntervalUnit.SECONDS);
-        this.rateLimiter = rateLimiter;
+        this.client = client;
     }
 
     @Override
@@ -36,6 +29,8 @@ public class RedissonRateLimiter implements RateLimiter{
 
     @Override
     public <T> T tryAcquire(Supplier<T> callback, String keys, int count, int period, double rate) {
+        RRateLimiter rateLimiter = client.getRateLimiter(keys);
+        rateLimiter.trySetRate(RateType.OVERALL,5,2, RateIntervalUnit.SECONDS);
         if(rateLimiter.tryAcquire()) {
             return callback.get();
         }else {
