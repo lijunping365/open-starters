@@ -46,9 +46,24 @@ public class LimitServiceImpl implements LimitService {
 }
 ```
 
+对于限流异常捕获，建议使用该方式进行全局异常捕获处理
+
+```java
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+  @ExceptionHandler({LimitException.class})
+  public Result<Object> limitException(LimitException ex) {
+    log.warn("[limitException]", ex);
+    return Result.failed(666, ex.getMessage());
+  }
+}
+```
+
 ## 拓展使用 Redis 限流
 
-### 注入 RedisTemplate<String, Object> 及 RedisScript
+### 注入 RedisTemplate<String, Object> 、 RedisScript 、 RedisRateLimiter
 
 ```
 @Bean
@@ -77,15 +92,20 @@ public RedisScript redisRateLimiterScript() {
     //redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("META-INF/scripts/request_rate_limiter.lua")));
     return redisScript;
 }
+
+@Bean
+public RateLimiter rateLimiter(RedisScript script, RedisTemplate<String, Object> redisTemplate){
+    return new RedisRateLimiter(script, redisTemplate);
+}
 ```
 
 ### 编写 lua 脚本
 
-spring-cloud-gateway 最新
-
-基于令牌桶算法实现
+参考 spring-cloud-gateway 最新版本，基于令牌桶算法实现
 
 令牌桶的关键是以下几个参数:令牌流入速率、桶容量 、每次请求许可数
+
+在 resources 目录下创建 scripts 文件夹，在 scripts 文件夹下创建 rate_limiter.lua 文件
 
 ```lua
 redis.replicate_commands()
