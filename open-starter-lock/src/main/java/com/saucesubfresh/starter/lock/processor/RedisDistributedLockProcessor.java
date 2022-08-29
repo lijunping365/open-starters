@@ -1,5 +1,7 @@
 package com.saucesubfresh.starter.lock.processor;
 
+import org.springframework.data.redis.core.RedisTemplate;
+
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -7,6 +9,12 @@ import java.util.function.Supplier;
  * @author lijunping on 2022/8/25
  */
 public class RedisDistributedLockProcessor implements DistributedLockProcessor{
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public RedisDistributedLockProcessor(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
 
     @Override
