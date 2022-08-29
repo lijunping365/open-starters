@@ -1,6 +1,6 @@
 package com.saucesubfresh.starter.limiter.aspect;
 
-import com.saucesubfresh.starter.limiter.annotation.Limiter;
+import com.saucesubfresh.starter.limiter.annotation.RateLimit;
 import com.saucesubfresh.starter.limiter.generator.KeyGenerator;
 import com.saucesubfresh.starter.limiter.process.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author lijunping on 2022/8/25
@@ -29,7 +28,7 @@ public class LimiterAspect {
         this.keyGenerator = keyGenerator;
     }
 
-    @Pointcut("@annotation(com.saucesubfresh.starter.limiter.annotation.Limiter)")
+    @Pointcut("@annotation(com.saucesubfresh.starter.limiter.annotation.RateLimit)")
     public void dsPointcut() {}
 
     @Around("dsPointcut()")
@@ -42,11 +41,11 @@ public class LimiterAspect {
     }
 
     private Object tryAcquire(ProceedingJoinPoint pjp, Method method, final String limitKey) throws Throwable{
-        Limiter annotation = method.getAnnotation(Limiter.class);
-        final double rate = annotation.rate();
-        final int permits = annotation.permits();
-        final int capacity = annotation.capacity();
-        return rateLimiter.tryAcquire(()-> proceed(pjp), limitKey, capacity, permits, rate);
+        RateLimit annotation = method.getAnnotation(RateLimit.class);
+        final int rate = annotation.replenishRate();
+        final int capacity = annotation.burstCapacity();
+        final int permits = annotation.requestedTokens();
+        return rateLimiter.tryAcquire(()-> proceed(pjp), limitKey, rate, capacity, permits);
     }
 
     private Object proceed(ProceedingJoinPoint pjp) {

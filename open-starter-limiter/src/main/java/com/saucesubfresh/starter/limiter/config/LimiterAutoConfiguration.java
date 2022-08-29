@@ -33,7 +33,6 @@ public class LimiterAutoConfiguration {
         return new RedissonRateLimiter(client);
     }
 
-
     @Bean
     public LimiterAspect limiterAspect(RateLimiter rateLimiter, KeyGenerator keyGenerator){
         return new LimiterAspect(rateLimiter, keyGenerator);

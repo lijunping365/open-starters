@@ -1,6 +1,5 @@
 package com.saucesubfresh.starter.limiter.process;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -9,8 +8,44 @@ import java.util.function.Supplier;
  */
 public interface RateLimiter {
 
-    <T> T tryAcquire(Supplier<T> callback, String keys, int count);
+    /**
+     *
+     * @param callback
+     * @param limitKey
+     * @param rate
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    default <T> T tryAcquire(Supplier<T> callback, String limitKey, int rate) throws Exception{
+        return tryAcquire(callback, limitKey, rate, 100, 1);
+    }
 
-    <T> T tryAcquire(Supplier<T> callback, String keys, int count, int period, double rate);
+    /**
+     *
+     * @param callback
+     * @param limitKey
+     * @param rate
+     * @param capacity
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    default <T> T tryAcquire(Supplier<T> callback, String limitKey, int rate, int capacity) throws Exception{
+        return tryAcquire(callback, limitKey, rate, capacity, 1);
+    }
+
+    /**
+     *
+     * @param callback
+     * @param limitKey
+     * @param rate
+     * @param capacity
+     * @param permits
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    <T> T tryAcquire(Supplier<T> callback, String limitKey, int rate, int capacity, int permits) throws Exception;
 
 }

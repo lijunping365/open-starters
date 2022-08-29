@@ -1,7 +1,7 @@
 package com.saucesubfresh.starter.limiter.generator;
 
 
-import com.saucesubfresh.starter.limiter.annotation.Limiter;
+import com.saucesubfresh.starter.limiter.annotation.RateLimit;
 import com.saucesubfresh.starter.limiter.exception.LimitException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.EvaluationContext;
@@ -26,7 +26,7 @@ public class SimpleKeyGenerator implements KeyGenerator{
   @Override
   public String generate(Method method, Object[] args) {
       Assert.notNull(method, "Method must not be null");
-      Limiter annotation = method.getAnnotation(Limiter.class);
+      RateLimit annotation = method.getAnnotation(RateLimit.class);
       String prefix = annotation.prefix();
       if (StringUtils.isBlank(prefix)) {
           prefix = method.getName();
