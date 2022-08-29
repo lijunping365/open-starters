@@ -78,6 +78,8 @@ spring-cloud-gateway 最新
 
 基于令牌桶算法实现
 
+令牌桶的关键是以下几个参数:令牌流入速率、桶容量 、每次请求许可数
+
 ```lua
 redis.replicate_commands()
 
@@ -136,10 +138,9 @@ end
 return { allowed_num, new_tokens }
 ```
 
-令牌桶的关键是以下几个参数:
+## tips
 
-令牌流入速率
+1. 如果是单机的，建议使用 Guava 的 RateLimiter
 
-桶容量
+2. 如果本插件的限流时间单位不满足你的需求，建议直接使用 Redisson 的 RRateLimiter 
 
-每次请求许可数
