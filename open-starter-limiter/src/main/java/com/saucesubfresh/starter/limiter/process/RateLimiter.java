@@ -9,11 +9,11 @@ import java.util.function.Supplier;
 public interface RateLimiter {
 
     /**
-     *
-     * @param callback
-     * @param limitKey
-     * @param rate
-     * @param <T>
+     * 尝试获取令牌
+     * @param callback 业务回调方法
+     * @param limitKey 限流 key
+     * @param rate 令牌生成速率
+     * @param <T> 业务返回类型
      * @return
      * @throws Exception
      */
@@ -22,12 +22,12 @@ public interface RateLimiter {
     }
 
     /**
-     *
-     * @param callback
-     * @param limitKey
-     * @param rate
-     * @param capacity
-     * @param <T>
+     * 尝试获取令牌
+     * @param callback 业务回调方法
+     * @param limitKey 限流 key
+     * @param rate 令牌生成速率
+     * @param capacity 令牌桶容量
+     * @param <T> 业务返回类型
      * @return
      * @throws Exception
      */
@@ -36,13 +36,13 @@ public interface RateLimiter {
     }
 
     /**
-     *
-     * @param callback
-     * @param limitKey
-     * @param rate
-     * @param capacity
-     * @param permits
-     * @param <T>
+     * 尝试获取令牌
+     * @param callback 业务回调方法
+     * @param limitKey 限流 key
+     * @param rate 令牌生成速率
+     * @param capacity 令牌桶容量
+     * @param permits 获取令牌数量
+     * @param <T> 业务返回类型
      * @return
      * @throws Exception
      */
