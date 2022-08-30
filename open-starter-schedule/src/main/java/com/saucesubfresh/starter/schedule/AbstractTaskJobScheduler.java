@@ -2,7 +2,6 @@ package com.saucesubfresh.starter.schedule;
 
 import com.saucesubfresh.starter.schedule.cron.CronHelper;
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
-import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +35,7 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
             while (!scheduleThreadToStop) {
                 List<Long> taskIds = scheduleTaskQueueManager.take();
                 if (CollectionUtils.isEmpty(taskIds)){
+                    threadSleep();
                     continue;
                 }
                 refreshNextTime(taskIds);
