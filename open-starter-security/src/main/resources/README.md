@@ -105,6 +105,58 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 
 在需要某个角色才能访问的方法上添加 PreAuthorization 注解，在该 starter 中已提供该实现。
 
+参考 Open-Crawler
+
+```java
+@Validated
+@RestController
+@RequestMapping("/user")
+public class CrawlerUserController {
+
+  @Autowired
+  private CrawlerUserService crawlerUserService;
+
+  @GetMapping("/currentUser")
+  public Result<CrawlerUserRespDTO> getCurrentUser() {
+    Long userId = UserSecurityContextHolder.getUserId();
+    return Result.succeed(crawlerUserService.loadUserByUserId(userId));
+  }
+
+  @GetMapping("/page")
+  public Result<PageResult<CrawlerUserRespDTO>> page(CrawlerUserReqDTO crawlerUserReqDTO) {
+    return Result.succeed(crawlerUserService.selectPage(crawlerUserReqDTO));
+  }
+
+  @GetMapping("/info/{id}")
+  public Result<CrawlerUserRespDTO> info(@PathVariable("id") Long id) {
+    return Result.succeed(crawlerUserService.getById(id));
+  }
+
+  @PostMapping("/save")
+  @PreAuthorization(value = "admin")
+  public Result<Boolean> save(@RequestBody @Valid CrawlerUserCreateDTO crawlerUserCreateDTO) {
+    return Result.succeed(crawlerUserService.save(crawlerUserCreateDTO));
+  }
+
+  @PutMapping("/update")
+  @PreAuthorization(value = "admin")
+  public Result<Boolean> update(@RequestBody @Valid CrawlerUserUpdateDTO crawlerUserUpdateDTO) {
+    return Result.succeed(crawlerUserService.updateById(crawlerUserUpdateDTO));
+  }
+
+  @DeleteMapping("/delete")
+  @PreAuthorization(value = "admin")
+  public Result<Boolean> delete(@RequestBody @Valid DeleteDTO deleteDTO) {
+    return Result.succeed(crawlerUserService.deleteById(deleteDTO));
+  }
+
+}
+```
+
+注意：
+
+与 HandlerInterceptor 搭配使用的注解只能用在 Controller 中
+
 ## 1.0.1 版本更新说明
 
 1. 对拦截器拦截方法进行了重大重构，拆分出了 401（认证） 处理策略和 403（授权） 处理策略
