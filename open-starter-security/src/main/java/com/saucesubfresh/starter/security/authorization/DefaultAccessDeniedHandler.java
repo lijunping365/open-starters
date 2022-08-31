@@ -33,11 +33,11 @@ public class DefaultAccessDeniedHandler implements AccessDeniedHandler{
             return Boolean.TRUE;
         }
 
-        String role = authorization.role();
         List<String> authorities = UserSecurityContextHolder.getContext().getAuthorities();
-        if (CollectionUtils.isEmpty(authorities) || !authorities.contains(role)) {
-            throw new SecurityException(SecurityExceptionEnum.FORBIDDEN);
+        if (!CollectionUtils.isEmpty(authorities) && authorities.contains(authorization.role())) {
+            return Boolean.TRUE;
         }
-        return Boolean.FALSE;
+
+        throw new SecurityException(SecurityExceptionEnum.FORBIDDEN);
     }
 }
