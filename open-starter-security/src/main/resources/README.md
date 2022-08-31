@@ -155,7 +155,7 @@ public class CrawlerUserController {
 
 注意：
 
-与 HandlerInterceptor 搭配使用的注解只能用在 Controller 中
+与 HandlerInterceptor 搭配使用的注解只能用在 Controller 中, 也就是说我们的自定义注解 PreAuthorization 只能用在 Controller 中
 
 ## 1.0.1 版本更新说明
 
