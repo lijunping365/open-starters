@@ -220,3 +220,7 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 1. 对 1.0.0 版本进行重构，摒弃了任务队列采用 redis zset 的实现方式，换为了采用时间轮算法的实现方式
 
 2. 新增了分布式调度能力
+
+## 1.0.3 版本更新说明
+
+修复了当任务列表为空时，导致scheduleThread线程占用大量cpu bug with issues#4 bug
