@@ -4,6 +4,7 @@ import com.saucesubfresh.starter.limiter.exception.LimitException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,18 +31,12 @@ public class RedisRateLimiter implements RateLimiter{
     @Override
     public <T> T tryAcquire(Supplier<T> callback, String limitKey, int rate, int capacity, int permits) {
         List<String> keys = getKeys(limitKey);
-
-        // allowed, tokens_left = redis.eval(SCRIPT, keys, args)
         List<Long> results = this.redisTemplate.execute(this.script, keys, rate, capacity, permits);
 
-        boolean allowed = results.get(0) == 1L;
-        Long tokensLeft = results.get(1);
-
-        if (log.isDebugEnabled()){
-            log.debug("[限流请求],limitKey:{}, permits:{}, allowed:{}, tokensLeft:{}", limitKey, permits, allowed, tokensLeft);
-        }
-
-        if (allowed) {
+        if (!CollectionUtils.isEmpty(results) && results.get(0) == 1L) {
+            if (log.isDebugEnabled()){
+                log.debug("[限流统计],tokensLeft:{}", results.get(1));
+            }
             return callback.get();
         }else {
             throw new LimitException("限流器限流了");
