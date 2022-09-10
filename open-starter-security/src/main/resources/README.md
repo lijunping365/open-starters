@@ -169,4 +169,4 @@ public class CrawlerUserController {
 
 ## 1.0.3 版本更新说明
 
-1. 修复了 DefaultAccessDeniedHandler#handler 方法逻辑判断 bug with issues#6
+1. 修复了 DefaultAccessDeniedHandler#handler 方法逻辑判断 fix a bug with issues#6
