@@ -103,7 +103,9 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 
 有些小型的系统或许压根就不需要权限，只需要给用户分配角色，没有给角色分配权限这一过程。这样的话，角色也是不可变的，就可以根据角色来做访问控制了。
 
-在需要某个角色才能访问的方法上添加 PreAuthorization 注解，在该 starter 中已提供该实现。
+在需要某个角色才能访问的方法上添加 PreAuthorization 注解，在该 starter 中已提供该实现，具体可以看 DefaultAccessDeniedHandler，
+
+该默认实现适合简单的权限管理系统，如系统中只有一种角色，比如只有 admin 角色，而某些接口只有拥有 admin 角色才能访问。
 
 参考 Open-Crawler
 
