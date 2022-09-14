@@ -10,6 +10,17 @@
 
 - [x] 开发者无感知获取用户信息
 
+## 实现原理
+
+spring mvc 的拦截器（HandlerInterceptor）是只拦截 controller，注意和 Filter 的区别
+
+一个请求过来 ，先进行过滤器处理，看程序是否受理该请求。过滤器放过后，程序中的拦截器进行处理 。
+
+HandlerInterceptor 的方法有一个handler参数。而 handler 可以进行强转 HandlerMethod handlerMethod = (HandlerMethod) handler;
+
+然后获取到 handlerMethod.getMethod() 获取的是 Controller 中的方法，便可以解析上面的注解。然后根据注解值可以选择性的进行拦截。
+
+
 ## 快速开始
 
 ### 1. 添加 Maven 依赖
@@ -157,12 +168,14 @@ public class CrawlerUserController {
 
 注意：
 
-与 HandlerInterceptor 搭配使用的注解只能用在 Controller 中, 也就是说我们的自定义注解 PreAuthorization 只能用在 Controller 中
+HandlerInterceptor 搭配注解使用时，注解只能用在 Controller 中, 也就是说我们的自定义注解 PreAuthorization 只能用在 Controller 中
 
 ## 1.0.1 版本更新说明
 
 1. 对拦截器拦截方法进行了重大重构，拆分出了 401（认证） 处理策略和 403（授权） 处理策略
+
 2. 认证、授权接口支持自定义
+
 3. 优化了鉴权相关逻辑，提供简单的基于注解鉴权能力，同时给开发者预留了基于“路径比对”的接口能力
 
 ## 1.0.2 版本更新说明

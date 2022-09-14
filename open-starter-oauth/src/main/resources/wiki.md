@@ -146,16 +146,65 @@ RSA 算法广泛应用与加密与认证两个领域
 
 如果是使用私钥加密则需要公钥进行解密
 
+# 简单介绍下组件中使用的 jwt 认证工具
 
+生成 token
 
+```java
+public class JwtTokenStore extends AbstractTokenStore {
 
+    private final OAuthProperties oauthProperties;
 
+    public JwtTokenStore(TokenEnhancer tokenEnhancer, OAuthProperties oauthProperties) {
+        super(tokenEnhancer);
+        this.oauthProperties = oauthProperties;
+    }
 
+    @Override
+    public AccessToken doGenerateToken(Authentication authentication) {
+        final TokenProperties tokenProperties = oauthProperties.getToken();
+        AccessToken token = new AccessToken();
+        long now = System.currentTimeMillis();
+        Date expiredDate = new Date(now + tokenProperties.getAccessTokenExpiresIn() * 1000);
+        String userDetailsStr = JSON.toJSON(authentication.getUserDetails());
+        Claims claims = Jwts.claims().setSubject(userDetailsStr);
+        String accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(expiredDate)
+                .signWith(Keys.hmacShaKeyFor(tokenProperties.getSecretKeyBytes()), SignatureAlgorithm.HS256)
+                .compact();
+        token.setExpiredTime(String.valueOf(expiredDate.getTime()));
+        token.setAccessToken(accessToken);
+        return token;
+    }
+}
+```
 
+校验 token
 
+```java
 
+public class JwtTokenService implements TokenService {
 
+    private final SecurityProperties securityProperties;
 
+    public JwtTokenService(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
+    }
 
-
-
+    @Override
+    public Authentication readAuthentication(String accessToken) {
+        String subject;
+        try {
+            Claims claims = Jwts.parserBuilder().setSigningKey(securityProperties.getSecretKeyBytes()).build().parseClaimsJws(accessToken).getBody();
+            subject = claims.getSubject();
+        }catch (Exception e){
+            throw new SecurityException(SecurityExceptionEnum.UNAUTHORIZED);
+        }
+        UserDetails userDetails = JSON.parse(subject, UserDetails.class);
+        Authentication authentication = new Authentication();
+        authentication.setUserDetails(userDetails);
+        return authentication;
+    }
+}
+```
