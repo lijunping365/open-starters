@@ -148,37 +148,129 @@ RSA 算法广泛应用与加密与认证两个领域
 
 # 简单介绍下组件中使用的 jwt 认证工具
 
-生成 token
+依赖 pom 如下：
+
+```xml
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>${jjwt.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>${jjwt.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>${jjwt.version}</version>
+</dependency>
+```
+
+生成 jwt token
 
 ```java
-public class JwtTokenStore extends AbstractTokenStore {
+public class JwtTest {
 
-    private final OAuthProperties oauthProperties;
-
-    public JwtTokenStore(TokenEnhancer tokenEnhancer, OAuthProperties oauthProperties) {
-        super(tokenEnhancer);
-        this.oauthProperties = oauthProperties;
+    public static void main(String[] args) {
+        generate("lijunping");
     }
 
-    @Override
-    public AccessToken doGenerateToken(Authentication authentication) {
-        final TokenProperties tokenProperties = oauthProperties.getToken();
-        AccessToken token = new AccessToken();
-        long now = System.currentTimeMillis();
-        Date expiredDate = new Date(now + tokenProperties.getAccessTokenExpiresIn() * 1000);
-        String userDetailsStr = JSON.toJSON(authentication.getUserDetails());
-        Claims claims = Jwts.claims().setSubject(userDetailsStr);
+    public static void generate(String json) {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH,1);
+        Date time = calendar.getTime();
+
+        SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        Claims claims = Jwts.claims().setSubject(json);
         String accessToken = Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(expiredDate)
-                .signWith(Keys.hmacShaKeyFor(tokenProperties.getSecretKeyBytes()), SignatureAlgorithm.HS256)
+                .setExpiration(time)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
-        token.setExpiredTime(String.valueOf(expiredDate.getTime()));
-        token.setAccessToken(accessToken);
-        return token;
+
+        System.out.println(accessToken);
+
     }
 }
 ```
+
+生成 jwt token 如下：
+
+```
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsaWp1bnBpbmciLCJleHAiOjE2NjU3NTc1OTd9.b1Eqsp2y703QoDTGMYOYKVr5bQ5mEr_RvyjnmuirIq0
+\__________________/\_______________________________________________/\__________________________________________/
+     Base64(Header)            Base64(Payload)                        HMACSHA256(base64UrlEncode(header)+"."+base64UrlEncode(payload),secret)
+```
+
+JWT结构
+
+JWT由3部分组成：标头(Header)、有效载荷(Payload)和签名(Signature)。
+
+1.Header
+  
+> JWT头是一个描述JWT元数据的JSON对象，alg属性表示签名使用的算法，默认为HMAC SHA256（写为HS256）；typ属性表示令牌的类型，JWT令牌统一写为JWT。最后，使用Base64 URL算法将上述JSON对象转换为字符串保存
+
+2.Payload
+
+> 有效载荷部分，是JWT的主体内容部分，也是一个JSON对象，包含需要传递的数据。 JWT指定七个默认字段供选择
+
+```
+iss：发行人
+exp：到期时间
+sub：主题
+aud：用户
+nbf：在此之前不可用
+iat：发布时间
+jti：JWT ID用于标识该JWT
+```
+
+这些预定义的字段并不要求强制使用。除以上默认字段外，我们还可以自定义私有字段，一般会把包含用户信息的数据放到payload中，如下例：
+
+```json
+{
+  "sub": "1234567890",
+  "name": "Helen",
+  "admin": true
+}
+
+```
+
+3. Signature
+
+前面两部分都是使用 Base64 进行编码的，即前端可以解开知道里面的信息。Signature 需要使用编码后的 header 和 payload 以及我们提供的一个密钥，然后使用 header 中指定的签名算法（HS256）进行签名。签名的作用是保证 JWT 没有被篡改过。
+
+三个部分通过.连接在一起就是我们的 JWT 了，它可能长这个样子，长度貌似和你的加密算法和私钥有关系。
+
+签名的目的
+
+最后一步签名的过程，实际上是对头部以及负载内容进行签名，防止内容被窜改。如果有人对头部以及负载的内容解码之后进行修改，再进行编码，最后加上之前的签名组合形成新的JWT的话，那么服务器端会判断出新的头部和负载形成的签名和JWT附带上的签名是不一样的。如果要对新的头部和负载进行签名，在不知道服务器加密时用的密钥的话，得出来的签名也是不一样的。
+
+
+信息暴露
+
+在这里大家一定会问一个问题：Base64是一种编码，是可逆的，那么我的信息不就被暴露了吗？
+
+是的。所以，在JWT中，不应该在负载里面加入任何敏感的数据。在上面的例子中，我们传输的是用户的User ID。这个值实际上不是什么敏感内容，一般情况下被知道也是安全的。但是像密码这样的内容就不能被放在JWT中了。如果将用户的密码放在了JWT中，那么怀有恶意的第三方通过Base64解码就能很快地知道你的密码了。
+
+因此JWT适合用于向Web应用传递一些非敏感信息。JWT还经常用于设计用户认证和授权系统，甚至实现Web应用的单点登录。
+
+当用户与服务器通信时，客户在请求中发回JSON对象。服务器仅依赖于这个JSON对象来标识用户。为了防止用户篡改数据，服务器将在生成对象时添加签名。服务器不保存任何会话数据，即服务器变为无状态，使其更容易扩展。
+
+在传输的时候，会将JWT的3部分分别进行Base64编码后用.进行连接形成最终传输的字符串
+
+JWTString=Base64(Header).Base64(Payload).HMACSHA256(base64UrlEncode(header)+"."+base64UrlEncode(payload),secret)
+
+Base64是一种编码，也就是说，它是可以被翻译回原来的样子来的。它并不是一种加密过程。
+
+> 如前所述，JWT头和有效载荷序列化的算法都用到了Base64URL。该算法和常见Base64算法类似，稍有差别。
+  作为令牌的JWT可以放在URL中（例如api.example/?token=xxx）。 Base64中用的三个字符
+  是"+"，"/"和"="，由于在URL中有特殊含义，因此Base64URL中对他们做了替换："="去掉，"+"用"-"替换，"/"用"_"替换，这就是Base64URL算法。
+
+因此不要构建隐私信息字段，存放保密信息，以防止信息泄露。
 
 校验 token
 
