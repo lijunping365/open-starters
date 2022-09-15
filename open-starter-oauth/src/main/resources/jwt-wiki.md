@@ -185,17 +185,17 @@ RSA(RS256)：是一种非对称加密算法，使用私钥加密明文，公钥�
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt-api</artifactId>
-    <version>${jjwt.version}</version>
+    <version>0.11.2</version>
 </dependency>
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt-impl</artifactId>
-    <version>${jjwt.version}</version>
+    <version>0.11.2</version>
 </dependency>
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt-jackson</artifactId>
-    <version>${jjwt.version}</version>
+    <version>0.11.2</version>
 </dependency>
 ```
 
