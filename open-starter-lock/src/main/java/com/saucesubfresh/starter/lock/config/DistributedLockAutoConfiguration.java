@@ -20,20 +20,20 @@ public class DistributedLockAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  @ConditionalOnBean(RedissonClient.class)
-  DistributedLockProcessor distributedLockProcessor(RedissonClient redissonClient) {
-    return new RedissonDistributedLockProcessor(redissonClient);
-  }
-
-  @Bean
-  DistributedLockAspect distributedLockAspect(DistributedLockProcessor lockProcessor, KeyGenerator keyGenerator){
-    return new DistributedLockAspect(lockProcessor, keyGenerator);
+  public KeyGenerator lockKeyGenerator(){
+    return new SimpleKeyGenerator();
   }
 
   @Bean
   @ConditionalOnMissingBean
-  KeyGenerator keyGenerator(){
-    return new SimpleKeyGenerator();
+  @ConditionalOnBean(RedissonClient.class)
+  public DistributedLockProcessor distributedLockProcessor(RedissonClient redissonClient) {
+    return new RedissonDistributedLockProcessor(redissonClient);
+  }
+
+  @Bean
+  public DistributedLockAspect distributedLockAspect(DistributedLockProcessor lockProcessor, KeyGenerator keyGenerator){
+    return new DistributedLockAspect(lockProcessor, keyGenerator);
   }
 
 }
