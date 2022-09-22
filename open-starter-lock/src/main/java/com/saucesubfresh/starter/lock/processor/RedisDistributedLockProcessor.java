@@ -8,7 +8,6 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -52,10 +51,10 @@ public class RedisDistributedLockProcessor implements DistributedLockProcessor{
             if (tryAcquireLock(lockName, filedKey, timeUnit.toMillis(leaseTime))){
                 return callback.get();
             }
+            return null;
         }finally {
             unlock(lockName, filedKey);
         }
-        return null;
     }
 
     /**
@@ -76,12 +75,6 @@ public class RedisDistributedLockProcessor implements DistributedLockProcessor{
      * @param filedKey filedKey
      */
     private void unlock(String lockName, String filedKey){
-        Long result = this.redisTemplate.execute(this.unlockScript, Collections.singletonList(lockName), filedKey);
-        if (Objects.equals(result, 1L)){
-            log.info("解锁成功" + lockName + filedKey);
-        }
-        if (Objects.equals(result, 0L)){
-            log.info("重入锁减一" + lockName + filedKey);
-        }
+        this.redisTemplate.execute(this.unlockScript, Collections.singletonList(lockName), filedKey);
     }
 }

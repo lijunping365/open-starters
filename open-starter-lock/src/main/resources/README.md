@@ -74,11 +74,15 @@ public RedisScript redisLockScript() {
 ### 编写 lua 脚本
 
 
-## 版本升级说明
+## 版本更新说明
 
-### 1.0.2 版本更新说明
+1.0.2
 
-1.0.2 为第一个版本
+支持 redisson
+
+1.0.3
+
+支持 redis + lua 方式
 
 
 
