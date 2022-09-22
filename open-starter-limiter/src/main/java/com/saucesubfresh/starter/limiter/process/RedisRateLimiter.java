@@ -2,8 +2,11 @@ package com.saucesubfresh.starter.limiter.process;
 
 import com.saucesubfresh.starter.limiter.exception.LimitException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -22,9 +25,11 @@ public class RedisRateLimiter implements RateLimiter{
     private final RedisScript<List<Long>> script;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisRateLimiter(RedisScript<List<Long>> script,
-                            RedisTemplate<String, Object> redisTemplate) {
+    public RedisRateLimiter(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+        DefaultRedisScript script = new DefaultRedisScript<>();
+        script.setScriptSource(new ResourceScriptSource(new ClassPathResource("META-INF/scripts/request_rate_limiter.lua")));
+        script.setResultType(List.class);
         this.script = script;
     }
 
