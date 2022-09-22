@@ -15,27 +15,27 @@ import java.util.function.Supplier;
  */
 public interface DistributedLockProcessor {
   /**
-   * 使用分布式锁。自定义锁的超时时间
+   * 阻塞式分布式锁。自定义锁释放的超时时间
    *
-   * @param callback 业务方法
-   * @param lockName 分布式锁名称
-   * @param leaseTime 锁超时时间。超时后自动释放锁。
-   * @param timeUnit
-   * @param fairLock  是否使用公平锁
+   * @param callback   业务方法
+   * @param lockName   分布式锁名称
+   * @param leaseTime  锁超时时间。超时后自动释放锁。
+   * @param timeUnit   时间单位
+   * @param fairLock   是否使用公平锁
    * @param <T>
    * @return
    */
   <T> T lock(Supplier<T> callback, String lockName, long leaseTime, TimeUnit timeUnit, boolean fairLock) throws Exception;
 
   /**
-   * 尝试分布式锁，自定义等待时间、超时时间。
+   * 非阻塞式/阻塞式分布式锁，自定义等待时间、锁释放超时时间
    *
-   * @param callback 业务方法
-   * @param lockName 分布式锁名称
-   * @param waitTime  获取锁最长等待时间
-   * @param leaseTime 锁超时时间。超时后自动释放锁。
-   * @param timeUnit
-   * @param fairLock  是否使用公平锁
+   * @param callback   业务方法
+   * @param lockName   分布式锁名称
+   * @param waitTime   获取锁最长等待时间
+   * @param leaseTime  锁超时时间。超时后自动释放锁。
+   * @param timeUnit   时间单位
+   * @param fairLock   是否使用公平锁
    * @param <T>
    * @return
    */
