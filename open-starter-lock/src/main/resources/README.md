@@ -18,7 +18,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-lock</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
@@ -39,46 +39,29 @@
 
 ## 拓展使用 Redis 分布式锁
 
-### 注入 RedisTemplate<String, Object> 、 RedisScript 、 RedisLock
+注入 RedisDistributedLockProcessor
 
-```
-@Bean
-public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-    //StringRedisTemplate的构造方法中默认设置了stringSerializer
-    RedisTemplate<String, Object> template = new RedisTemplate<>();
-    //set key serializer
-    StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-    template.setKeySerializer(stringRedisSerializer);
-    template.setHashKeySerializer(stringRedisSerializer);
+```java
+@Configuration
+@AutoConfigureBefore({RedisTemplate.class, RedisAutoConfiguration.class})
+public class RedisConfig {
 
-    //set value serializer
-    template.setDefaultSerializer(jackson2JsonRedisSerializer());
-    template.setConnectionFactory(lettuceConnectionFactory);
-    template.afterPropertiesSet();
-    return template;
+    @Bean
+    public DistributedLockProcessor distributedLockProcessor(RedisTemplate<String, Object> redisTemplate){
+        return new RedisDistributedLockProcessor(redisTemplate);
+    }
 }
 ```
 
-```
-@Bean
-public RedisScript redisLockScript() {
-    DefaultRedisScript redisScript = new DefaultRedisScript<>();
-    redisScript.setResultType(List.class);
-    redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("scripts/rate_limiter.lua")));
-    //redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("META-INF/scripts/request_rate_limiter.lua")));
-    return redisScript;
-}
+## 版本更新说明
 
-```
+1.0.2
 
-### 编写 lua 脚本
+支持 redisson
 
+1.0.3
 
-## 版本升级说明
-
-### 1.0.2 版本更新说明
-
-1.0.2 为第一个版本
+支持 redis + lua 方式
 
 
 
