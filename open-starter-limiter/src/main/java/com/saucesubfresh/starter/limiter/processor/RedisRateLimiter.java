@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.limiter.process;
+package com.saucesubfresh.starter.limiter.processor;
 
 import com.saucesubfresh.starter.limiter.exception.LimitException;
 import lombok.extern.slf4j.Slf4j;

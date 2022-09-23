@@ -1,6 +1,7 @@
 package com.saucesubfresh.starter.limiter.annotation;
 
-import com.saucesubfresh.starter.limiter.generator.KeyGenerator;
+
+import com.saucesubfresh.starter.limiter.generator.SimpleKeyGenerator;
 
 import java.lang.annotation.*;
 
@@ -10,16 +11,9 @@ import java.lang.annotation.*;
 public @interface RateLimit {
 
     /**
-     * 限流 key 的前缀
-     * @return
+     * 限流 key {@link SimpleKeyGenerator}
      */
-    String prefix() default "";
-
-    /**
-     * 限流 key，支持 Spel 表达式，生成器 {@link KeyGenerator}
-     * @return
-     */
-    String key() default "";
+    String limitKey() default "";
 
     /**
      * 令牌流入速率，单位秒

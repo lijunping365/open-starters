@@ -1,4 +1,4 @@
-package com.saucesubfresh.starter.limiter.process;
+package com.saucesubfresh.starter.limiter.processor;
 
 import java.util.function.Supplier;
 
