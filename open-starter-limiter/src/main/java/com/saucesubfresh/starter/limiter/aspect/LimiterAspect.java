@@ -2,7 +2,7 @@ package com.saucesubfresh.starter.limiter.aspect;
 
 import com.saucesubfresh.starter.limiter.annotation.RateLimit;
 import com.saucesubfresh.starter.limiter.generator.KeyGenerator;
-import com.saucesubfresh.starter.limiter.process.RateLimiter;
+import com.saucesubfresh.starter.limiter.processor.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
