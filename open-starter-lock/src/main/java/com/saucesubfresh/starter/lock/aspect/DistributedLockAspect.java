@@ -1,6 +1,6 @@
 package com.saucesubfresh.starter.lock.aspect;
 
-import com.saucesubfresh.starter.lock.annotation.DistributedLock;
+import com.saucesubfresh.starter.lock.annotation.Lock;
 import com.saucesubfresh.starter.lock.processor.DistributedLockProcessor;
 import com.saucesubfresh.starter.lock.generator.KeyGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class DistributedLockAspect {
     this.keyGenerator = keyGenerator;
   }
 
-  @Pointcut("@annotation(com.saucesubfresh.starter.lock.annotation.DistributedLock)")
+  @Pointcut("@annotation(com.saucesubfresh.starter.lock.annotation.Lock)")
   public void dsPointcut() {}
 
   @Around("dsPointcut()")
@@ -45,7 +45,7 @@ public class DistributedLockAspect {
   }
 
   private Object lock(ProceedingJoinPoint pjp, Method method, final String lockName) throws Throwable{
-    DistributedLock annotation = method.getAnnotation(DistributedLock.class);
+    Lock annotation = method.getAnnotation(Lock.class);
     boolean tryLock = annotation.tryLock();
     boolean fairLock = annotation.fairLock();
     long leaseTime = annotation.leaseTime();
