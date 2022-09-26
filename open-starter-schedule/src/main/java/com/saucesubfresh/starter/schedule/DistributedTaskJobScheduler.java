@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2022 organization SauceSubFresh
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.saucesubfresh.starter.schedule;
 
 import com.saucesubfresh.starter.schedule.exception.ScheduleException;
@@ -22,9 +37,7 @@ import java.util.concurrent.TimeUnit;
  *
  * 当 leaseTime 不为 -1 的时候, 当前线程会一直持有锁且阻塞当前线程到 leaseTime 为 0 时会自动释放锁
  *
- *
- * @author: 李俊平
- * @Date: 2022-07-16 11:49
+ * @author lijunping
  */
 @Slf4j
 public class DistributedTaskJobScheduler extends AbstractTaskJobScheduler {
