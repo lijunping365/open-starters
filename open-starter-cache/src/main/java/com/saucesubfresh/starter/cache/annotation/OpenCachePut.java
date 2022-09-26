@@ -21,6 +21,8 @@ import java.lang.annotation.*;
 
 /**
  * 用于更新缓存
+ *
+ * @author lijunping
  */
 @Inherited
 @Documented

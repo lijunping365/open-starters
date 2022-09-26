@@ -26,7 +26,7 @@ import java.io.Serializable;
 /**
  * 缓存指标数据上报信息类
  *
- * @author lijunping on 2022/6/24
+ * @author lijunping
  */
 @Data
 @Builder

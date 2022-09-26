@@ -23,8 +23,7 @@ import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.redisson.api.RedissonClient;
 
 /**
- * @author: 李俊平
- * @Date: 2022-05-29 13:38
+ * @author lijunping
  */
 public class RedissonCaffeineCacheManager extends AbstractCacheManager {
     private final RedissonClient client;

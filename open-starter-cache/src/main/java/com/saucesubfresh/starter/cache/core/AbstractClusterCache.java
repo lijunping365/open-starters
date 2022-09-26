@@ -20,7 +20,7 @@ import com.saucesubfresh.starter.cache.stats.CacheStats;
 import com.saucesubfresh.starter.cache.stats.StatsCounter;
 
 /**
- * @author lijunping on 2022/6/9
+ * @author lijunping
  */
 public abstract class AbstractClusterCache implements ClusterCache {
 

@@ -22,8 +22,7 @@ import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-25 17:14
+ * @author lijunping
  */
 @Slf4j
 public class RedissonCacheMessageListener extends AbstractCacheMessageListener {

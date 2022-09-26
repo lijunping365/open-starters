@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.cache.core;
 import com.saucesubfresh.starter.cache.stats.CacheStats;
 
 /**
- * @author lijunping on 2022/5/24
+ * @author lijunping
  */
 public interface ClusterCache{
 

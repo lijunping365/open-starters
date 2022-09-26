@@ -21,12 +21,10 @@ package com.saucesubfresh.starter.cache.message;
  *
  *     目的就是使其他节点的本地缓存同步
  *
- *     具体实现可参考 {@link RedissonCacheMessageProducer,
- *                  @link RedisCacheMessageProducer,
- *                  @link KafkaCacheMessageProducer}
+ *     具体实现可参考 {@link RedissonCacheMessageProducer},{@link RedisCacheMessageProducer},{@link KafkaCacheMessageProducer}
  * </b>
- * @author: 李俊平
- * @Date: 2022-06-25 17:14
+ *
+ * @author lijunping
  */
 public interface CacheMessageProducer {
 

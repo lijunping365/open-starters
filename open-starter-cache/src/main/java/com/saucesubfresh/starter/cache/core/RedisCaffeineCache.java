@@ -32,8 +32,7 @@ import java.util.concurrent.TimeUnit;
  *
  * 比如清除操作，先清除 redis 中缓存数据，然后再清除 caffeine 缓存，避免短时间内如果先清除 caffeine 缓存后其他请求会再从 redis 里加载到 caffeine 中
  *
- * @author: 李俊平
- * @Date: 2022-06-18 23:33
+ * @author lijunping
  */
 @Slf4j
 public class RedisCaffeineCache extends AbstractClusterCache {

@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.cache.message;
 import lombok.Getter;
 
 /**
- * @author lijunping on 2022/6/23
+ * @author lijunping
  */
 @Getter
 public enum CacheCommand {

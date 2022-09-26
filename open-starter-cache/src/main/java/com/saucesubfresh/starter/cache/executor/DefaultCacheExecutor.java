@@ -22,7 +22,7 @@ import com.saucesubfresh.starter.cache.message.CacheCommand;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author lijunping on 2022/6/16
+ * @author lijunping
  */
 @Slf4j
 public class DefaultCacheExecutor extends AbstractCacheExecutor {

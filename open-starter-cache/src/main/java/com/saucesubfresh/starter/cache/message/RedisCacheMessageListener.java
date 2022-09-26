@@ -23,8 +23,7 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-25 17:14
+ * @author lijunping
  */
 @Slf4j
 public class RedisCacheMessageListener extends AbstractCacheMessageListener implements MessageListener {

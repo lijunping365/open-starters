@@ -21,7 +21,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * @author lijunping on 2022/5/20
+ * @author lijunping
  */
 @Data
 @ConfigurationProperties(prefix = "com.saucesubfresh.cache")

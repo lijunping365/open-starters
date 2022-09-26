@@ -18,8 +18,7 @@ package com.saucesubfresh.starter.cache.stats;
 import lombok.Data;
 
 /**
- * copy caffeine
- * @author lijunping on 2022/6/23
+ * This design is learning from {@link com.github.benmanes.caffeine.cache.stats.CacheStats} which is in Caffeine.
  */
 @Data
 public final class CacheStats {

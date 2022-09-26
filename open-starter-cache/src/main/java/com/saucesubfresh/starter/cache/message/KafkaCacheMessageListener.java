@@ -24,8 +24,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.MessageListener;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-25 17:14
+ * @author lijunping
  */
 @Slf4j
 public class KafkaCacheMessageListener extends AbstractCacheMessageListener implements MessageListener<String, CacheMessage> {

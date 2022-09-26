@@ -28,8 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-25 12:08
+ * @author lijunping
  */
 @Slf4j
 public class DefaultCacheMetricsScheduler implements CacheMetricsScheduler, InitializingBean, DisposableBean {

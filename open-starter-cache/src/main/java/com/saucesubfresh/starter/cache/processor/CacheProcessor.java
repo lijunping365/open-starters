@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 /**
  * 缓存注解处理器
  *
- * @author lijunping on 2022/5/25
+ * @author lijunping
  */
 public interface CacheProcessor {
 

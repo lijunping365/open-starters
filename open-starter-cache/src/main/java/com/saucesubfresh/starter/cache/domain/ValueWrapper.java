@@ -16,8 +16,7 @@
 package com.saucesubfresh.starter.cache.domain;
 
 /**
- * @author: 李俊平
- * @Date: 2022-05-29 12:06
+ * @author lijunping
  */
 @FunctionalInterface
 public interface ValueWrapper {

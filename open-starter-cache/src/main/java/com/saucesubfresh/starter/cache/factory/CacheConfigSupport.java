@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 organization SauceSubFresh
+ * Copyright (c) 2013-2021 Nikita Koksharov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,7 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * copy from redisson
- * @author lijunping on 2022/6/22
+ * This design is learning from {@link org.redisson.config.ConfigSupport} which is in Redisson.
  */
 public class CacheConfigSupport {
 

@@ -21,7 +21,7 @@ import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
 
 /**
- * @author lijunping on 2022/6/16
+ * @author lijunping
  */
 public abstract class AbstractCacheExecutor implements CacheExecutor {
 

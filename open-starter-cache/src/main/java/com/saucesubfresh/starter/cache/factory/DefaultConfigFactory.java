@@ -31,8 +31,7 @@ import java.util.Map;
  *     加载配置文件的默认实现，默认加载 yaml 文件
  * </p>
  *
- * @author: 李俊平
- * @Date: 2022-06-22 21:31
+ * @author lijunping
  */
 @Slf4j
 public class DefaultConfigFactory extends AbstractConfigFactory implements ResourceLoaderAware {

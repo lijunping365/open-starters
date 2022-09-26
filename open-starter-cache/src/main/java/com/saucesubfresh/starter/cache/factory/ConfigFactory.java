@@ -16,7 +16,7 @@
 package com.saucesubfresh.starter.cache.factory;
 
 /**
- * @author lijunping on 2022/6/22
+ * @author lijunping
  */
 public interface ConfigFactory {
 

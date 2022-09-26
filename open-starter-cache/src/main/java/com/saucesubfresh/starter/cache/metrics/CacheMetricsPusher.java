@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 缓存指标上报发送器
  *
- * @author lijunping on 2022/6/22
+ * @author lijunping
  */
 public interface CacheMetricsPusher {
 

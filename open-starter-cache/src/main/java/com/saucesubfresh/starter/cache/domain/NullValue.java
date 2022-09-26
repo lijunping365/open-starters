@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.cache.domain;
 import java.io.Serializable;
 
 /**
- * @author lijunping on 2022/6/22
+ * @author lijunping
  */
 public class NullValue implements ValueWrapper, Serializable {
 

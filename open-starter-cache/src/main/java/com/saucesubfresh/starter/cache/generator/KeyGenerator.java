@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.cache.generator;
 import java.lang.reflect.Method;
 
 /**
- * @author lijunping on 2021/12/30
+ * @author lijunping
  */
 public interface KeyGenerator {
     /**

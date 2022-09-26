@@ -18,8 +18,7 @@ package com.saucesubfresh.starter.cache.stats;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
- * copy caffeine
- * @author lijunping on 2022/6/23
+ * This design is learning from {@link com.github.benmanes.caffeine.cache.stats.ConcurrentStatsCounter} which is in Caffeine.
  */
 public final class ConcurrentStatsCounter implements StatsCounter{
     private final LongAdder hitCount;

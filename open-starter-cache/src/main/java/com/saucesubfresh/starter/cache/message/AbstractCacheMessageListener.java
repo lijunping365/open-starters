@@ -21,8 +21,7 @@ import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import java.util.Objects;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-25 17:38
+ * @author lijunping
  */
 public abstract class AbstractCacheMessageListener implements CacheMessageListener{
 

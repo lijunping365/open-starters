@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * @author lijunping on 2022/6/24
+ * @author lijunping
  */
 @Data
 @Builder

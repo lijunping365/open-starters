@@ -21,7 +21,7 @@ import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import com.saucesubfresh.starter.cache.stats.CacheStats;
 
 /**
- * @author lijunping on 2022/6/24
+ * @author lijunping
  */
 public class DefaultCacheMetricsBuilder implements CacheMetricsBuilder {
 

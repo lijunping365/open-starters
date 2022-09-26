@@ -21,8 +21,8 @@ import java.util.Collection;
 
 /**
  * 管理 cache
- * @author: 李俊平
- * @Date: 2022-05-29 13:36
+ *
+ * @author lijunping
  */
 public interface CacheManager {
 

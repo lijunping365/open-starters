@@ -16,8 +16,7 @@
 package com.saucesubfresh.starter.cache.stats;
 
 /**
- * copy caffeine
- * @author lijunping on 2022/6/23
+ * This design is learning from {@link com.github.benmanes.caffeine.cache.stats.StatsCounter} which is in Caffeine.
  */
 public interface StatsCounter {
 

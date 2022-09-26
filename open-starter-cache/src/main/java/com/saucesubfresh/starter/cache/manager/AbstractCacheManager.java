@@ -26,8 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * @author: 李俊平
- * @Date: 2022-05-29 14:57
+ * @author lijunping
  */
 @Slf4j
 public abstract class AbstractCacheManager implements CacheManager{

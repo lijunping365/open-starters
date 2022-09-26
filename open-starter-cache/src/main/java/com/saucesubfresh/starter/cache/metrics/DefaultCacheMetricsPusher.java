@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.cache.metrics;
 import java.util.List;
 
 /**
- * @author lijunping on 2022/6/24
+ * @author lijunping
  */
 public class DefaultCacheMetricsPusher implements CacheMetricsPusher{
 

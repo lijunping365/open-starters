@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-25 12:00
+ * @author lijunping
  */
 public class DefaultCacheMetricsCollector implements CacheMetricsCollector{
 

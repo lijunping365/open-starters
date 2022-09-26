@@ -19,9 +19,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author : lijunping
- * @weixin : ilwq18242076871
- * Description:
+ * @author lijunping
  */
 public class NamedThreadFactory implements ThreadFactory {
 
@@ -48,6 +46,4 @@ public class NamedThreadFactory implements ThreadFactory {
     t.setDaemon(daemon);
     return t;
   }
-
-
 }

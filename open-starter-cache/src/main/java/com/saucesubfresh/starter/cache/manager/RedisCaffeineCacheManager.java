@@ -23,8 +23,7 @@ import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-18 23:13
+ * @author lijunping
  */
 public class RedisCaffeineCacheManager extends AbstractCacheManager {
 

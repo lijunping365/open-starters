@@ -19,7 +19,8 @@ import java.lang.annotation.*;
 
 /**
  * 代表开启缓存
- * @author lijunping on 2022/5/25
+ *
+ * @author lijunping
  */
 @Documented
 @Target(ElementType.TYPE)

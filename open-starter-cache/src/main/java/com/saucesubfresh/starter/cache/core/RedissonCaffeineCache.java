@@ -23,7 +23,7 @@ import org.redisson.api.RLocalCachedMap;
 import org.redisson.api.RedissonClient;
 
 /**
- * @author lijunping on 2022/6/9
+ * @author lijunping
  */
 @Slf4j
 public class RedissonCaffeineCache extends AbstractClusterCache{

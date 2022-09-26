@@ -21,7 +21,7 @@ import com.saucesubfresh.starter.cache.message.CacheMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author lijunping on 2022/6/27
+ * @author lijunping
  */
 @Slf4j
 public class DefaultCacheExecutorErrorHandler implements CacheExecutorErrorHandler {

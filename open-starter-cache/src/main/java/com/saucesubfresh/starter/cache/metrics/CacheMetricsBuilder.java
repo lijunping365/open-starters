@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.cache.metrics;
 /**
  * 缓存指标信息构建者
  *
- * @author lijunping on 2022/6/24
+ * @author lijunping
  */
 public interface CacheMetricsBuilder {
 

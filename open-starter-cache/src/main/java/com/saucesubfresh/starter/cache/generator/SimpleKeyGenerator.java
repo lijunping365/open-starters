@@ -27,8 +27,7 @@ import java.lang.reflect.Parameter;
 import java.util.Objects;
 
 /**
- * @author: 李俊平
- * @Date: 2022-05-25 23:02
+ * @author lijunping
  */
 public class SimpleKeyGenerator implements KeyGenerator{
 

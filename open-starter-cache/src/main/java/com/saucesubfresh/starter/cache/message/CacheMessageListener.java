@@ -25,8 +25,8 @@ package com.saucesubfresh.starter.cache.message;
  *                  @link RedisCacheMessageListener ,
  *                  @link KafkaCacheMessageListener}
  * </b>
- * @author: 李俊平
- * @Date: 2022-06-25 17:14
+ *
+ * @author lijunping
  */
 public interface CacheMessageListener {
 

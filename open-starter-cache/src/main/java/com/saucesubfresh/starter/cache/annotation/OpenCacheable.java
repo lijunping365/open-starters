@@ -22,6 +22,8 @@ import java.lang.annotation.*;
 /**
  * 根据方法对其返回结果进行缓存，下次请求时，如果缓存存在，则直接读取缓存数据返回；
  * 如果缓存不存在，则执行方法，并把返回的结果存入缓存中。一般用在查询方法上。
+ *
+ * @author lijunping
  */
 @Inherited
 @Documented
