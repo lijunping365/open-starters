@@ -1,3 +1,38 @@
+/*
+ * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+/*
+ *
+ *
+ *
+ *
+ *
+ * Written by Doug Lea with assistance from members of JCP JSR-166
+ * Expert Group and released to the public domain, as explained at
+ * http://creativecommons.org/publicdomain/zero/1.0/
+ */
+
 package com.saucesubfresh.starter.executor.thread;
 
 import java.io.Serializable;
@@ -11,10 +46,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * @author : lijunping
- * @weixin : ilwq18242076871
- * Description: 复制于LinkedBlockingQueue
  * 修改点： capacity 变为 volatile，使 capacity 支持安全动态修改
+ *
+ * {@see LinkedBlockingQueue}
  */
 public class ResizableCapacityLinkedBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable {
 
