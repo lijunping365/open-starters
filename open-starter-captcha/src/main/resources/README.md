@@ -80,6 +80,22 @@ public class OpenJobCaptchaController {
         }
         return Result.succeed(openJobCaptchaRespDTO);
     }
+
+    @PostMapping("/create/sms")
+    public Result<OpenJobCaptchaRespDTO> createSmsCode(@RequestBody @Valid OpenJobCaptchaRequest request) {
+        OpenJobCaptchaRespDTO openJobCaptchaRespDTO = new OpenJobCaptchaRespDTO();
+        CaptchaGenerateRequest captchaGenerateRequest = new CaptchaGenerateRequest();
+        captchaGenerateRequest.setRequestId(request.getDeviceId());
+        try {
+            ValidateCode validateCode = smsCodeGenerator.create(captchaGenerateRequest);
+            openJobCaptchaRespDTO.setSuccess(true);
+            log.info("向手机号: {}发送短信验证码: {}", request.getMobile(), validateCode.getCode());
+        } catch (ValidateCodeException e) {
+            log.error(e.getMessage(), e);
+            throw new ControllerException(e.getMessage());
+        }
+        return Result.succeed(openJobCaptchaRespDTO);
+    }
 }
 ```
 
