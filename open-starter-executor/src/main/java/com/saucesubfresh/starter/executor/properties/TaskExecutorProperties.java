@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author lijunping
  */
 @Data
-@ConfigurationProperties("com.pro.crawler.thread")
+@ConfigurationProperties("com.saucesubfresh.executor")
 public class TaskExecutorProperties {
 
   /**
@@ -50,6 +50,6 @@ public class TaskExecutorProperties {
   /**
    * 任务执行线程前缀
    */
-  private String prefix = "crawler-task";
+  private String prefix = "executor-task";
 
 }

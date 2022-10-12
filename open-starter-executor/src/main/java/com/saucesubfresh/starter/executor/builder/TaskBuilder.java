@@ -19,7 +19,9 @@ import com.saucesubfresh.starter.executor.domain.Task;
 import com.saucesubfresh.starter.executor.handler.TaskHandler;
 
 /**
- * 任务构建接口
+ * 1. 把执行的任务转换为 Runnable
+ *
+ * 2. 对 Runnable 进行代理并返回 Runnable 的代理
  *
  * @author lijunping
  */
