@@ -21,6 +21,7 @@ import com.saucesubfresh.starter.crawler.executor.download.DefaultDownloadHandle
 import com.saucesubfresh.starter.crawler.executor.download.DownloadHandler;
 import com.saucesubfresh.starter.crawler.executor.result.DefaultResultHandler;
 import com.saucesubfresh.starter.crawler.executor.result.ResultHandler;
+import com.saucesubfresh.starter.crawler.plugin.InterceptorChain;
 import com.saucesubfresh.starter.crawler.properties.CrawlerProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,15 +36,22 @@ import org.springframework.context.annotation.Configuration;
 public class CrawlerAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean
-    public DownloadHandler downloadPipeline(){
-        return new DefaultDownloadHandler();
+    public InterceptorChain interceptorChain(){
+        return new InterceptorChain();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ResultHandler resultHandler(){
-        return new DefaultResultHandler();
+    public DownloadHandler downloadPipeline(InterceptorChain interceptorChain){
+        DefaultDownloadHandler downloadHandler = new DefaultDownloadHandler();
+        return (DownloadHandler) interceptorChain.pluginAll(downloadHandler);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ResultHandler resultHandler(InterceptorChain interceptorChain){
+        DefaultResultHandler resultHandler = new DefaultResultHandler();
+        return (ResultHandler) interceptorChain.pluginAll(resultHandler);
     }
 
     @Bean
