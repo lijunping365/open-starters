@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.pipeline;
+package com.saucesubfresh.starter.crawler.executor.download;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.Map;
 
 /**
+ * 下载
+ *
  * @author lijunping
  */
-@Slf4j
-public class DefaultPersistencePipeline implements PersistencePipeline {
+public interface DownloadHandler {
 
-    @Override
-    public void process(SpiderRequest request, SpiderResponse response) {
-        List<Map<String, Object>> data = response.getFormatResult();
-        log.info("异步持久化操作-发送给消息队列 {}", data);
-    }
+    /**
+     * download html or json
+     * @param request
+     * @return 爬取内容（原始数据）
+     */
+    String download(SpiderRequest request);
 }

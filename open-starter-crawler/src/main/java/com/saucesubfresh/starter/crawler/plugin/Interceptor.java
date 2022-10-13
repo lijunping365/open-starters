@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.pipeline;
+package com.saucesubfresh.starter.crawler.plugin;
 
 /**
- * 数据持久化
- *
  * @author lijunping
  */
-public interface PersistencePipeline extends Pipeline{
+public interface Interceptor {
 
+    Object intercept(Invocation invocation) throws Throwable;
+
+    default Object plugin(Object target) {
+        return Plugin.wrap(target, this);
+    }
 }

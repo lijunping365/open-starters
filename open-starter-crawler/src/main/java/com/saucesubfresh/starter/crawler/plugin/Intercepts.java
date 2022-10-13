@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.pipeline;
+package com.saucesubfresh.starter.crawler.plugin;
 
-
-import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
+import java.lang.annotation.*;
 
 /**
- * 流水线处理
- *
  * @author lijunping
  */
-public interface Pipeline {
-
-    void process(SpiderRequest request, SpiderResponse response);
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Intercepts {
+    /**
+     * Returns method signatures to intercept.
+     *
+     * @return method signatures
+     */
+    Signature[] value();
 }

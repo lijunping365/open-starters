@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.generator;
+package com.saucesubfresh.starter.crawler.executor.result;
+
+import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+
+import java.util.List;
 
 /**
+ * 结果处理
+ *
  * @author lijunping
  */
-public interface KeyGenerator {
+public interface ResultHandler {
 
-    String generate(String params);
+    /**
+     * 结果解析
+     * @param request
+     * @param content
+     * @return
+     */
+    <T> List<T> handler(SpiderRequest request, String content, Class<T> clazz);
 }
