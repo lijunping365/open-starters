@@ -16,8 +16,8 @@
 package com.saucesubfresh.starter.crawler.executor;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.executor.download.DownloadHandler;
-import com.saucesubfresh.starter.crawler.executor.result.ResultHandler;
+import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
+import com.saucesubfresh.starter.crawler.handler.ResultHandler;
 
 import java.util.List;
 

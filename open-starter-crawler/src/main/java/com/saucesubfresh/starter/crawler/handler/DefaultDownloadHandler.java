@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.plugin;
+package com.saucesubfresh.starter.crawler.handler;
 
-import java.lang.annotation.*;
+import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.exception.CrawlerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 默认 下载器
+ *
  * @author lijunping
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Intercepts {
-    /**
-     * Returns method signatures to intercept.
-     *
-     * @return method signatures
-     */
-    Signature[] value();
+@Slf4j
+public class DefaultDownloadHandler extends AbstractDownloadHandler {
+
+    @Override
+    protected String doDownload(SpiderRequest request) throws CrawlerException {
+        return null;
+    }
+
 }

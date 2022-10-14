@@ -13,40 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.plugin;
+package com.saucesubfresh.starter.crawler.handler;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 
 /**
+ * 下载
+ *
  * @author lijunping
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({})
-public @interface Signature {
+public interface DownloadHandler {
 
     /**
-     * Returns the java type.
-     *
-     * @return the java type
+     * download html or json
+     * @param request
+     * @return 爬取内容（原始数据）
      */
-    Class<?> type();
-
-    /**
-     * Returns the method name.
-     *
-     * @return the method name
-     */
-    String method();
-
-    /**
-     * Returns java types for method argument.
-     *
-     * @return java types for method argument
-     */
-    Class<?>[] args();
-
+    String download(SpiderRequest request);
 }

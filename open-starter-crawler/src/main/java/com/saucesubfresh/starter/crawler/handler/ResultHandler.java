@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.executor.download;
+package com.saucesubfresh.starter.crawler.handler;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.exception.CrawlerException;
-import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 /**
- * 默认 下载器
+ * 结果处理
  *
  * @author lijunping
  */
-@Slf4j
-public class DefaultDownloadHandler extends AbstractDownloadHandler {
+public interface ResultHandler {
 
-    @Override
-    protected String doDownload(SpiderRequest request) throws CrawlerException {
-        return null;
-    }
-
+    /**
+     * 结果解析
+     * @param request
+     * @param content
+     * @return
+     */
+    <T> List<T> handler(SpiderRequest request, String content, Class<T> clazz);
 }

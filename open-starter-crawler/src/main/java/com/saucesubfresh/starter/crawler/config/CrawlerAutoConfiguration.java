@@ -17,11 +17,10 @@ package com.saucesubfresh.starter.crawler.config;
 
 import com.saucesubfresh.starter.crawler.executor.CrawlerExecutor;
 import com.saucesubfresh.starter.crawler.executor.DefaultCrawlerExecutor;
-import com.saucesubfresh.starter.crawler.executor.download.DefaultDownloadHandler;
-import com.saucesubfresh.starter.crawler.executor.download.DownloadHandler;
-import com.saucesubfresh.starter.crawler.executor.result.DefaultResultHandler;
-import com.saucesubfresh.starter.crawler.executor.result.ResultHandler;
-import com.saucesubfresh.starter.crawler.plugin.InterceptorChain;
+import com.saucesubfresh.starter.crawler.handler.DefaultDownloadHandler;
+import com.saucesubfresh.starter.crawler.handler.DefaultResultHandler;
+import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
+import com.saucesubfresh.starter.crawler.handler.ResultHandler;
 import com.saucesubfresh.starter.crawler.properties.CrawlerProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -36,22 +35,15 @@ import org.springframework.context.annotation.Configuration;
 public class CrawlerAutoConfiguration {
 
     @Bean
-    public InterceptorChain interceptorChain(){
-        return new InterceptorChain();
+    @ConditionalOnMissingBean
+    public DownloadHandler downloadPipeline(){
+        return new DefaultDownloadHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public DownloadHandler downloadPipeline(InterceptorChain interceptorChain){
-        DefaultDownloadHandler downloadHandler = new DefaultDownloadHandler();
-        return (DownloadHandler) interceptorChain.pluginAll(downloadHandler);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ResultHandler resultHandler(InterceptorChain interceptorChain){
-        DefaultResultHandler resultHandler = new DefaultResultHandler();
-        return (ResultHandler) interceptorChain.pluginAll(resultHandler);
+    public ResultHandler resultHandler(){
+        return new DefaultResultHandler();
     }
 
     @Bean
