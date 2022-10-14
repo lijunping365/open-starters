@@ -47,7 +47,6 @@ public class DefaultResultHandler extends AbstractResultHandler {
         }
 
         List<Map<String, Object>> formatResult = format(parseResult, fieldExtractors);
-
         return JSON.parseList(JSON.toJSON(formatResult), clazz);
     }
 
