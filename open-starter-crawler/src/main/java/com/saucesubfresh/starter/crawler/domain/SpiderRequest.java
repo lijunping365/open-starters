@@ -30,10 +30,6 @@ import java.util.Map;
 public class SpiderRequest implements Serializable {
     private static final long serialVersionUID = 2062192774891352043L;
     /**
-     * 任务 id
-     */
-    private Long taskId;
-    /**
      * 爬虫 id
      */
     private Long spiderId;
@@ -45,6 +41,14 @@ public class SpiderRequest implements Serializable {
      * 请求方式 GET|POST
      */
     private String method;
+    /**
+     * 下载重试次数
+     */
+    private int retryTimes = 0;
+    /**
+     * 间隔时间
+     */
+    private int sleepTime = 5000;
     /**
      * 请求参数
      */
@@ -58,19 +62,8 @@ public class SpiderRequest implements Serializable {
      */
     private Proxy proxy;
     /**
-     * 处理器名称
-     */
-    private String handlerName;
-    /**
      * 数据抽取规则
      */
     private List<FieldExtractor> extract;
-    /**
-     * 下载重试次数
-     */
-    private int retryTimes = 0;
-    /**
-     * 间隔时间
-     */
-    private int sleepTime = 5000;
+
 }
