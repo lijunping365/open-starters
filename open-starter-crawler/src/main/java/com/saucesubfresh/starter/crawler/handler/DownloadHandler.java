@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.generator;
+package com.saucesubfresh.starter.crawler.handler;
+
+import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 
 /**
+ * 下载
+ *
  * @author lijunping
  */
-public interface KeyGenerator {
+public interface DownloadHandler {
 
-    String generate(String params);
+    /**
+     * download html or json
+     * @param request
+     * @return 爬取内容（原始数据）
+     */
+    String download(SpiderRequest request);
 }

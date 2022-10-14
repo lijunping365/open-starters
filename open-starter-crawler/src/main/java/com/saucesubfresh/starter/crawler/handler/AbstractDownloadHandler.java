@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.pipeline;
+package com.saucesubfresh.starter.crawler.handler;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,16 +25,17 @@ import lombok.extern.slf4j.Slf4j;
  * @author lijunping
  */
 @Slf4j
-public abstract class AbstractDownloadPipeline implements DownloadPipeline {
+public abstract class AbstractDownloadHandler implements DownloadHandler {
 
     @Override
-    public void process(SpiderRequest request, SpiderResponse response) {
+    public String download(SpiderRequest request) {
         boolean success = false;
         int maxTimes = request.getRetryTimes();
         int currentTimes = 0;
+        String response = null;
         while (!success) {
             try {
-                doDownload(request, response);
+                response = doDownload(request);
                 success = true;
             }catch (CrawlerException e){
                 log.error(e.getMessage(), e);
@@ -49,6 +49,7 @@ public abstract class AbstractDownloadPipeline implements DownloadPipeline {
                 sleep(request.getSleepTime());
             }
         }
+        return response;
     }
 
     protected void sleep(int time) {
@@ -59,5 +60,5 @@ public abstract class AbstractDownloadPipeline implements DownloadPipeline {
         }
     }
 
-    protected abstract void doDownload(SpiderRequest request, SpiderResponse response) throws CrawlerException;
+    protected abstract String doDownload(SpiderRequest request) throws CrawlerException;
 }

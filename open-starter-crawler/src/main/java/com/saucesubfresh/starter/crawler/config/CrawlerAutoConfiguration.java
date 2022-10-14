@@ -15,9 +15,12 @@
  */
 package com.saucesubfresh.starter.crawler.config;
 
-import com.saucesubfresh.starter.crawler.generator.DefaultKeyGenerator;
-import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
-import com.saucesubfresh.starter.crawler.pipeline.*;
+import com.saucesubfresh.starter.crawler.executor.CrawlerExecutor;
+import com.saucesubfresh.starter.crawler.executor.DefaultCrawlerExecutor;
+import com.saucesubfresh.starter.crawler.handler.DefaultDownloadHandler;
+import com.saucesubfresh.starter.crawler.handler.DefaultResultHandler;
+import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
+import com.saucesubfresh.starter.crawler.handler.ResultHandler;
 import com.saucesubfresh.starter.crawler.properties.CrawlerProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -33,37 +36,20 @@ public class CrawlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public KeyGenerator keyGenerator(){
-        return new DefaultKeyGenerator();
+    public DownloadHandler downloadPipeline(){
+        return new DefaultDownloadHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public DownloadPipeline downloadPipeline(){
-        return new DefaultDownloadPipeline();
+    public ResultHandler resultHandler(){
+        return new DefaultResultHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ParserPipeline parserPipeline(){
-        return new DefaultParserPipeline();
+    public CrawlerExecutor crawlerExecutor(DownloadHandler downloadPipeline, ResultHandler resultHandler){
+        return new DefaultCrawlerExecutor(downloadPipeline, resultHandler);
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public FormatPipeline formatPipeline(){
-        return new DefaultFormatPipeline();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ValuePipeline fillPipeline(KeyGenerator keyGenerator){
-        return new DefaultValuePipeline(keyGenerator);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public PersistencePipeline persistencePipeline(){
-        return new DefaultPersistencePipeline();
-    }
 }

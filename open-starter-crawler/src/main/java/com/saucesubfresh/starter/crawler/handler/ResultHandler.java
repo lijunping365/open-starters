@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.pipeline;
+package com.saucesubfresh.starter.crawler.handler;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
 
-import java.util.Map;
+import java.util.List;
 
 /**
+ * 结果处理
+ *
  * @author lijunping
  */
-public class DefaultValuePipeline extends AbstractValuePipeline {
+public interface ResultHandler {
 
-    public DefaultValuePipeline(KeyGenerator keyGenerator) {
-        super(keyGenerator);
-    }
-
-    @Override
-    protected void doFillValue(SpiderRequest request, Map<String, Object> rowData) {
-
-    }
+    /**
+     * 结果解析
+     * @param request
+     * @param content
+     * @return
+     */
+    <T> List<T> handler(SpiderRequest request, String content, Class<T> clazz);
 }

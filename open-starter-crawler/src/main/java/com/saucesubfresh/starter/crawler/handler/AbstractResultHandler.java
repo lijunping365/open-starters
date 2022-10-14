@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.pipeline;
+package com.saucesubfresh.starter.crawler.handler;
 
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
 import com.saucesubfresh.starter.crawler.parser.ElementSelector;
 import com.saucesubfresh.starter.crawler.parser.provider.JsonPathSelector;
@@ -25,25 +24,20 @@ import com.saucesubfresh.starter.crawler.utils.ExtractorUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <pre>
- *  抽象解析类，子类实现包括
- *  1. 动态规则解析（自动模式）
- *  2. 基于类注解解析（手动模式）
+ *  抽象结果处理类，子类实现包括
  * </pre>
  *
  * @author lijunping
  */
-public abstract class AbstractParserPipeline implements ParserPipeline {
+public abstract class AbstractResultHandler implements ResultHandler {
 
     @Override
-    public void process(SpiderRequest request, SpiderResponse response) {
-        Map<String, Object> parseResult = doParse(request, response);
-        response.setParseResult(parseResult);
+    public <T> List<T> handler(SpiderRequest request, String content, Class<T> clazz) {
+        return doHandler(request, content, clazz);
     }
 
     /**
@@ -94,6 +88,28 @@ public abstract class AbstractParserPipeline implements ParserPipeline {
         return fields;
     }
 
-    protected abstract Map<String, Object> doParse(SpiderRequest request, SpiderResponse response);
+    /**
+     * 解析结果格式化
+     *
+     * @param fields
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    protected List<Map<String, Object>> formatList(Map<String, Object> fields){
+        List<Map<String, Object>> formatResult = new ArrayList<>();
+        Map<String, List<String>> dataTmp = new HashMap<>();
+        fields.forEach((key, value)-> dataTmp.put(key, (List<String>) value));
+        int maxSize = dataTmp.values().stream().map(List::size).max(Comparator.comparing(Integer::intValue)).orElse(0);
+
+        for (int i = 0; i <maxSize; i++) {
+            Map<String, Object> rowData = new HashMap<>();
+            int finalI = i;
+            dataTmp.forEach((key, value)-> rowData.put(key, finalI >= value.size() ? null : value.get(finalI)));
+            formatResult.add(rowData);
+        }
+        return formatResult;
+    }
+
+    protected abstract <T> List<T> doHandler(SpiderRequest request, String content, Class<T> clazz);
 
 }

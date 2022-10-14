@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.pipeline;
-
+package com.saucesubfresh.starter.crawler.handler;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
+import com.saucesubfresh.starter.crawler.exception.CrawlerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 流水线处理
+ * 默认 下载器
  *
  * @author lijunping
  */
-public interface Pipeline {
+@Slf4j
+public class DefaultDownloadHandler extends AbstractDownloadHandler {
 
-    void process(SpiderRequest request, SpiderResponse response);
+    @Override
+    protected String doDownload(SpiderRequest request) throws CrawlerException {
+        return null;
+    }
+
 }
