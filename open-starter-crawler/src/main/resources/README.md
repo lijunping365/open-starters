@@ -8,7 +8,7 @@
 
 - [x] 解析规则支持值传递和类注解两种方式
 
-- [x] 爬虫过程采用 pipeline 方式实现，pipeline 支持自定义
+- [x] 包含爬虫核心流程
 
 - [x] 数据 id 生成支持自定义
 
@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-crawler</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
@@ -35,50 +35,36 @@
 节选自 Open-Crawler，搭载 open-starter-executor 组件进行多线程采集，效率更高，还可自定义采集前后拦截器，进行采集时间统计。
 
 ```java
-
-import java.util.ArrayList;
-
 @Slf4j
 @Component
-public class DefaultCrawlerExecutor implements CrawlerExecutor {
+public class CrawlerMessageProcess implements MessageProcess {
 
-    private final List<Pipeline> pipelines = new ArrayList<>();
+    private final CrawlerExecutor crawlerExecutor;
     private final TaskProcessor<ISpiderRequest> taskProcessor;
-    public DefaultCrawlerExecutor(DownloadPipeline downloadPipeline,
-                                  CustomizeSubPipeline subPipeline,
-                                  CustomizeReplacePipeline replacePipeline,
-                                  ParserPipeline parserPipeline,
-                                  FormatPipeline formatPipeline,
-                                  ValuePipeline valuePipeline,
-                                  FilterPipeline filterPipeline,
-                                  SerializePipeline serializePipeline,
-                                  PersistencePipeline persistencePipeline,
-                                  TaskProcessor<ISpiderRequest> taskProcessor) {
-        pipelines.add(downloadPipeline);
-        pipelines.add(subPipeline);
-        pipelines.add(replacePipeline);
-        pipelines.add(parserPipeline);
-        pipelines.add(formatPipeline);
-        pipelines.add(valuePipeline);
-        pipelines.add(filterPipeline);
-        pipelines.add(serializePipeline);
-        pipelines.add(persistencePipeline);
+
+    public CrawlerMessageProcess(CrawlerExecutor crawlerExecutor,
+                                 TaskProcessor<ISpiderRequest> taskProcessor) {
+        this.crawlerExecutor = crawlerExecutor;
         this.taskProcessor = taskProcessor;
     }
 
     @Override
-    public void executeAsync(List<ISpiderRequest> requests) {
-        taskProcessor.execute(requests, (task -> {
-            ISpiderResponse response = new ISpiderResponse();
-            response.setSerializeClass(CrawlerData.class);
-            this.doExecute(pipelines, (SpiderRequest) task, response);
-        }));
-    }
-
-    private void doExecute(List<Pipeline> pipelines, SpiderRequest request, SpiderResponse response){
-        pipelines.forEach(pipeline -> pipeline.process(request, response));
+    public byte[] process(Message message) {
+        byte[] body = message.getBody();
+        try {
+            List<CrawlerSpiderRequest> req = SerializationUtils.deserializeList(body, CrawlerSpiderRequest.class);
+            List<ISpiderRequest> requests = JSON.parseList(JSON.toJSON(req), ISpiderRequest.class);
+            requests.forEach(request->{
+                List<CrawlerData> dataList = crawlerExecutor.handler(request, CrawlerData.class);
+            });
+        }catch (Exception e){
+            log.error(e.getMessage(), e);
+            return null;
+        }
+        return null;
     }
 }
+
 ```
 
 ### 4. 类注解解析规则实例
@@ -110,22 +96,12 @@ import java.util.ArrayList;
 @Component
 public class CrawlerTest {
 
-    private final List<Pipeline> pipelines = new ArrayList<>();
+    private final CrawlerExecutor crawlerExecutor;
     private final TaskProcessor<ISpiderRequest> taskProcessor;
 
-    public CrawlerTest(DownloadPipeline downloadPipeline,
-                       CustomizeSubPipeline subPipeline,
-                       CustomizeReplacePipeline replacePipeline,
-                       ParserPipeline parserPipeline,
-                       FormatPipeline formatPipeline,
-                       ValuePipeline valuePipeline,
+    public CrawlerTest(CrawlerExecutor crawlerExecutor,
                        TaskProcessor<ISpiderRequest> taskProcessor) {
-        pipelines.add(downloadPipeline);
-        pipelines.add(subPipeline);
-        pipelines.add(replacePipeline);
-        pipelines.add(parserPipeline);
-        pipelines.add(formatPipeline);
-        pipelines.add(valuePipeline);
+        this.crawlerExecutor = crawlerExecutor;
         this.taskProcessor = taskProcessor;
     }
 
@@ -133,9 +109,7 @@ public class CrawlerTest {
     public void test() {
         List<ISpiderRequest> spiderRequests = buildRequest();
         taskProcessor.execute(spiderRequests, (task -> {
-            ISpiderResponse response = new ISpiderResponse();
-            response.setSerializeClass(CrawlerData.class);
-            this.doExecute(pipelines, (SpiderRequest) task, response);
+            List<CrawlerData> dataList = crawlerExecutor.handler(request, CrawlerData.class);
         }));
 
     }
