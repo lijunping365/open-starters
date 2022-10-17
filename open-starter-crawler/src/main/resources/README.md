@@ -32,36 +32,76 @@
 
 ### 3. 动态解析规则实例
 
-节选自 Open-Crawler，搭载 open-starter-executor 组件进行多线程采集，效率更高，还可自定义采集前后拦截器，进行采集时间统计。
+节选自 Open-Crawler
 
 ```java
 @Slf4j
 @Component
-public class CrawlerMessageProcess implements MessageProcess {
+public class CrawlerMessageProcess {
 
     private final CrawlerExecutor crawlerExecutor;
-    private final TaskProcessor<ISpiderRequest> taskProcessor;
+    private final PersistenceHandler persistenceHandler;
+    private final ResultFillHandler resultFillHandler;
+    private final ResultFilterHandler resultFilterHandler;
+    private final KafkaTemplate<String, byte[]> kafkaTemplate;
+    private final ThreadPoolExecutor threadPoolExecutor;
 
     public CrawlerMessageProcess(CrawlerExecutor crawlerExecutor,
-                                 TaskProcessor<ISpiderRequest> taskProcessor) {
+                                 PersistenceHandler persistenceHandler,
+                                 ResultFillHandler resultFillHandler,
+                                 ResultFilterHandler resultFilterHandler,
+                                 KafkaTemplate<String, byte[]> kafkaTemplate,
+                                 ThreadPoolExecutor threadPoolExecutor) {
         this.crawlerExecutor = crawlerExecutor;
-        this.taskProcessor = taskProcessor;
+        this.persistenceHandler = persistenceHandler;
+        this.resultFillHandler = resultFillHandler;
+        this.resultFilterHandler = resultFilterHandler;
+        this.kafkaTemplate = kafkaTemplate;
+        this.threadPoolExecutor = threadPoolExecutor;
     }
 
-    @Override
-    public byte[] process(Message message) {
-        byte[] body = message.getBody();
-        try {
-            List<CrawlerSpiderRequest> req = SerializationUtils.deserializeList(body, CrawlerSpiderRequest.class);
-            List<ISpiderRequest> requests = JSON.parseList(JSON.toJSON(req), ISpiderRequest.class);
-            requests.forEach(request->{
+    /**
+     * 执行爬虫并存储结果
+     * @param requests
+     */
+    private void doProcess(List<ISpiderRequest> requests){
+        requests.forEach(request-> CompletableFuture.runAsync(()->{
+            long beginTime = System.currentTimeMillis();
+            String errMsg = null;
+            try {
                 List<CrawlerData> dataList = crawlerExecutor.handler(request, CrawlerData.class);
-            });
+                dataList = resultFilterHandler.handler(request, dataList);
+                dataList = resultFillHandler.handler(request, dataList);
+                persistenceHandler.handler(request, dataList);
+            }catch (Exception e){
+                errMsg = e.getMessage();
+            }
+            long useTime = System.currentTimeMillis() - beginTime;
+            recordLog(request, useTime, errMsg);
+        }, threadPoolExecutor));
+    }
+
+    /**
+     * 异步记录采集日志
+     * @param request request
+     * @param useTime 采集耗时
+     * @param errMsg 采集异常信息
+     */
+    public void recordLog(ISpiderRequest request, long useTime, String errMsg) {
+        Map<String, Object> traceInfo = new HashMap<>();
+        traceInfo.put("total", useTime);
+        CrawlerSpiderLog build = CrawlerSpiderLog.builder()
+                .spiderId(request.getSpiderId())
+                .cause(errMsg)
+                .status(StringUtils.isBlank(errMsg) ? CommonStatusEnum.YES.getValue() : CommonStatusEnum.NO.getValue())
+                .trace(JSON.toJSON(traceInfo))
+                .createTime(LocalDateTime.now())
+                .build();
+        try {
+            kafkaTemplate.send("crawler-log", SerializationUtils.serialize(build));
         }catch (Exception e){
             log.error(e.getMessage(), e);
-            return null;
         }
-        return null;
     }
 }
 
@@ -97,25 +137,28 @@ import java.util.ArrayList;
 public class CrawlerTest {
 
     private final CrawlerExecutor crawlerExecutor;
-    private final TaskProcessor<ISpiderRequest> taskProcessor;
+    private final ThreadPoolExecutor threadPoolExecutor;
 
     public CrawlerTest(CrawlerExecutor crawlerExecutor,
-                       TaskProcessor<ISpiderRequest> taskProcessor) {
+                       ThreadPoolExecutor threadPoolExecutor) {
         this.crawlerExecutor = crawlerExecutor;
-        this.taskProcessor = taskProcessor;
+        this.threadPoolExecutor = threadPoolExecutor;
     }
 
     @PostConstruct
     public void test() {
         List<ISpiderRequest> spiderRequests = buildRequest();
-        taskProcessor.execute(spiderRequests, (task -> {
-            List<CrawlerData> dataList = crawlerExecutor.handler(request, CrawlerData.class);
-        }));
+        spiderRequests.forEach(request-> CompletableFuture.runAsync(()->{
+            try {
+                List<CrawlerData> dataList = crawlerExecutor.handler(request, CrawlerData.class);
+                dataList = resultFilterHandler.handler(request, dataList);
+                dataList = resultFillHandler.handler(request, dataList);
+                log.info("data: {}", dataList);
+            }catch (Exception e){
+                log.error(e.getMessage());
+            }
+        }, threadPoolExecutor));
 
-    }
-
-    private void doExecute(List<Pipeline> pipelines, SpiderRequest request, SpiderResponse response){
-        pipelines.forEach(pipeline -> pipeline.process(request, response));
     }
 
     public List<ISpiderRequest> buildRequest() {
@@ -131,7 +174,6 @@ public class CrawlerTest {
 
 ```
 
-
 ## 1.0.0 版本说明
 
 采用固定流程进行操作：下载-> 解析-> 持久化
@@ -140,22 +182,9 @@ public class CrawlerTest {
 @Slf4j
 public class DefaultSpiderExecutor implements SpiderExecutor{
 
-    private final TaskProcessor<SpiderRequest> taskProcessor;
-    private final SpiderSuccessHandler spiderSuccessHandler;
-    private final SpiderFailureHandler spiderFailureHandler;
-    private final SpiderDownload spiderDownload;
-
-    public DefaultSpiderExecutor(TaskProcessor<SpiderRequest> taskProcessor, SpiderSuccessHandler spiderSuccessHandler, SpiderFailureHandler spiderFailureHandler, SpiderDownload spiderDownload) {
-        this.taskProcessor = taskProcessor;
-        this.spiderSuccessHandler = spiderSuccessHandler;
-        this.spiderFailureHandler = spiderFailureHandler;
-        this.spiderDownload = spiderDownload;
-    }
-
     @Override
     public void execute(List<SpiderRequest> requests, SpiderParser spiderParser, Pipeline pipeline) {
-        taskProcessor.execute(requests, task -> {
-            SpiderRequest request = (SpiderRequest) task;
+        requests.foreach(request->{
             try {
                 // 1.download
                 SpiderResponse response = spiderDownload.download(request);
@@ -182,7 +211,7 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 
 ## 1.0.2 版本更新说明
 
-采用固定的流程进行操作，此法存在弊端
+采用固定的流程进行操作，此法存在弊端，无法满足开闭原则，如果比如如果在下载后需要
 
 虽然爬虫基本的操作有： 下载-> 解析-> 持久化，但是这三个操作又不是每个都是必须的，
 
@@ -194,9 +223,11 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 
 系统默认的流水线是：下载-> 解析-> 格式化-> 值处理-> 持久化
 
+系统提供较多默认流水线操作实现供用户使用
+
 ## 1.0.3 版本更新说明
 
-爬虫执行优化，建议搭载 open-starter-executor 组件进行多线程采集，效率更高，还可自定义采集前后拦截器，统计采集时间。
+爬虫执行流程简化，只包含爬虫的核心流程：下载和解析，下载由用户自己实现，满足用户不同的需求，当然也可以使用我们的 http 插件，解析后数据交给用户，供用户处理。
 
 ## 注意事项
 
