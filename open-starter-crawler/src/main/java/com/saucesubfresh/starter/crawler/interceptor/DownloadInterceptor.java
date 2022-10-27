@@ -20,6 +20,7 @@ import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
 import com.saucesubfresh.starter.crawler.plugin.*;
 
 /**
+ * 插件示例
  * @author lijunping on 2022/10/27
  */
 @Intercepts({@Signature(type = DownloadHandler.class, method = "download", args = {SpiderRequest.class})})
