@@ -58,12 +58,9 @@ public class SpiderRequest implements Serializable {
      */
     private Map<String, String> headers;
     /**
-     * http 代理
-     */
-    private Proxy proxy;
-    /**
      * 数据抽取规则
      */
     private List<FieldExtractor> extract;
+
 
 }
