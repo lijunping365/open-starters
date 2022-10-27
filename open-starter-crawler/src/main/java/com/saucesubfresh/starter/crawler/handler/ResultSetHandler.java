@@ -16,22 +16,22 @@
 package com.saucesubfresh.starter.crawler.handler;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.exception.CrawlerException;
-import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
-import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * 默认 下载器
+ * 结果处理
  *
  * @author lijunping
  */
-@Slf4j
-@UsePlugin(type = DownloadHandler.class)
-public class DefaultDownloadHandler extends AbstractDownloadHandler {
+public interface ResultSetHandler {
 
-    @Override
-    protected String doDownload(SpiderRequest request) throws CrawlerException {
-        return null;
-    }
-
+    /**
+     * 结果解析
+     * @param request
+     * @param content
+     * @return
+     */
+    List<Map<String, Object>> handler(SpiderRequest request, String content);
 }

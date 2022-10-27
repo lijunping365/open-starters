@@ -13,25 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.handler;
-
-import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.exception.CrawlerException;
-import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
-import lombok.extern.slf4j.Slf4j;
+package com.saucesubfresh.starter.crawler.factory;
 
 /**
- * 默认 下载器
- *
- * @author lijunping
+ * @author lijunping on 2022/10/27
  */
-@Slf4j
-@UsePlugin(type = DownloadHandler.class)
-public class DefaultDownloadHandler extends AbstractDownloadHandler {
+public interface BeanProxyFactory {
 
-    @Override
-    protected String doDownload(SpiderRequest request) throws CrawlerException {
-        return null;
-    }
-
+    <T> T getProxyBean(Class<T> type);
 }

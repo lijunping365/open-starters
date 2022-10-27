@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.handler;
+package com.saucesubfresh.starter.crawler.plugin;
 
-import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-
-import java.util.List;
+import java.lang.annotation.*;
 
 /**
- * 结果处理
- *
- * @author lijunping
+ * @author lijunping on 2022/10/12
  */
-public interface ResultHandler {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface UsePlugin {
 
     /**
-     * 结果解析
-     * @param request
-     * @param content
+     * 代理接口类
      * @return
      */
-    <T> List<T> handler(SpiderRequest request, String content, Class<T> clazz);
+    Class<?> type();
 }

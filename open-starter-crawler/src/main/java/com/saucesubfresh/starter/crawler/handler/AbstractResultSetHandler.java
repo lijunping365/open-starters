@@ -33,11 +33,11 @@ import java.util.*;
  *
  * @author lijunping
  */
-public abstract class AbstractResultHandler implements ResultHandler {
+public abstract class AbstractResultSetHandler implements ResultSetHandler {
 
     @Override
-    public <T> List<T> handler(SpiderRequest request, String content, Class<T> clazz) {
-        return doHandler(request, content, clazz);
+    public List<Map<String, Object>> handler(SpiderRequest request, String content) {
+        return doHandler(request, content);
     }
 
     /**
@@ -110,6 +110,6 @@ public abstract class AbstractResultHandler implements ResultHandler {
         return formatResult;
     }
 
-    protected abstract <T> List<T> doHandler(SpiderRequest request, String content, Class<T> clazz);
+    protected abstract List<Map<String, Object>> doHandler(SpiderRequest request, String content);
 
 }

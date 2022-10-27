@@ -16,14 +16,27 @@
 package com.saucesubfresh.starter.crawler.executor;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.utils.JSON;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
+ * 执行爬虫
+ *
  * @author lijunping
  */
 public interface CrawlerExecutor {
 
-    <T> List<T> handler(SpiderRequest request, Class<T> clazz);
+    default <T> List<T> handler(SpiderRequest request, Class<T> clazz){
+        List<Map<String, Object>> result = handler(request);
+        if (CollectionUtils.isEmpty(result)){
+            return null;
+        }
+        return JSON.parseList(JSON.toJSON(result), clazz);
+    }
+
+    List<Map<String, Object>> handler(SpiderRequest request);
 }

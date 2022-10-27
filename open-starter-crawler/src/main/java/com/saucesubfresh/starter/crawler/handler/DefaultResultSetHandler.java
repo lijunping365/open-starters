@@ -19,7 +19,7 @@ package com.saucesubfresh.starter.crawler.handler;
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
-import com.saucesubfresh.starter.crawler.utils.JSON;
+import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -32,10 +32,11 @@ import java.util.Map;
  *
  * @author lijunping
  */
-public class DefaultResultHandler extends AbstractResultHandler {
+@UsePlugin(type = ResultSetHandler.class)
+public class DefaultResultSetHandler extends AbstractResultSetHandler {
 
     @Override
-    protected <T> List<T> doHandler(SpiderRequest request, String body, Class<T> clazz) {
+    protected List<Map<String, Object>> doHandler(SpiderRequest request, String body) {
         final List<FieldExtractor> fieldExtractors = request.getExtract();
         if (StringUtils.isBlank(body) || CollectionUtils.isEmpty(fieldExtractors)){
             return null;
@@ -46,8 +47,7 @@ public class DefaultResultHandler extends AbstractResultHandler {
             return null;
         }
 
-        List<Map<String, Object>> formatResult = format(parseResult, fieldExtractors);
-        return JSON.parseList(JSON.toJSON(formatResult), clazz);
+        return format(parseResult, fieldExtractors);
     }
 
     /**
