@@ -11,7 +11,7 @@
 
     <artifactId>open-starter-crawler</artifactId>
     <description>一个企业级的爬虫插件</description>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <properties>
         <jsoup.version>1.15.2</jsoup.version>
