@@ -19,7 +19,7 @@ import com.saucesubfresh.starter.crawler.plugin.InterceptorChain;
 import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.ObjectUtils;
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author lijunping on 2022/10/27
  */
 @Slf4j
-public class DefaultBeanProxyFactory implements BeanProxyFactory, InitializingBean, ApplicationContextAware {
+public class DefaultBeanProxyFactory implements BeanProxyFactory, SmartInitializingSingleton, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -45,17 +45,17 @@ public class DefaultBeanProxyFactory implements BeanProxyFactory, InitializingBe
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterSingletonsInstantiated() {
         InterceptorChain interceptorChain = applicationContext.getBean(InterceptorChain.class);
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(UsePlugin.class);
         if (ObjectUtils.isEmpty(beans)){
             log.warn("Could not find a class marked with an annotation UsePlugin.");
-        }else {
-            beans.forEach((k,v)->{
-                UsePlugin annotation = v.getClass().getAnnotation(UsePlugin.class);
-                proxyMap.put(annotation.type(), interceptorChain.pluginAll(v));
-            });
+            return;
         }
+        beans.forEach((k,v)->{
+            UsePlugin annotation = v.getClass().getAnnotation(UsePlugin.class);
+            proxyMap.put(annotation.type(), interceptorChain.pluginAll(v));
+        });
     }
 
     @Override
