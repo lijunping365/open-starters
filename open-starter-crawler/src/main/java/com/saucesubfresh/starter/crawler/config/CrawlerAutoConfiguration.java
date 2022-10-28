@@ -23,15 +23,12 @@ import com.saucesubfresh.starter.crawler.handler.DefaultDownloadHandler;
 import com.saucesubfresh.starter.crawler.handler.DefaultResultSetHandler;
 import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
 import com.saucesubfresh.starter.crawler.handler.ResultSetHandler;
-import com.saucesubfresh.starter.crawler.plugin.Interceptor;
 import com.saucesubfresh.starter.crawler.plugin.InterceptorChain;
 import com.saucesubfresh.starter.crawler.properties.CrawlerProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 /**
  * @author lijunping
@@ -54,6 +51,12 @@ public class CrawlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public InterceptorChain interceptorChain(){
+        return new InterceptorChain();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public BeanProxyFactory beanProxyFactory(){
         return new DefaultBeanProxyFactory();
     }
@@ -63,11 +66,4 @@ public class CrawlerAutoConfiguration {
     public CrawlerExecutor crawlerExecutor(BeanProxyFactory beanProxyFactory){
         return new DefaultCrawlerExecutor(beanProxyFactory);
     }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public InterceptorChain interceptorChain(List<Interceptor>interceptors){
-        return new InterceptorChain(interceptors);
-    }
-
 }

@@ -15,6 +15,7 @@
  */
 package com.saucesubfresh.starter.crawler.plugin;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,11 +24,10 @@ import java.util.List;
  */
 public class InterceptorChain {
 
-    private final List<Interceptor> interceptors;
-
-    public InterceptorChain(List<Interceptor> interceptors) {
-        this.interceptors = interceptors;
-    }
+    /**
+     * 拦截器集合
+     */
+    private final List<Interceptor> interceptors = new ArrayList<>();
 
     /**
      * 装载拦截器
