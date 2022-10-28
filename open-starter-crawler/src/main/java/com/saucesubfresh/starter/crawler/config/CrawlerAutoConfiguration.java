@@ -39,13 +39,13 @@ public class CrawlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public DownloadHandler downloadPipeline(){
+    public DownloadHandler downloadHandler(){
         return new DefaultDownloadHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ResultSetHandler resultHandler(){
+    public ResultSetHandler resultSetHandler(){
         return new DefaultResultSetHandler();
     }
 
