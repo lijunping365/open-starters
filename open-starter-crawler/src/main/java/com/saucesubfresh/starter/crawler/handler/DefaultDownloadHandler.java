@@ -16,7 +16,6 @@
 package com.saucesubfresh.starter.crawler.handler;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,11 +26,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @UsePlugin(type = DownloadHandler.class)
-public class DefaultDownloadHandler extends AbstractDownloadHandler {
+public class DefaultDownloadHandler implements DownloadHandler {
 
     @Override
-    protected String doDownload(SpiderRequest request) throws CrawlerException {
+    public String download(SpiderRequest request) {
         return null;
     }
-
 }

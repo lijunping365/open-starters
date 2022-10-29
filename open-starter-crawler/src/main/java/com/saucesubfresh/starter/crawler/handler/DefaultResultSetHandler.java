@@ -19,13 +19,12 @@ package com.saucesubfresh.starter.crawler.handler;
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
+import com.saucesubfresh.starter.crawler.parser.ParserProcessor;
 import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 默认结果处理器
@@ -33,10 +32,10 @@ import java.util.Map;
  * @author lijunping
  */
 @UsePlugin(type = ResultSetHandler.class)
-public class DefaultResultSetHandler extends AbstractResultSetHandler {
+public class DefaultResultSetHandler implements ResultSetHandler{
 
     @Override
-    protected List<Map<String, Object>> doHandler(SpiderRequest request, String body) {
+    public List<Map<String, Object>> handler(SpiderRequest request, String body) {
         final List<FieldExtractor> fieldExtractors = request.getExtract();
         if (StringUtils.isBlank(body) || CollectionUtils.isEmpty(fieldExtractors)){
             return null;
@@ -94,12 +93,29 @@ public class DefaultResultSetHandler extends AbstractResultSetHandler {
      *
      */
     private Map<String, Object> parse(String body, List<FieldExtractor> fieldExtractors){
-        Map<String, Object> parseResult;
-        if (ExpressionType.of(fieldExtractors.get(0).getExpressionType()) == ExpressionType.JsonPath){
-            parseResult = parseJson(body, fieldExtractors);
-        } else {
-            parseResult = parseHtml(body, fieldExtractors);
+        ExpressionType of = ExpressionType.of(fieldExtractors.get(0).getExpressionType());
+        return ParserProcessor.processor(of, body, fieldExtractors);
+    }
+
+    /**
+     * 格式化解析结果
+     *
+     * @param fields
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> formatList(Map<String, Object> fields){
+        List<Map<String, Object>> formatResult = new ArrayList<>();
+        Map<String, List<String>> dataTmp = new HashMap<>();
+        fields.forEach((key, value)-> dataTmp.put(key, (List<String>) value));
+        int maxSize = dataTmp.values().stream().map(List::size).max(Comparator.comparing(Integer::intValue)).orElse(0);
+
+        for (int i = 0; i <maxSize; i++) {
+            Map<String, Object> rowData = new HashMap<>();
+            int finalI = i;
+            dataTmp.forEach((key, value)-> rowData.put(key, finalI >= value.size() ? null : value.get(finalI)));
+            formatResult.add(rowData);
         }
-        return parseResult;
+        return formatResult;
     }
 }
