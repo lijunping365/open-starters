@@ -28,12 +28,11 @@ public class DownloadInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        System.out.println("成功拦截了 DownloadHandler 的 download 方法");
-        return invocation.proceed();//调用原方法;
+        return invocation.proceed();
     }
 
     @Override
     public Object plugin(Object target) {
-        return Plugin.wrap(target,this);//把被拦截对象生成一个代理对象
+        return Plugin.wrap(target,this);
     }
 }

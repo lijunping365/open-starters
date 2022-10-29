@@ -19,6 +19,8 @@ import com.saucesubfresh.starter.crawler.executor.CrawlerExecutor;
 import com.saucesubfresh.starter.crawler.executor.DefaultCrawlerExecutor;
 import com.saucesubfresh.starter.crawler.factory.BeanProxyFactory;
 import com.saucesubfresh.starter.crawler.factory.DefaultBeanProxyFactory;
+import com.saucesubfresh.starter.crawler.generator.DefaultKeyGenerator;
+import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
 import com.saucesubfresh.starter.crawler.handler.DefaultDownloadHandler;
 import com.saucesubfresh.starter.crawler.handler.DefaultResultSetHandler;
 import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
@@ -59,6 +61,12 @@ public class CrawlerAutoConfiguration {
     @ConditionalOnMissingBean
     public BeanProxyFactory beanProxyFactory(){
         return new DefaultBeanProxyFactory();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KeyGenerator keyGenerator(){
+        return new DefaultKeyGenerator();
     }
 
     @Bean
