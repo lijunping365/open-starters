@@ -29,7 +29,7 @@ public class JobHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public JobHandlerRegister jobHandlerCollector(){
+    public JobHandlerRegister jobHandlerRegister(){
         return new DefaultJobHandlerRegister();
     }
 }
