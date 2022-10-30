@@ -11,8 +11,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author code4crafter@gmail.com
- * @since 0.4.1
+ * @author lijunping
  */
 @Data
 public class AppStore {

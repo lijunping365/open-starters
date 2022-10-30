@@ -25,6 +25,7 @@
         <module>open-starter-cache</module>
         <module>open-starter-crawler</module>
         <module>open-starter-limiter</module>
+        <module>open-starter-job-register</module>
     </modules>
 
     <licenses>
