@@ -18,8 +18,7 @@ package com.saucesubfresh.starter.job.register.core;
 import java.lang.reflect.Method;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-13 06:39
+ * @author lijunping
  */
 public class MethodJobHandler implements OpenJobHandler{
 

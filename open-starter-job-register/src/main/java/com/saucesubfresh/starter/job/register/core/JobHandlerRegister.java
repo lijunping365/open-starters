@@ -16,8 +16,7 @@
 package com.saucesubfresh.starter.job.register.core;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-12 17:08
+ * @author lijunping
  */
 public interface JobHandlerRegister {
 

@@ -32,8 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * @author: 李俊平
- * @Date: 2022-06-12 17:30
+ * @author lijunping
  */
 @Slf4j
 public class DefaultJobHandlerRegister implements JobHandlerRegister, ApplicationContextAware, SmartInitializingSingleton {
