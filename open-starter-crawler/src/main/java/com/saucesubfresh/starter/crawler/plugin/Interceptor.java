@@ -13,38 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.domain;
-
-import lombok.Data;
+package com.saucesubfresh.starter.crawler.plugin;
 
 /**
- * @author lijunping
+ * @author lijunping on 2022/10/12
  */
-@Data
-public class Proxy {
+public interface Interceptor {
 
-    /**
-     * 1: http | 2: https
-     */
-    private Integer scheme;
+    Object intercept(Invocation invocation) throws Throwable;
 
-    /**
-     * ip
-     */
-    private String host;
-
-    /**
-     * 端口
-     */
-    private Integer port;
-
-    /**
-     * 用户名
-     */
-    private String username;
-
-    /**
-     * 密码
-     */
-    private String password;
+    default Object plugin(Object target) {
+        return Plugin.wrap(target, this);
+    }
 }

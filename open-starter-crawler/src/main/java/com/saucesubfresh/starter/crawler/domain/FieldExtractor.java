@@ -26,6 +26,11 @@ import lombok.Data;
 public class FieldExtractor {
 
     /**
+     * 字段名（属性名），例如：title
+     */
+    private String fieldName;
+
+    /**
      * 解析方式，例如：XPath 或 JsonPath 或 Regex 或 Css
      */
     private String expressionType;
@@ -34,11 +39,6 @@ public class FieldExtractor {
      * 解析规则，例如：//a[@class='article-link title']/span/text()
      */
     private String expressionValue;
-
-    /**
-     * 字段名（属性名），例如：title
-     */
-    private String fieldName;
 
     /**
      * 字段默认值，如果未采到使用该默认值

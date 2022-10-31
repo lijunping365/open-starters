@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.handler;
+package com.saucesubfresh.starter.crawler.interceptor;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
-import lombok.extern.slf4j.Slf4j;
+import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
+import com.saucesubfresh.starter.crawler.plugin.*;
 
 /**
- * 默认 下载器
- *
- * @author lijunping
+ * 插件示例
+ * @author lijunping on 2022/10/27
  */
-@Slf4j
-@UsePlugin(type = DownloadHandler.class)
-public class DefaultDownloadHandler implements DownloadHandler {
+@Intercepts({@Signature(type = DownloadHandler.class, method = "download", args = {SpiderRequest.class})})
+public class DownloadInterceptor implements Interceptor {
 
     @Override
-    public String download(SpiderRequest request) {
-        return null;
+    public Object intercept(Invocation invocation) throws Throwable {
+        return invocation.proceed();
+    }
+
+    @Override
+    public Object plugin(Object target) {
+        return Plugin.wrap(target,this);
     }
 }

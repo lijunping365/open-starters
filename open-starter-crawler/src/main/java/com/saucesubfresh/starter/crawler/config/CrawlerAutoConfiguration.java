@@ -17,10 +17,15 @@ package com.saucesubfresh.starter.crawler.config;
 
 import com.saucesubfresh.starter.crawler.executor.CrawlerExecutor;
 import com.saucesubfresh.starter.crawler.executor.DefaultCrawlerExecutor;
+import com.saucesubfresh.starter.crawler.factory.BeanProxyFactory;
+import com.saucesubfresh.starter.crawler.factory.DefaultBeanProxyFactory;
+import com.saucesubfresh.starter.crawler.generator.DefaultKeyGenerator;
+import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
 import com.saucesubfresh.starter.crawler.handler.DefaultDownloadHandler;
-import com.saucesubfresh.starter.crawler.handler.DefaultResultHandler;
+import com.saucesubfresh.starter.crawler.handler.DefaultResultSetHandler;
 import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
-import com.saucesubfresh.starter.crawler.handler.ResultHandler;
+import com.saucesubfresh.starter.crawler.handler.ResultSetHandler;
+import com.saucesubfresh.starter.crawler.plugin.InterceptorChain;
 import com.saucesubfresh.starter.crawler.properties.CrawlerProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -36,20 +41,37 @@ public class CrawlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public DownloadHandler downloadPipeline(){
+    public DownloadHandler downloadHandler(){
         return new DefaultDownloadHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ResultHandler resultHandler(){
-        return new DefaultResultHandler();
+    public ResultSetHandler resultSetHandler(){
+        return new DefaultResultSetHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public CrawlerExecutor crawlerExecutor(DownloadHandler downloadPipeline, ResultHandler resultHandler){
-        return new DefaultCrawlerExecutor(downloadPipeline, resultHandler);
+    public InterceptorChain interceptorChain(){
+        return new InterceptorChain();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public BeanProxyFactory beanProxyFactory(){
+        return new DefaultBeanProxyFactory();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KeyGenerator keyGenerator(){
+        return new DefaultKeyGenerator();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CrawlerExecutor crawlerExecutor(BeanProxyFactory beanProxyFactory){
+        return new DefaultCrawlerExecutor(beanProxyFactory);
+    }
 }

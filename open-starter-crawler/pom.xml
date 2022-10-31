@@ -11,11 +11,12 @@
 
     <artifactId>open-starter-crawler</artifactId>
     <description>一个企业级的爬虫插件</description>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <properties>
         <jsoup.version>1.15.2</jsoup.version>
         <xsoup.version>0.3.2</xsoup.version>
+        <guava.version>31.0.1-jre</guava.version>
     </properties>
 
     <dependencies>
@@ -29,6 +30,12 @@
             <groupId>us.codecraft</groupId>
             <artifactId>xsoup</artifactId>
             <version>${xsoup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>
