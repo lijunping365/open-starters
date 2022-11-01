@@ -20,6 +20,7 @@ import com.saucesubfresh.starter.oauth.component.AuthenticationFailureHandler;
 import com.saucesubfresh.starter.oauth.component.AuthenticationSuccessHandler;
 import com.saucesubfresh.starter.oauth.domain.UserDetails;
 import com.saucesubfresh.starter.oauth.exception.AuthenticationException;
+import com.saucesubfresh.starter.oauth.exception.AccountLockedException;
 import com.saucesubfresh.starter.oauth.request.BaseLoginRequest;
 import com.saucesubfresh.starter.oauth.token.AccessToken;
 import com.saucesubfresh.starter.oauth.token.TokenStore;
@@ -50,15 +51,15 @@ public abstract class AbstractAuthenticationProcessor<T extends BaseLoginRequest
             AccessToken accessToken = tokenStore.generateToken(authentication);
             authenticationSuccessHandler.onAuthenticationSuccess(authentication);
             return accessToken;
-        } catch (AuthenticationException e){
-            authenticationFailureHandler.onAuthenticationFailureHandler(e);
-            throw new AuthenticationException(e.getMessage());
+        } catch (AuthenticationException exception){
+            authenticationFailureHandler.onAuthenticationFailureHandler(exception);
+            throw exception;
         }
     }
 
     private void checkAccountLock(UserDetails userDetails) {
         if (Objects.nonNull(userDetails) && userDetails.getAccountLocked()) {
-            throw new AuthenticationException("This account is locked:" + userDetails.getId());
+            throw new AccountLockedException("This account is locked:" + userDetails.getId());
         }
     }
 
