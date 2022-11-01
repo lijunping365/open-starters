@@ -17,7 +17,6 @@ package com.saucesubfresh.starter.security.authorization;
 
 import com.saucesubfresh.starter.security.annotation.PreAuthorization;
 import com.saucesubfresh.starter.security.context.UserSecurityContextHolder;
-import com.saucesubfresh.starter.security.enums.SecurityExceptionEnum;
 import com.saucesubfresh.starter.security.exception.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -53,6 +52,6 @@ public class DefaultAccessDeniedHandler implements AccessDeniedHandler{
             return Boolean.TRUE;
         }
 
-        throw new SecurityException(SecurityExceptionEnum.FORBIDDEN);
+        throw new SecurityException("Permission denied");
     }
 }

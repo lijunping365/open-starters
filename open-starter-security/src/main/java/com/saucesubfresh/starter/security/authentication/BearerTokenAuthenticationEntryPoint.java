@@ -18,7 +18,6 @@ package com.saucesubfresh.starter.security.authentication;
 import com.saucesubfresh.starter.security.context.UserSecurityContext;
 import com.saucesubfresh.starter.security.context.UserSecurityContextHolder;
 import com.saucesubfresh.starter.security.domain.Authentication;
-import com.saucesubfresh.starter.security.enums.SecurityExceptionEnum;
 import com.saucesubfresh.starter.security.exception.SecurityException;
 import com.saucesubfresh.starter.security.service.TokenService;
 import com.saucesubfresh.starter.security.utils.JSON;
@@ -42,7 +41,7 @@ public class BearerTokenAuthenticationEntryPoint implements AuthenticationEntryP
     public void commence(HttpServletRequest request) throws SecurityException {
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
-            throw new SecurityException(SecurityExceptionEnum.NON_AUTHENTICATION);
+            throw new SecurityException("Illegal request header");
         }
         String accessToken = header.substring(7);
         Authentication authentication = tokenService.readAuthentication(accessToken);
