@@ -15,10 +15,9 @@
  */
 package com.saucesubfresh.starter.security.service.support;
 
-import com.saucesubfresh.starter.security.enums.SecurityExceptionEnum;
-import com.saucesubfresh.starter.security.exception.SecurityException;
 import com.saucesubfresh.starter.security.domain.Authentication;
 import com.saucesubfresh.starter.security.domain.UserDetails;
+import com.saucesubfresh.starter.security.exception.SecurityException;
 import com.saucesubfresh.starter.security.properties.SecurityProperties;
 import com.saucesubfresh.starter.security.service.TokenService;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,7 +41,7 @@ public class RedisTokenService implements TokenService {
     public Authentication readAuthentication(String accessToken){
         Object o = redisTemplate.opsForValue().get(buildAccessTokenKey(accessToken));
         if (Objects.isNull(o)){
-            throw new SecurityException(SecurityExceptionEnum.UNAUTHORIZED);
+            throw new SecurityException("AccessToken error or accessToken has been invalid");
         }
         UserDetails userDetails = (UserDetails) o;
         Authentication authentication = new Authentication();
