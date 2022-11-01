@@ -19,11 +19,11 @@ import com.saucesubfresh.starter.oauth.component.AuthenticationFailureHandler;
 import com.saucesubfresh.starter.oauth.component.AuthenticationSuccessHandler;
 import com.saucesubfresh.starter.oauth.core.AbstractAuthenticationProcessor;
 import com.saucesubfresh.starter.oauth.domain.UserDetails;
-import com.saucesubfresh.starter.oauth.enums.OAuthExceptionEnum;
 import com.saucesubfresh.starter.oauth.exception.AuthenticationException;
 import com.saucesubfresh.starter.oauth.request.PasswordLoginRequest;
 import com.saucesubfresh.starter.oauth.service.UserDetailService;
 import com.saucesubfresh.starter.oauth.token.TokenStore;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Objects;
@@ -44,14 +44,22 @@ public class PasswordAuthenticationProcessor extends AbstractAuthenticationProce
 
     @Override
     protected UserDetails loadUserDetails(PasswordLoginRequest request) throws AuthenticationException{
+        if (StringUtils.isBlank(request.getUsername())){
+            throw new AuthenticationException("Username must not be empty or null");
+        }
+
+        if (StringUtils.isBlank(request.getPassword())){
+            throw new AuthenticationException("Password must not be empty or null");
+        }
+
         final UserDetails userDetails = userDetailService.loadUserByUsername(request.getUsername());
         if (Objects.isNull(userDetails)){
-            throw new AuthenticationException(OAuthExceptionEnum.USERNAME_OR_PASSWORD_ERROR);
+            throw new AuthenticationException("User not found:" + request.getUsername());
         }
 
         boolean matches = passwordEncoder.matches(request.getPassword(), userDetails.getPassword());
         if (!matches){
-            throw new AuthenticationException(OAuthExceptionEnum.USERNAME_OR_PASSWORD_ERROR);
+            throw new AuthenticationException("The password do not match:" + request.getPassword());
         }
         return userDetails;
     }

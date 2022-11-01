@@ -19,11 +19,11 @@ import com.saucesubfresh.starter.oauth.component.AuthenticationFailureHandler;
 import com.saucesubfresh.starter.oauth.component.AuthenticationSuccessHandler;
 import com.saucesubfresh.starter.oauth.core.AbstractAuthenticationProcessor;
 import com.saucesubfresh.starter.oauth.domain.UserDetails;
-import com.saucesubfresh.starter.oauth.enums.OAuthExceptionEnum;
 import com.saucesubfresh.starter.oauth.exception.AuthenticationException;
 import com.saucesubfresh.starter.oauth.request.MobileLoginRequest;
 import com.saucesubfresh.starter.oauth.service.UserDetailService;
 import com.saucesubfresh.starter.oauth.token.TokenStore;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
@@ -41,9 +41,13 @@ public class SmsMobileAuthenticationProcessor extends AbstractAuthenticationProc
 
     @Override
     protected UserDetails loadUserDetails(MobileLoginRequest request) throws AuthenticationException{
+        if (StringUtils.isBlank(request.getMobile())){
+            throw new AuthenticationException("Mobile must not be empty or null");
+        }
+
         final UserDetails userDetails = userDetailService.loadUserByMobile(request.getMobile());
         if (Objects.isNull(userDetails)){
-            throw new AuthenticationException(OAuthExceptionEnum.USERNAME_OR_PASSWORD_ERROR);
+            throw new AuthenticationException("User not found:" + request.getMobile());
         }
         return userDetails;
     }

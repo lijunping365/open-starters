@@ -18,7 +18,6 @@ package com.saucesubfresh.starter.oauth.request;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -32,7 +31,6 @@ public class MobileLoginRequest extends BaseLoginRequest implements Serializable
 
     private static final long serialVersionUID = 2512743958725643646L;
 
-    @NotBlank(message = "手机号不能为空")
     private String mobile;
 
 }
