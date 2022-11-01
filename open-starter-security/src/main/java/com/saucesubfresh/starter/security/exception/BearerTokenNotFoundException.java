@@ -16,18 +16,16 @@
 package com.saucesubfresh.starter.security.exception;
 
 /**
- * 认证异常类
- *
- * @author lijunping
+ * @author: 李俊平
+ * @Date: 2022-11-01 23:30
  */
-public abstract class SecurityException extends RuntimeException{
+public class BearerTokenNotFoundException extends SecurityException{
 
-    public SecurityException(String msg, Throwable t) {
+    public BearerTokenNotFoundException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public SecurityException(String msg){
+    public BearerTokenNotFoundException(String msg) {
         super(msg);
     }
-
 }

@@ -17,7 +17,7 @@ package com.saucesubfresh.starter.security.service.support;
 
 import com.saucesubfresh.starter.security.domain.Authentication;
 import com.saucesubfresh.starter.security.domain.UserDetails;
-import com.saucesubfresh.starter.security.exception.SecurityException;
+import com.saucesubfresh.starter.security.exception.InvalidBearerTokenException;
 import com.saucesubfresh.starter.security.properties.SecurityProperties;
 import com.saucesubfresh.starter.security.service.TokenService;
 import com.saucesubfresh.starter.security.utils.JSON;
@@ -42,7 +42,7 @@ public class JwtTokenService implements TokenService {
             Claims claims = Jwts.parserBuilder().setSigningKey(securityProperties.getSecretKeyBytes()).build().parseClaimsJws(accessToken).getBody();
             subject = claims.getSubject();
         }catch (Exception e){
-            throw new SecurityException("AccessToken error or accessToken has been invalid");
+            throw new InvalidBearerTokenException("AccessToken error or accessToken has been invalid");
         }
         UserDetails userDetails = JSON.parse(subject, UserDetails.class);
         Authentication authentication = new Authentication();

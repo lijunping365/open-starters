@@ -16,18 +16,16 @@
 package com.saucesubfresh.starter.security.exception;
 
 /**
- * 认证异常类
- *
- * @author lijunping
+ * @author: 李俊平
+ * @Date: 2022-11-01 23:16
  */
-public abstract class SecurityException extends RuntimeException{
+public class AccessDeniedException extends SecurityException{
 
-    public SecurityException(String msg, Throwable t) {
+    public AccessDeniedException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public SecurityException(String msg){
+    public AccessDeniedException(String msg) {
         super(msg);
     }
-
 }
