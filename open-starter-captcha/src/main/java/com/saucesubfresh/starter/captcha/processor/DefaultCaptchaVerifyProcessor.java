@@ -39,7 +39,6 @@ public class DefaultCaptchaVerifyProcessor implements CaptchaVerifyProcessor{
 
         String validateCode = captchaRepository.get(request.getRequestId());
         String codeInRequest = request.getCode();
-
         if (StringUtils.isBlank(validateCode)) {
             throw new ValidateCodeException("The validate code has expired");
         }
