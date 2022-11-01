@@ -11,6 +11,7 @@
 
     <artifactId>open-starter-captcha</artifactId>
     <description>各种验证码生成和校验 starter</description>
+    <version>1.0.3</version>
 
     <properties>
         <google.zxing.version>3.5.0</google.zxing.version>
