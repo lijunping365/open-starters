@@ -38,10 +38,10 @@ public class DefaultCaptchaVerifyProcessor implements CaptchaVerifyProcessor{
         String codeInRequest = request.getCode();
 
         if (StringUtils.isBlank(validateCode)) {
-            throw new ValidateCodeException("验证码已过期");
+            throw new ValidateCodeException("The validate code has expired");
         }
         if (!StringUtils.equals(validateCode, codeInRequest)) {
-            throw new ValidateCodeException("验证码输入错误");
+            throw new ValidateCodeException("The validate code input error");
         }
     }
 }
