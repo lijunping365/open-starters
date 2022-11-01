@@ -19,20 +19,16 @@ import com.saucesubfresh.starter.oauth.authentication.Authentication;
 import com.saucesubfresh.starter.oauth.component.AuthenticationFailureHandler;
 import com.saucesubfresh.starter.oauth.component.AuthenticationSuccessHandler;
 import com.saucesubfresh.starter.oauth.domain.UserDetails;
-import com.saucesubfresh.starter.oauth.enums.OAuthExceptionEnum;
 import com.saucesubfresh.starter.oauth.exception.AuthenticationException;
 import com.saucesubfresh.starter.oauth.request.BaseLoginRequest;
 import com.saucesubfresh.starter.oauth.token.AccessToken;
 import com.saucesubfresh.starter.oauth.token.TokenStore;
-import com.saucesubfresh.starter.oauth.enums.OAuthExceptionEnum;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
 /**
  * @author lijunping
  */
-@Slf4j
 public abstract class AbstractAuthenticationProcessor<T extends BaseLoginRequest> implements AuthenticationProcessor<T>{
 
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
@@ -56,14 +52,13 @@ public abstract class AbstractAuthenticationProcessor<T extends BaseLoginRequest
             return accessToken;
         } catch (AuthenticationException e){
             authenticationFailureHandler.onAuthenticationFailureHandler(e);
-            throw new AuthenticationException(e.getCode(), e.getMessage());
+            throw new AuthenticationException(e.getMessage());
         }
     }
 
     private void checkAccountLock(UserDetails userDetails) {
         if (Objects.nonNull(userDetails) && userDetails.getAccountLocked()) {
-            log.info("账号已被锁定 {}", userDetails);
-            throw new AuthenticationException(OAuthExceptionEnum.ACCOUNT_LOCKED);
+            throw new AuthenticationException("This account is locked:" + userDetails.getId());
         }
     }
 
