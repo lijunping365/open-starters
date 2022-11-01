@@ -185,3 +185,5 @@ HandlerInterceptor 搭配注解使用时，注解只能用在 Controller 中, �
 ## 1.0.3 版本更新说明
 
 1. 修复了 DefaultAccessDeniedHandler#handler 方法逻辑判断 fix a bug with issues#6
+
+2. 优化抛出异常
