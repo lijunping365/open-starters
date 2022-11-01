@@ -20,6 +20,7 @@ import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
 import com.saucesubfresh.starter.captcha.repository.CaptchaRepository;
 import com.saucesubfresh.starter.captcha.request.CaptchaGenerateRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 验证码抽象处理器，包含验证码的生成处理，保存处理
@@ -37,7 +38,10 @@ public abstract class AbstractCaptchaGenerator<T extends ValidateCode> implement
 
   @Override
   public T create(CaptchaGenerateRequest request) throws ValidateCodeException {
-    request.checkConstraints();
+    if (StringUtils.isBlank(request.getRequestId())){
+      throw new ValidateCodeException("RequestId must not be empty or null");
+    }
+
     T validateCode = this.generate();
     this.repository(request.getRequestId(), validateCode);
     return validateCode;

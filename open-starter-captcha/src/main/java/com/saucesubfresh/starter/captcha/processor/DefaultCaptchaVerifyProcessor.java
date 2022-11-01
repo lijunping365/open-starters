@@ -33,7 +33,10 @@ public class DefaultCaptchaVerifyProcessor implements CaptchaVerifyProcessor{
 
     @Override
     public void validate(CaptchaVerifyRequest request) throws ValidateCodeException{
-        request.checkConstraints();
+        if (StringUtils.isBlank(request.getRequestId())){
+            throw new ValidateCodeException("RequestId must not be empty or null");
+        }
+
         String validateCode = captchaRepository.get(request.getRequestId());
         String codeInRequest = request.getCode();
 
