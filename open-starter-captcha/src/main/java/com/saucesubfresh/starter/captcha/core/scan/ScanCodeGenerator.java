@@ -22,6 +22,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.CharacterSetECI;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.saucesubfresh.starter.captcha.exception.CaptchaGenerationException;
 import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
 import com.saucesubfresh.starter.captcha.processor.AbstractCaptchaGenerator;
 import com.saucesubfresh.starter.captcha.properties.CaptchaProperties;
@@ -61,7 +62,7 @@ public class ScanCodeGenerator extends AbstractCaptchaGenerator<ScanValidateCode
     try {
       bitMatrix = new MultiFormatWriter().encode(uuid, BarcodeFormat.QR_CODE, scanCodeProperties.getWidth(), scanCodeProperties.getHeight(), hintTypes);
     } catch (WriterException e) {
-      throw new ValidateCodeException(e.getMessage());
+      throw new CaptchaGenerationException(e.getMessage());
     }
 
     BufferedImage bufferedImage = new BufferedImage(scanCodeProperties.getWidth(), scanCodeProperties.getHeight(), BufferedImage.TYPE_INT_RGB);

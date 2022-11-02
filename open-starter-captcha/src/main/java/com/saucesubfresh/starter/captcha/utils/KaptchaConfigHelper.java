@@ -1,6 +1,6 @@
 package com.saucesubfresh.starter.captcha.utils;
 
-import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
+import com.saucesubfresh.starter.captcha.exception.CaptchaGenerationException;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -37,10 +37,10 @@ public class KaptchaConfigHelper {
             } else if (colorValues.length == 3) {
                 color = new Color(r, g, b);
             } else {
-                throw new ValidateCodeException("Color can only have 3 (RGB) or 4 (RGB with Alpha) values.");
+                throw new CaptchaGenerationException("Color can only have 3 (RGB) or 4 (RGB with Alpha) values.");
             }
         } catch (Exception exception) {
-            throw new ValidateCodeException(exception.getMessage());
+            throw new CaptchaGenerationException(exception.getMessage());
         }
         return color;
     }
@@ -51,7 +51,7 @@ public class KaptchaConfigHelper {
             Field field = Class.forName("java.awt.Color").getField(paramValue);
             color = (Color) field.get(null);
         } catch (Exception exception) {
-            throw new ValidateCodeException(exception.getMessage());
+            throw new CaptchaGenerationException(exception.getMessage());
         }
         return color;
     }

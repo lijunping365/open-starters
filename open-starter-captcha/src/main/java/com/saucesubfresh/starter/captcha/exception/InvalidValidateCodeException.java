@@ -16,15 +16,13 @@
 package com.saucesubfresh.starter.captcha.exception;
 
 /**
- * @author lijunping
+ * 非法验证码
+ *
+ * @author lijunping on 2022/11/2
  */
-public abstract class ValidateCodeException extends RuntimeException {
+public class InvalidValidateCodeException extends ValidateCodeException{
 
-    public ValidateCodeException(String msg, Throwable t) {
-        super(msg, t);
-    }
-
-    public ValidateCodeException(String msg) {
+    public InvalidValidateCodeException(String msg){
         super(msg);
     }
 }

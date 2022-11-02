@@ -1,7 +1,7 @@
 package com.saucesubfresh.starter.captcha.core.image.kaptcha.components.impl;
 
 import com.saucesubfresh.starter.captcha.core.image.kaptcha.components.WordRenderer;
-import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
+import com.saucesubfresh.starter.captcha.exception.CaptchaGenerationException;
 import com.saucesubfresh.starter.captcha.properties.CaptchaProperties;
 import com.saucesubfresh.starter.captcha.properties.ImageCodeProperties;
 import com.saucesubfresh.starter.captcha.utils.KaptchaConfigHelper;
@@ -47,7 +47,7 @@ public class DefaultWordRenderer implements WordRenderer {
 
 		int fontSize = imageProps.getFontSize();
 		if (fontSize < 1) {
-			throw new ValidateCodeException("Value must be greater than or equals to 1.");
+			throw new CaptchaGenerationException("Value must be greater than or equals to 1.");
 		}
 
 		Font[] fonts = KaptchaConfigHelper.getFonts(imageProps.getFontNames(), fontSize, new Font[]{
