@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.captcha.processor;
 
 import com.saucesubfresh.starter.captcha.core.sms.ValidateCode;
+import com.saucesubfresh.starter.captcha.exception.InvalidArgumentException;
 import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
 import com.saucesubfresh.starter.captcha.repository.CaptchaRepository;
 import com.saucesubfresh.starter.captcha.request.CaptchaGenerateRequest;
@@ -39,7 +40,7 @@ public abstract class AbstractCaptchaGenerator<T extends ValidateCode> implement
   @Override
   public T create(CaptchaGenerateRequest request) throws ValidateCodeException {
     if (StringUtils.isBlank(request.getRequestId())){
-      throw new ValidateCodeException("RequestId must not be empty or null");
+      throw new InvalidArgumentException("RequestId must not be empty or null");
     }
 
     T validateCode = this.generate();

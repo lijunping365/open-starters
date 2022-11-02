@@ -15,7 +15,10 @@
  */
 package com.saucesubfresh.starter.captcha.processor;
 
+import com.saucesubfresh.starter.captcha.exception.InvalidArgumentException;
+import com.saucesubfresh.starter.captcha.exception.InvalidValidateCodeException;
 import com.saucesubfresh.starter.captcha.exception.ValidateCodeException;
+import com.saucesubfresh.starter.captcha.exception.ValidateCodeExpiredException;
 import com.saucesubfresh.starter.captcha.repository.CaptchaRepository;
 import com.saucesubfresh.starter.captcha.request.CaptchaVerifyRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -34,16 +37,16 @@ public class DefaultCaptchaVerifyProcessor implements CaptchaVerifyProcessor{
     @Override
     public void validate(CaptchaVerifyRequest request) throws ValidateCodeException{
         if (StringUtils.isBlank(request.getRequestId())){
-            throw new ValidateCodeException("RequestId must not be empty or null");
+            throw new InvalidArgumentException("RequestId must not be empty or null");
         }
 
         String validateCode = captchaRepository.get(request.getRequestId());
         String codeInRequest = request.getCode();
         if (StringUtils.isBlank(validateCode)) {
-            throw new ValidateCodeException("The validate code has expired");
+            throw new ValidateCodeExpiredException("The validate code has expired");
         }
         if (!StringUtils.equals(validateCode, codeInRequest)) {
-            throw new ValidateCodeException("The validate code input error");
+            throw new InvalidValidateCodeException("The validate code input error");
         }
     }
 }
