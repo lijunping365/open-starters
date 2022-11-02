@@ -16,18 +16,16 @@
 package com.saucesubfresh.starter.oauth.exception;
 
 /**
- * 认证异常类
- *
- * @author lijunping
+ * @author: 李俊平
+ * @Date: 2022-11-01 17:50
  */
-public abstract class AuthenticationException extends RuntimeException{
+public class UsernameNotFoundException extends AuthenticationException{
 
-    public AuthenticationException(String msg, Throwable t) {
+    public UsernameNotFoundException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public AuthenticationException(String msg) {
+    public UsernameNotFoundException(String msg) {
         super(msg);
     }
-
 }
