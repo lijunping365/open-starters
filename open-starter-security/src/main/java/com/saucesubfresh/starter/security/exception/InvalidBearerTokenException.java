@@ -16,8 +16,13 @@
 package com.saucesubfresh.starter.security.exception;
 
 /**
- * @author: 李俊平
- * @Date: 2022-11-01 22:28
+ * 401
+ *
+ * 表示认证失败，表示请求没有被认证或者认证失败
+ *
+ * 场景有 token失效、token缺失、token伪造，导致服务端无法识别身份
+ *
+ * @author lijunping
  */
 public class InvalidBearerTokenException extends SecurityException{
 

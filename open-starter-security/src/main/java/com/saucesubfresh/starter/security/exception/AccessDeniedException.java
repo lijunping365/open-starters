@@ -16,8 +16,11 @@
 package com.saucesubfresh.starter.security.exception;
 
 /**
- * @author: 李俊平
- * @Date: 2022-11-01 23:16
+ * 403
+ *
+ * 表示授权失败，通常表示用户通过了身份验证，但缺少权限对给定的资源进行访问或者操作
+ *
+ * @author lijunping
  */
 public class AccessDeniedException extends SecurityException{
 
