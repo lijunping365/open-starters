@@ -214,16 +214,22 @@ public class SecurityAutoConfiguration {
 
 > 2.如果采用的是 redis token，配置 redis 的 tokenPrefix 时，open-starter-oauth 和 open-starter-security 须一致，而且 redis 地址也应一致
 
-## 1.0.1 版本更新说明
+## 版本更新说明
+
+### 1.0.1 
 
 1. 声明异常抛出类型
 
-## 1.0.2 版本更新说明
+### 1.0.2 
 
 1. 增加角色列表字段
+
 2. token 过期时间改为 long 型
+
 3. 配置优化，使用了 @NestedConfigurationProperty，配置时有提示
 
-## 1.0.3 版本更新说明
+### 1.0.3
 
 1. 优化抛出异常
+
+2. 细化异常分类，可以针对不同的异常做出不同的处理

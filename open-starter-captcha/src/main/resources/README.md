@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-captcha</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
@@ -149,7 +149,9 @@ public class XxxCaptchaRepository implements CaptchaRepository {
 }
 ```
 
-## 1.0.1 版本更新说明
+## 版本更新说明
+
+### 1.0.1
 
 1. 去掉了发送回调接口
 
@@ -158,3 +160,7 @@ public class XxxCaptchaRepository implements CaptchaRepository {
 3. 加入了数学表达式图形验证码功能
 
 4. 配置优化，使用了 @NestedConfigurationProperty，配置时有提示
+
+### 1.0.3 
+
+1. 细化异常分类，可以针对不同的异常做出不同的处理

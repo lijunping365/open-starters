@@ -170,7 +170,9 @@ public class CrawlerUserController {
 
 HandlerInterceptor 搭配注解使用时，注解只能用在 Controller 中, 也就是说我们的自定义注解 PreAuthorization 只能用在 Controller 中
 
-## 1.0.1 版本更新说明
+## 版本更新说明
+
+### 1.0.1
 
 1. 对拦截器拦截方法进行了重大重构，拆分出了 401（认证） 处理策略和 403（授权） 处理策略
 
@@ -178,12 +180,14 @@ HandlerInterceptor 搭配注解使用时，注解只能用在 Controller 中, �
 
 3. 优化了鉴权相关逻辑，提供简单的基于注解鉴权能力，同时给开发者预留了基于“路径比对”的接口能力
 
-## 1.0.2 版本更新说明
+### 1.0.2
 
 1. 增加角色列表字段
 
-## 1.0.3 版本更新说明
+### 1.0.3
 
 1. 修复了 DefaultAccessDeniedHandler#handler 方法逻辑判断 fix a bug with issues#6
 
 2. 优化抛出异常
+
+3. 细化异常分类，可以针对不同的异常做出不同的处理
