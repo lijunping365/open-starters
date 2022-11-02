@@ -16,18 +16,19 @@
 package com.saucesubfresh.starter.security.exception;
 
 /**
- * 认证异常类
+ * 403
+ *
+ * 表示授权失败，通常表示用户通过了身份验证，但缺少权限对给定的资源进行访问或者操作
  *
  * @author lijunping
  */
-public abstract class SecurityException extends RuntimeException{
+public class AccessDeniedException extends SecurityException{
 
-    public SecurityException(String msg, Throwable t) {
+    public AccessDeniedException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public SecurityException(String msg){
+    public AccessDeniedException(String msg) {
         super(msg);
     }
-
 }

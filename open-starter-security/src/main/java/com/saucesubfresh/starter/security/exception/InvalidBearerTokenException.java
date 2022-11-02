@@ -16,18 +16,21 @@
 package com.saucesubfresh.starter.security.exception;
 
 /**
- * 认证异常类
+ * 401
+ *
+ * 表示认证失败，表示请求没有被认证或者认证失败
+ *
+ * 场景有 token失效、token缺失、token伪造，导致服务端无法识别身份
  *
  * @author lijunping
  */
-public abstract class SecurityException extends RuntimeException{
+public class InvalidBearerTokenException extends SecurityException{
 
-    public SecurityException(String msg, Throwable t) {
+    public InvalidBearerTokenException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public SecurityException(String msg){
+    public InvalidBearerTokenException(String msg) {
         super(msg);
     }
-
 }
