@@ -43,6 +43,7 @@ public class ResultSetInterceptor implements Interceptor {
         this.keyGenerator = keyGenerator;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         Object result = invocation.proceed();
