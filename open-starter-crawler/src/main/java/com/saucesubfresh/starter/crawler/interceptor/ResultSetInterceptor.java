@@ -101,6 +101,7 @@ public class ResultSetInterceptor implements Interceptor {
      * 目的是在存入 ES 或其他数据库时防止重复，如果在 ES 或其他数据库中有此 id，就说明该条数据已经存在了，则应该进行更新操作
      * @param rowData
      * @param uniqueKeys
+     * @param spiderId
      * @return
      */
     protected String getUniqueId(Map<String, Object> rowData, List<String> uniqueKeys, Long spiderId){
