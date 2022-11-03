@@ -45,11 +45,12 @@ public class DefaultResultSetHandler implements ResultSetHandler{
         if (CollectionUtils.isEmpty(parseResult)){
             return null;
         }
-
         return format(parseResult, fieldExtractors);
     }
 
     /**
+     * 数据格式化策略（当勾选的字段数量 == 全部字段数量，则进行转置，否则不进行处理）
+     *
      * @return 数据格式化结果，类似此结构的 json
      *
      * <pre>
@@ -69,15 +70,11 @@ public class DefaultResultSetHandler implements ResultSetHandler{
      */
     private List<Map<String, Object>> format(Map<String, Object> parseResult, List<FieldExtractor> fieldExtractors){
         long count = fieldExtractors.stream().filter(FieldExtractor::isMulti).count();
-        List<Map<String, Object>> formatResult;
-        // 数据格式化策略（当勾选的字段数量 == 全部字段数量，则进行转置，否则不进行）
         if (fieldExtractors.size() == count){
-            formatResult = formatList(parseResult);
+            return formatList(parseResult);
         }else {
-            formatResult = new ArrayList<>();
-            formatResult.add(parseResult);
+            return Collections.singletonList(parseResult);
         }
-        return formatResult;
     }
 
     /**
@@ -109,7 +106,6 @@ public class DefaultResultSetHandler implements ResultSetHandler{
         Map<String, List<String>> dataTmp = new HashMap<>();
         fields.forEach((key, value)-> dataTmp.put(key, (List<String>) value));
         int maxSize = dataTmp.values().stream().map(List::size).max(Comparator.comparing(Integer::intValue)).orElse(0);
-
         for (int i = 0; i <maxSize; i++) {
             Map<String, Object> rowData = new HashMap<>();
             int finalI = i;
