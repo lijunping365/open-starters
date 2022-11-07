@@ -16,7 +16,6 @@
 package com.saucesubfresh.starter.crawler.executor;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.factory.BeanProxyFactory;
 import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
 import com.saucesubfresh.starter.crawler.handler.ResultSetHandler;
 
@@ -28,17 +27,17 @@ import java.util.Map;
  */
 public class DefaultCrawlerExecutor implements CrawlerExecutor{
 
-    private final BeanProxyFactory beanProxyFactory;
+    private final DownloadHandler downloadHandler;
+    private final ResultSetHandler resultSetHandler;
 
-    public DefaultCrawlerExecutor(BeanProxyFactory beanProxyFactory) {
-        this.beanProxyFactory = beanProxyFactory;
+    public DefaultCrawlerExecutor(DownloadHandler downloadHandler, ResultSetHandler resultSetHandler) {
+        this.downloadHandler = downloadHandler;
+        this.resultSetHandler = resultSetHandler;
     }
 
     @Override
     public List<Map<String, Object>> handler(SpiderRequest request) {
-        DownloadHandler downloadHandler = beanProxyFactory.getProxyBean(DownloadHandler.class);
         String response = downloadHandler.download(request);
-        ResultSetHandler resultSetHandler = beanProxyFactory.getProxyBean(ResultSetHandler.class);
         return resultSetHandler.handler(request, response);
     }
 }

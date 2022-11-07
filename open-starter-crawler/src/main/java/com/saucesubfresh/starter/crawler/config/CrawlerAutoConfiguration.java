@@ -17,8 +17,6 @@ package com.saucesubfresh.starter.crawler.config;
 
 import com.saucesubfresh.starter.crawler.executor.CrawlerExecutor;
 import com.saucesubfresh.starter.crawler.executor.DefaultCrawlerExecutor;
-import com.saucesubfresh.starter.crawler.factory.BeanProxyFactory;
-import com.saucesubfresh.starter.crawler.factory.DefaultBeanProxyFactory;
 import com.saucesubfresh.starter.crawler.generator.DefaultKeyGenerator;
 import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
 import com.saucesubfresh.starter.crawler.handler.DefaultDownloadHandler;
@@ -26,7 +24,9 @@ import com.saucesubfresh.starter.crawler.handler.DefaultResultSetHandler;
 import com.saucesubfresh.starter.crawler.handler.DownloadHandler;
 import com.saucesubfresh.starter.crawler.handler.ResultSetHandler;
 import com.saucesubfresh.starter.crawler.plugin.InterceptorChain;
+import com.saucesubfresh.starter.crawler.processor.CrawlerBeanPostProcessor;
 import com.saucesubfresh.starter.crawler.properties.CrawlerProperties;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -59,19 +59,18 @@ public class CrawlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public BeanProxyFactory beanProxyFactory(){
-        return new DefaultBeanProxyFactory();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
     public KeyGenerator keyGenerator(){
         return new DefaultKeyGenerator();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public CrawlerExecutor crawlerExecutor(BeanProxyFactory beanProxyFactory){
-        return new DefaultCrawlerExecutor(beanProxyFactory);
+    public CrawlerExecutor crawlerExecutor(DownloadHandler downloadHandler, ResultSetHandler resultSetHandler){
+        return new DefaultCrawlerExecutor(downloadHandler, resultSetHandler);
+    }
+
+    @Bean
+    public BeanPostProcessor crawlerBeanPostProcessor(){
+        return new CrawlerBeanPostProcessor();
     }
 }
