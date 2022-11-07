@@ -53,8 +53,7 @@ public class ResultSetInterceptor implements Interceptor {
         final Object arg = invocation.getArgs()[0];
         SpiderRequest spiderRequest = (SpiderRequest) arg;
         List<Map<String, Object>> list = (List<Map<String, Object>>) result;
-        fillValue(spiderRequest, list);
-        return list;
+        return fillValue(spiderRequest, list);
     }
 
     @Override
@@ -67,7 +66,7 @@ public class ResultSetInterceptor implements Interceptor {
      * @param request
      * @param formatResult
      */
-    private void fillValue(SpiderRequest request, List<Map<String, Object>> formatResult) {
+    private List<Map<String, Object>> fillValue(SpiderRequest request, List<Map<String, Object>> formatResult) {
         List<FieldExtractor> fieldExtractors = request.getExtract();
         List<String> uniqueKeys = getUniqueKeys(fieldExtractors);
         for (Map<String, Object> rowData : formatResult) {
@@ -79,6 +78,7 @@ public class ResultSetInterceptor implements Interceptor {
                 rowData.putIfAbsent(e.getFieldName(), e.getDefaultValue());
             });
         }
+        return formatResult;
     }
 
     /**
@@ -90,7 +90,6 @@ public class ResultSetInterceptor implements Interceptor {
                 .filter(FieldExtractor::isUnique)
                 .map(FieldExtractor::getFieldName)
                 .collect(Collectors.toList());
-
         if (CollectionUtils.isEmpty(uniqueKeys)){
             uniqueKeys = Collections.singletonList(fieldExtractors.get(0).getFieldName());
         }
