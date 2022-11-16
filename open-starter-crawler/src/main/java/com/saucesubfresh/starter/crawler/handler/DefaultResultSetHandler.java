@@ -31,7 +31,7 @@ import java.util.*;
  *
  * @author lijunping
  */
-@UsePlugin(type = ResultSetHandler.class)
+@UsePlugin
 public class DefaultResultSetHandler implements ResultSetHandler{
 
     @Override

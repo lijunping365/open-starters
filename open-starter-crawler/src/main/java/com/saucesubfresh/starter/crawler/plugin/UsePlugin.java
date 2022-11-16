@@ -25,9 +25,4 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface UsePlugin {
 
-    /**
-     * 代理接口类
-     * @return
-     */
-    Class<?> type();
 }
