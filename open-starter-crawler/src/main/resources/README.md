@@ -233,7 +233,7 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 
 1. JsonPath 不可以与其他解析方法混用
 
-2. 默认解析中如果所有字段都勾选了循环将进行转置，否则将不会转置
+2. 默认解析中如果每条抽取规则的 multi 都为 true ，那么对应的值将进行转置，即意为采集列表，否则将不会转置
 
 3. id 生成规则：如果指定了 id 字段，则指定的 id 字段将会被当作主键，
 
