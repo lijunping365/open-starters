@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author lijunping
  */
 @Slf4j
-@UsePlugin(type = DownloadHandler.class)
+@UsePlugin
 public class DefaultDownloadHandler implements DownloadHandler {
 
     @Override
