@@ -11,7 +11,7 @@
 
     <artifactId>open-starter-schedule</artifactId>
     <description>A distributed scheduling component</description>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <properties>
         <redisson.version>3.17.4</redisson.version>

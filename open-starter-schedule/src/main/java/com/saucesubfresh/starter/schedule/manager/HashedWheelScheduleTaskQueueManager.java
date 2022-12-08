@@ -73,19 +73,19 @@ public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueMan
         }
 
         Set<WheelEntity> tasks = entities.stream()
-                .filter(e -> Objects.equals(e.getRound(), 0L))
+                .filter(e -> Objects.equals(e.getRound(), 0L) || Objects.equals(e.getRound() -1, 0L))
                 .collect(Collectors.toSet());
 
-        if (CollectionUtils.isEmpty(tasks)){
-            return Collections.emptyList();
-        }
-
         entities.removeAll(tasks);
-        for (WheelEntity entity : entities) {
-            entity.setRound(entity.getRound() - 1L);
+
+        if (!CollectionUtils.isEmpty(entities)){
+            for (WheelEntity entity : entities) {
+                entity.setRound(entity.getRound() - 1L);
+            }
+
+            timeWheel.put(nowSecond, entities);
         }
 
-        timeWheel.put(nowSecond, entities);
         return tasks.stream().map(WheelEntity::getTaskId).collect(Collectors.toList());
     }
 }
