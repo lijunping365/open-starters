@@ -224,3 +224,7 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 ## 1.0.3 版本更新说明
 
 修复了当任务列表为空时，导致scheduleThread线程占用大量cpu bug with issues#4 bug
+
+## 1.0.4 版本更新说明
+
+修复了时间轮圈数更新bug，fix bug with issues#20
