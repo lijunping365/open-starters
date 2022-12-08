@@ -73,7 +73,7 @@ public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueMan
         }
 
         Set<WheelEntity> tasks = entities.stream()
-                .filter(e -> Objects.equals(e.getRound(), 0L))
+                .filter(e -> Objects.equals(e.getRound(), 0L) || Objects.equals(e.getRound() -1, 0L))
                 .collect(Collectors.toSet());
 
         entities.removeAll(tasks);
