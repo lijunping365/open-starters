@@ -26,9 +26,9 @@ public interface ScheduleTaskQueueManager {
      * 任务放入到队列
      *
      * @param taskId
-     * @param nextTime
+     * @param cron
      */
-    void put(Long taskId, Long nextTime);
+    void put(Long taskId, String cron);
 
     /**
      * 从任务队列获取任务

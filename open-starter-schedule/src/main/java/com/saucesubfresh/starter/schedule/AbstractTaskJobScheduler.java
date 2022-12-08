@@ -15,7 +15,6 @@
  */
 package com.saucesubfresh.starter.schedule;
 
-import com.saucesubfresh.starter.schedule.cron.CronHelper;
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
@@ -88,8 +87,7 @@ public abstract class AbstractTaskJobScheduler implements TaskJobScheduler {
                 continue;
             }
             try {
-                long nextTime = CronHelper.getNextTime(task.getCronExpression());
-                scheduleTaskQueueManager.put(taskId, nextTime);
+                scheduleTaskQueueManager.put(taskId, task.getCronExpression());
             }catch (Exception e){
                 if (!scheduleThreadToStop) {
                     log.error("Refresh task error:{}", e.getMessage(), e);

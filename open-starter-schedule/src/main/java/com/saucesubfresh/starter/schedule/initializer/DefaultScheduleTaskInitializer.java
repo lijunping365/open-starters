@@ -15,7 +15,6 @@
  */
 package com.saucesubfresh.starter.schedule.initializer;
 
-import com.saucesubfresh.starter.schedule.cron.CronHelper;
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.loader.ScheduleTaskLoader;
 import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
@@ -55,8 +54,7 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
         if (!CollectionUtils.isEmpty(scheduleTasks)){
             scheduleTaskPoolManager.addAll(scheduleTasks);
             for (ScheduleTask task : scheduleTasks) {
-                long nextTime = CronHelper.getNextTime(task.getCronExpression());
-                scheduleTaskQueueManager.put(task.getTaskId(), nextTime);
+                scheduleTaskQueueManager.put(task.getTaskId(), task.getCronExpression());
             }
         }
         taskJobScheduler.start();

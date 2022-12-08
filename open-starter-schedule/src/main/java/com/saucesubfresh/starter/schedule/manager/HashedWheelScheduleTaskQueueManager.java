@@ -15,6 +15,7 @@
  */
 package com.saucesubfresh.starter.schedule.manager;
 
+import com.saucesubfresh.starter.schedule.cron.CronHelper;
 import com.saucesubfresh.starter.schedule.domain.WheelEntity;
 import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
@@ -43,7 +44,8 @@ public class HashedWheelScheduleTaskQueueManager implements ScheduleTaskQueueMan
     }
 
     @Override
-    public void put(Long taskId, Long nextTime) {
+    public void put(Long taskId, String cron) {
+        long nextTime = CronHelper.getNextTime(cron);
         long nowTime = System.currentTimeMillis() / 1000;
         if (nextTime <= nowTime){
             throw new ScheduleException("The nextTime must more than the nowTime");
