@@ -69,9 +69,9 @@ public class ResultSetInterceptor implements Interceptor {
     private List<Map<String, Object>> fillValue(SpiderRequest request, List<Map<String, Object>> formatResult) {
         List<FieldExtractor> fieldExtractors = request.getExtract();
         List<String> uniqueKeys = getUniqueKeys(fieldExtractors);
+        long time = System.currentTimeMillis();
         for (Map<String, Object> rowData : formatResult) {
             String uniqueId = getUniqueId(rowData, uniqueKeys, request.getSpiderId());
-            long time = new Date().getTime();
             rowData.putIfAbsent(ID, uniqueId);
             rowData.putIfAbsent(CREATE_TIME, time);
             fieldExtractors.stream().filter(e-> StringUtils.isNotBlank(e.getDefaultValue())).forEach(e->{
