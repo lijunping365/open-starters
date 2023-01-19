@@ -24,10 +24,14 @@ import com.saucesubfresh.starter.security.utils.JSON;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
+import java.util.Objects;
+
 /**
  * @author lijunping
  */
 public class JwtTokenService implements TokenService {
+    private static final String TOKEN_TYPE = "token_type";
+    private static final String ACCESS_TOKEN = "access_token";
 
     private final SecurityProperties securityProperties;
 
@@ -38,12 +42,19 @@ public class JwtTokenService implements TokenService {
     @Override
     public Authentication readAuthentication(String accessToken) {
         String subject;
+        Object tokenType;
         try {
             Claims claims = Jwts.parserBuilder().setSigningKey(securityProperties.getSecretKeyBytes()).build().parseClaimsJws(accessToken).getBody();
             subject = claims.getSubject();
+            tokenType = claims.get(TOKEN_TYPE);
         }catch (Exception e){
             throw new InvalidBearerTokenException("AccessToken error or accessToken has been invalid");
         }
+
+        if (!Objects.equals(tokenType, ACCESS_TOKEN)){
+            throw new InvalidBearerTokenException("AccessToken error or accessToken has been invalid");
+        }
+
         UserDetails userDetails = JSON.parse(subject, UserDetails.class);
         Authentication authentication = new Authentication();
         authentication.setUserDetails(userDetails);
