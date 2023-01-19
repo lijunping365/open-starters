@@ -13,36 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.oauth.token;
-
-
-import lombok.Data;
-
-import java.io.Serializable;
+package com.saucesubfresh.starter.oauth.exception;
 
 /**
- * token 实体类
- *
- * @author lijunping
+ * @author: 李俊平
+ * @Date: 2022-11-01 18:02
  */
-@Data
-public class AccessToken implements Serializable {
+public class InvalidRefreshTokenException extends AuthenticationException{
 
-  private static final long serialVersionUID = 2756099126284764479L;
+    public InvalidRefreshTokenException(String msg, Throwable t) {
+        super(msg, t);
+    }
 
-  /**
-   * accessToken
-   */
-  private String accessToken;
-
-  /**
-   * refreshToken
-   */
-  private String refreshToken;
-
-  /**
-   * accessToken 过期时间
-   */
-  private String expiredTime;
-
+    public InvalidRefreshTokenException(String msg) {
+        super(msg);
+    }
 }

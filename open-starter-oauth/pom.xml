@@ -11,7 +11,7 @@
 
     <artifactId>open-starter-oauth</artifactId>
     <description>简单的 oauth 插件</description>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <properties>
         <jjwt.version>0.11.2</jjwt.version>

@@ -35,12 +35,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class RedisTokenStore extends AbstractTokenStore {
-
+    private static final String REDIS_REFRESH_TOKEN_PREFIX = "refresh_token:";
     private final RedisTemplate<String, Object> redisTemplate;
     private final OAuthProperties oauthProperties;
 
     public RedisTokenStore(TokenEnhancer tokenEnhancer, RedisTemplate<String, Object> redisTemplate, OAuthProperties oauthProperties) {
-        super(tokenEnhancer);
+        super(tokenEnhancer, oauthProperties);
         this.redisTemplate = redisTemplate;
         this.oauthProperties = oauthProperties;
     }
@@ -52,14 +52,43 @@ public class RedisTokenStore extends AbstractTokenStore {
         AccessToken token = new AccessToken();
         String accessToken = UUID.randomUUID().toString();
         long now = System.currentTimeMillis();
-        long expiredTime = now + tokenProperties.getAccessTokenExpiresIn() * 1000;
-        token.setExpiredTime(String.valueOf(expiredTime));
+        long accessTokenExpiredTime = getAccessTokenExpiredTime(now);
         token.setAccessToken(accessToken);
-        redisTemplate.opsForValue().set(buildAccessTokenKey(accessToken), userDetails, tokenProperties.getAccessTokenExpiresIn(), TimeUnit.SECONDS);
+        token.setExpiredTime(String.valueOf(accessTokenExpiredTime));
+        long accessTokenExpiresIn = tokenProperties.getAccessTokenExpiresIn();
+        redisTemplate.opsForValue().set(getAccessTokenKey(accessToken), userDetails, accessTokenExpiresIn, TimeUnit.SECONDS);
+
+        if (supportRefreshToken()){
+            String refreshToken = UUID.randomUUID().toString();
+            token.setRefreshToken(refreshToken);
+            long refreshTokenExpireTimes = tokenProperties.getRefreshTokenExpireTimes();
+            long refreshTokenExpiredTime = accessTokenExpiresIn * refreshTokenExpireTimes;
+            redisTemplate.opsForValue().set(getRefreshTokenKey(refreshToken), userDetails, refreshTokenExpiredTime, TimeUnit.SECONDS);
+        }
+
         return token;
     }
 
-    private String buildAccessTokenKey(String accessToken){
-        return oauthProperties.getToken().getTokenPrefix() + accessToken;
+    @Override
+    public Authentication readAuthentication(String refreshToken) {
+        return null;
+    }
+
+    @Override
+    public void invalidateAccessToken(String accessToken) {
+        redisTemplate.delete(getAccessTokenKey(accessToken));
+    }
+
+    @Override
+    public void invalidateRefreshToken(String refreshToken) {
+        redisTemplate.delete(getRefreshTokenKey(refreshToken));
+    }
+
+    private String getAccessTokenKey(String accessToken){
+        return oauthProperties.getToken().getRedisAccessTokenKey() + accessToken;
+    }
+
+    private String getRefreshTokenKey(String refreshToken){
+        return REDIS_REFRESH_TOKEN_PREFIX + refreshToken;
     }
 }

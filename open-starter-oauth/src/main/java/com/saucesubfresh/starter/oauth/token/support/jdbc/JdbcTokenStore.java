@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.oauth.token.support.jdbc;
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
+import com.saucesubfresh.starter.oauth.properties.OAuthProperties;
 import com.saucesubfresh.starter.oauth.token.AbstractTokenStore;
 import com.saucesubfresh.starter.oauth.token.AccessToken;
 import com.saucesubfresh.starter.oauth.token.TokenEnhancer;
@@ -29,8 +30,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JdbcTokenStore extends AbstractTokenStore {
 
-    public JdbcTokenStore(TokenEnhancer tokenEnhancer) {
-        super(tokenEnhancer);
+    private final OAuthProperties oauthProperties;
+
+    public JdbcTokenStore(TokenEnhancer tokenEnhancer, OAuthProperties oauthProperties) {
+        super(tokenEnhancer, oauthProperties);
+        this.oauthProperties = oauthProperties;
     }
 
     @Override
@@ -38,4 +42,18 @@ public class JdbcTokenStore extends AbstractTokenStore {
         return null;
     }
 
+    @Override
+    public Authentication readAuthentication(String refreshToken) {
+        return null;
+    }
+
+    @Override
+    public void invalidateAccessToken(String accessToken) {
+
+    }
+
+    @Override
+    public void invalidateRefreshToken(String refreshToken) {
+
+    }
 }

@@ -214,6 +214,52 @@ public class SecurityAutoConfiguration {
 
 > 2.如果采用的是 redis token，配置 redis 的 tokenPrefix 时，open-starter-oauth 和 open-starter-security 须一致，而且 redis 地址也应一致
 
+## 使用者疑问
+
+### 1. 关于 JWT token 和 Redis Token 的选择问题
+
+1. jwt token
+
+优点：验证速度快，不需要服务器存储 accessToken 和 refreshToken
+
+缺点：无法强制失效，一旦生成只要没有过期就可以用
+
+适用场景：不需要频繁修改用户的信息
+
+2. redis token
+
+优点：可以使 token 强制失效（通过中间层，在生成用户token 之后记录 【uid：accessToken，refreshToken】对应关系，在强制失效时通过 uid 删除对应的 accessToken 和 refreshToken）
+
+缺点：验证速度相比 jwt token 慢，需要服务器存储 accessToken 和 refreshToken
+
+适用场景：当管理员修改了用户的权限或修改了用户的锁定状态用户可以立即感触到。
+
+可以根据使用场景及各自优缺点进行选择。
+
+### 2. 用户可以直接拿 refreshToken 当 accessToken 使用吗
+
+当用户把 refreshToken 当作 accessToken 来使用时在认证时是不会通过的。
+
+对于 jwt token 来说，其实用户拿到的 accessToken 和 refreshToken 是有区分 token 类型字段的
+
+对于 redis token 来说，accessToken 和 refreshToken 是使用不同的 redis key 前缀去存储的。
+
+### 3. 如何使用 access token 自动续期功能？
+
+1. 在 security 验证 accessToken 的有效性时，当 accessToken 失效返回特定的异常
+
+2. 前端在接收到这个异常之后，发请求给 oauth 表明要 refreshToken， oauth 检查 refreshToken 是否失效，如果未失效就重新生成 accessToken 和 refreshToken 返回给客户端，否则告诉客户端你需要重新登录。
+
+3. 只要 refreshToken 没有失效就可以一直为用户失效的 accessToken 续期，一旦 refreshToken 失效，那么用户就需要重新登录。
+
+### 4. 如何使 accessToken 强制失效？
+
+1. 首先，accessToken 强制失效只支持 redis token，也就是说你必须要使用 redis token
+
+2. 该 starter 已提供删除 accessToken 接口，开发者只需要在生成用户 accessToken 之后记录【uid：accessToken，refreshToken】对应关系，
+
+3. 在想要强制失效的时候，通过 uid 拿到该用户的 accessToken 和 refreshToken 调用该 starter 的删除 
+
 ## 版本更新说明
 
 ### 1.0.1 
@@ -233,3 +279,7 @@ public class SecurityAutoConfiguration {
 1. 优化抛出异常
 
 2. 细化异常分类，可以针对不同的异常做出不同的处理
+
+### 1.0.4
+
+1. 自动为 token 续期，即自动刷新 token 能力

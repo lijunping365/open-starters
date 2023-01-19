@@ -42,7 +42,7 @@ public class JwtTokenStore extends AbstractTokenStore {
     private final OAuthProperties oauthProperties;
 
     public JwtTokenStore(TokenEnhancer tokenEnhancer, OAuthProperties oauthProperties) {
-        super(tokenEnhancer);
+        super(tokenEnhancer, oauthProperties);
         this.oauthProperties = oauthProperties;
     }
 
@@ -51,16 +51,42 @@ public class JwtTokenStore extends AbstractTokenStore {
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();
         long now = System.currentTimeMillis();
-        Date expiredDate = new Date(now + tokenProperties.getAccessTokenExpiresIn() * 1000);
+        long accessTokenExpiredTime = getAccessTokenExpiredTime(now);
         String userDetailsStr = JSON.toJSON(authentication.getUserDetails());
         Claims claims = Jwts.claims().setSubject(userDetailsStr);
         String accessToken = Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(expiredDate)
+                .setExpiration(new Date(accessTokenExpiredTime))
                 .signWith(Keys.hmacShaKeyFor(tokenProperties.getSecretKeyBytes()), SignatureAlgorithm.HS256)
                 .compact();
-        token.setExpiredTime(String.valueOf(expiredDate.getTime()));
+        token.setExpiredTime(String.valueOf(accessTokenExpiredTime));
         token.setAccessToken(accessToken);
+
+        if (supportRefreshToken()){
+            long refreshTokenExpiredTime = getRefreshTokenExpiredTime(now);
+            String refreshToken = Jwts.builder()
+                    .setClaims(claims)
+                    .setExpiration(new Date(refreshTokenExpiredTime))
+                    .signWith(Keys.hmacShaKeyFor(tokenProperties.getSecretKeyBytes()), SignatureAlgorithm.HS256)
+                    .compact();
+            token.setRefreshToken(refreshToken);
+        }
+
         return token;
+    }
+
+    @Override
+    public Authentication readAuthentication(String refreshToken) {
+        return null;
+    }
+
+    @Override
+    public void invalidateAccessToken(String accessToken) {
+        throw new UnsupportedOperationException("jwt access token not support delete");
+    }
+
+    @Override
+    public void invalidateRefreshToken(String refreshToken) {
+        throw new UnsupportedOperationException("jwt refresh token not support delete");
     }
 }
