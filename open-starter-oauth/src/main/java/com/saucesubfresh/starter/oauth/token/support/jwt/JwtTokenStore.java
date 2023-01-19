@@ -17,6 +17,8 @@ package com.saucesubfresh.starter.oauth.token.support.jwt;
 
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
+import com.saucesubfresh.starter.oauth.domain.UserDetails;
+import com.saucesubfresh.starter.oauth.exception.InvalidRefreshTokenException;
 import com.saucesubfresh.starter.oauth.properties.OAuthProperties;
 import com.saucesubfresh.starter.oauth.properties.token.TokenProperties;
 import com.saucesubfresh.starter.oauth.token.AbstractTokenStore;
@@ -47,7 +49,7 @@ public class JwtTokenStore extends AbstractTokenStore {
     }
 
     @Override
-    public AccessToken doGenerateToken(Authentication authentication) {
+    protected AccessToken doGenerateToken(Authentication authentication) {
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();
         long now = System.currentTimeMillis();
@@ -77,7 +79,18 @@ public class JwtTokenStore extends AbstractTokenStore {
 
     @Override
     public Authentication readAuthentication(String refreshToken) {
-        return null;
+        String subject;
+        try {
+            final TokenProperties tokenProperties = oauthProperties.getToken();
+            Claims claims = Jwts.parserBuilder().setSigningKey(tokenProperties.getSecretKeyBytes()).build().parseClaimsJws(refreshToken).getBody();
+            subject = claims.getSubject();
+        }catch (Exception e){
+            throw new InvalidRefreshTokenException("RefreshToken error or refreshToken has been invalid");
+        }
+        UserDetails userDetails = JSON.parse(subject, UserDetails.class);
+        Authentication authentication = new Authentication();
+        authentication.setUserDetails(userDetails);
+        return authentication;
     }
 
     @Override

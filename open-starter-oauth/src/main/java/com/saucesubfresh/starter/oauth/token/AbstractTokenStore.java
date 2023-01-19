@@ -74,11 +74,11 @@ public abstract class AbstractTokenStore implements TokenStore{
     }
 
     /**
-     * 根据
+     * 生成 access_token 和 refresh_token
      * @param authentication
      * @return
      */
-    public abstract AccessToken doGenerateToken(Authentication authentication);
+    protected abstract AccessToken doGenerateToken(Authentication authentication);
 
     /**
      * 通过 refreshToken 获取用户信息

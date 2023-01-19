@@ -38,7 +38,7 @@ public class JdbcTokenStore extends AbstractTokenStore {
     }
 
     @Override
-    public AccessToken doGenerateToken(Authentication authentication) {
+    protected AccessToken doGenerateToken(Authentication authentication) {
         return null;
     }
 

@@ -17,6 +17,7 @@ package com.saucesubfresh.starter.oauth.token.support.redis;
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
 import com.saucesubfresh.starter.oauth.domain.UserDetails;
+import com.saucesubfresh.starter.oauth.exception.InvalidRefreshTokenException;
 import com.saucesubfresh.starter.oauth.properties.OAuthProperties;
 import com.saucesubfresh.starter.oauth.properties.token.TokenProperties;
 import com.saucesubfresh.starter.oauth.token.AbstractTokenStore;
@@ -25,6 +26,7 @@ import com.saucesubfresh.starter.oauth.token.TokenEnhancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +48,7 @@ public class RedisTokenStore extends AbstractTokenStore {
     }
 
     @Override
-    public AccessToken doGenerateToken(Authentication authentication) {
+    protected AccessToken doGenerateToken(Authentication authentication) {
         UserDetails userDetails = authentication.getUserDetails();
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();
@@ -71,7 +73,14 @@ public class RedisTokenStore extends AbstractTokenStore {
 
     @Override
     public Authentication readAuthentication(String refreshToken) {
-        return null;
+        Object o = redisTemplate.opsForValue().get(getRefreshTokenKey(refreshToken));
+        if (Objects.isNull(o)){
+            throw new InvalidRefreshTokenException("RefreshToken error or refreshToken has been invalid");
+        }
+        UserDetails userDetails = (UserDetails) o;
+        Authentication authentication = new Authentication();
+        authentication.setUserDetails(userDetails);
+        return authentication;
     }
 
     @Override
