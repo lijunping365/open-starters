@@ -77,10 +77,7 @@ public class RedisTokenStore extends AbstractTokenStore {
         if (Objects.isNull(o)){
             throw new InvalidRefreshTokenException("RefreshToken error or refreshToken has been invalid");
         }
-        UserDetails userDetails = (UserDetails) o;
-        Authentication authentication = new Authentication();
-        authentication.setUserDetails(userDetails);
-        return authentication;
+        return new Authentication((UserDetails) o);
     }
 
     @Override

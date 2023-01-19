@@ -282,4 +282,4 @@ public class SecurityAutoConfiguration {
 
 ### 1.0.4
 
-1. 自动为 token 续期，即自动刷新 token 能力
+1. 新增自动为 token 续期，即自动刷新 token 能力
