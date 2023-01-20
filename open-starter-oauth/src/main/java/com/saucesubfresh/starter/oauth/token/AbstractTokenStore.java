@@ -16,16 +16,23 @@
 package com.saucesubfresh.starter.oauth.token;
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
+import com.saucesubfresh.starter.oauth.properties.OAuthProperties;
+import com.saucesubfresh.starter.oauth.properties.token.TokenProperties;
 
 /**
  * @author lijunping
  */
 public abstract class AbstractTokenStore implements TokenStore{
-
+    /**
+     * Seconds to milliseconds
+     */
+    private static final long UNIT = 1000;
     private final TokenEnhancer tokenEnhancer;
+    private final OAuthProperties oauthProperties;
 
-    public AbstractTokenStore(TokenEnhancer tokenEnhancer) {
+    public AbstractTokenStore(TokenEnhancer tokenEnhancer, OAuthProperties oauthProperties) {
         this.tokenEnhancer = tokenEnhancer;
+        this.oauthProperties = oauthProperties;
     }
 
     @Override
@@ -35,5 +42,48 @@ public abstract class AbstractTokenStore implements TokenStore{
         return result;
     }
 
-    public abstract AccessToken doGenerateToken(Authentication authentication);
+    @Override
+    public AccessToken refreshToken(String refreshToken) {
+        Authentication authentication = readAuthentication(refreshToken);
+        return generateToken(authentication);
+    }
+
+    /**
+     * 获取 accessToken 失效时间（时间戳）
+     */
+    protected long getAccessTokenExpiredTime(long now){
+        final TokenProperties tokenProperties = oauthProperties.getToken();
+        long accessTokenExpiresIn = tokenProperties.getAccessTokenExpiresIn() * UNIT;
+        return now + accessTokenExpiresIn;
+    }
+
+    /**
+     * 获取 refreshToken 失效时间（时间戳）
+     */
+    protected long getRefreshTokenExpiredTime(long now){
+        final TokenProperties tokenProperties = oauthProperties.getToken();
+        long refreshTokenExpiresIn = tokenProperties.getAccessTokenExpiresIn() * tokenProperties.getRefreshTokenExpireTimes() * UNIT;
+        return now + refreshTokenExpiresIn;
+    }
+
+    /**
+     * 是否支持刷新 token
+     */
+    protected boolean supportRefreshToken(){
+        return oauthProperties.getToken().isSupportRefreshToken();
+    }
+
+    /**
+     * 生成 access_token 和 refresh_token
+     * @param authentication
+     * @return
+     */
+    protected abstract AccessToken doGenerateToken(Authentication authentication);
+
+    /**
+     * 通过 refreshToken 获取用户信息
+     * @param refreshToken
+     * @return
+     */
+    protected abstract Authentication readAuthentication(String refreshToken);
 }

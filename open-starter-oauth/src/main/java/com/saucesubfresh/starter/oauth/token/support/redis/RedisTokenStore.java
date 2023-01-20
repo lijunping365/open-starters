@@ -17,6 +17,7 @@ package com.saucesubfresh.starter.oauth.token.support.redis;
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
 import com.saucesubfresh.starter.oauth.domain.UserDetails;
+import com.saucesubfresh.starter.oauth.exception.InvalidRefreshTokenException;
 import com.saucesubfresh.starter.oauth.properties.OAuthProperties;
 import com.saucesubfresh.starter.oauth.properties.token.TokenProperties;
 import com.saucesubfresh.starter.oauth.token.AbstractTokenStore;
@@ -25,6 +26,7 @@ import com.saucesubfresh.starter.oauth.token.TokenEnhancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -35,31 +37,64 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class RedisTokenStore extends AbstractTokenStore {
-
+    private static final String REDIS_REFRESH_TOKEN_PREFIX = "refresh_token:";
     private final RedisTemplate<String, Object> redisTemplate;
     private final OAuthProperties oauthProperties;
 
     public RedisTokenStore(TokenEnhancer tokenEnhancer, RedisTemplate<String, Object> redisTemplate, OAuthProperties oauthProperties) {
-        super(tokenEnhancer);
+        super(tokenEnhancer, oauthProperties);
         this.redisTemplate = redisTemplate;
         this.oauthProperties = oauthProperties;
     }
 
     @Override
-    public AccessToken doGenerateToken(Authentication authentication) {
+    protected AccessToken doGenerateToken(Authentication authentication) {
         UserDetails userDetails = authentication.getUserDetails();
         final TokenProperties tokenProperties = oauthProperties.getToken();
         AccessToken token = new AccessToken();
         String accessToken = UUID.randomUUID().toString();
         long now = System.currentTimeMillis();
-        long expiredTime = now + tokenProperties.getAccessTokenExpiresIn() * 1000;
-        token.setExpiredTime(String.valueOf(expiredTime));
+        long accessTokenExpiredTime = getAccessTokenExpiredTime(now);
         token.setAccessToken(accessToken);
-        redisTemplate.opsForValue().set(buildAccessTokenKey(accessToken), userDetails, tokenProperties.getAccessTokenExpiresIn(), TimeUnit.SECONDS);
+        token.setExpiredTime(String.valueOf(accessTokenExpiredTime));
+        long accessTokenExpiresIn = tokenProperties.getAccessTokenExpiresIn();
+        redisTemplate.opsForValue().set(getAccessTokenKey(accessToken), userDetails, accessTokenExpiresIn, TimeUnit.SECONDS);
+
+        if (supportRefreshToken()){
+            String refreshToken = UUID.randomUUID().toString();
+            token.setRefreshToken(refreshToken);
+            long refreshTokenExpireTimes = tokenProperties.getRefreshTokenExpireTimes();
+            long refreshTokenExpiredTime = accessTokenExpiresIn * refreshTokenExpireTimes;
+            redisTemplate.opsForValue().set(getRefreshTokenKey(refreshToken), userDetails, refreshTokenExpiredTime, TimeUnit.SECONDS);
+        }
+
         return token;
     }
 
-    private String buildAccessTokenKey(String accessToken){
-        return oauthProperties.getToken().getTokenPrefix() + accessToken;
+    @Override
+    public Authentication readAuthentication(String refreshToken) {
+        Object o = redisTemplate.opsForValue().get(getRefreshTokenKey(refreshToken));
+        if (Objects.isNull(o)){
+            throw new InvalidRefreshTokenException("RefreshToken error or refreshToken has been invalid");
+        }
+        return new Authentication((UserDetails) o);
+    }
+
+    @Override
+    public void invalidateAccessToken(String accessToken) {
+        redisTemplate.delete(getAccessTokenKey(accessToken));
+    }
+
+    @Override
+    public void invalidateRefreshToken(String refreshToken) {
+        redisTemplate.delete(getRefreshTokenKey(refreshToken));
+    }
+
+    private String getAccessTokenKey(String accessToken){
+        return oauthProperties.getToken().getRedisAccessTokenKey() + accessToken;
+    }
+
+    private String getRefreshTokenKey(String refreshToken){
+        return REDIS_REFRESH_TOKEN_PREFIX + refreshToken;
     }
 }

@@ -31,4 +31,23 @@ public interface TokenStore {
      */
     AccessToken generateToken(Authentication authentication);
 
+    /**
+     * 根据 refreshToken 重新生成 access_token 和 refresh_token
+     * @param refreshToken
+     * @return
+     */
+    AccessToken refreshToken(String refreshToken);
+
+    /**
+     * 使 accessToken 失效
+     * @param accessToken
+     */
+    void invalidateAccessToken(String accessToken);
+
+    /**
+     * 使 refreshToken 失效
+     * @param refreshToken
+     */
+    void invalidateRefreshToken(String refreshToken);
+
 }
