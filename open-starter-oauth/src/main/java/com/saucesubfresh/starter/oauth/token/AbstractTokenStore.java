@@ -16,8 +16,10 @@
 package com.saucesubfresh.starter.oauth.token;
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
+import com.saucesubfresh.starter.oauth.exception.InvalidRefreshTokenException;
 import com.saucesubfresh.starter.oauth.properties.OAuthProperties;
 import com.saucesubfresh.starter.oauth.properties.token.TokenProperties;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author lijunping
@@ -44,6 +46,9 @@ public abstract class AbstractTokenStore implements TokenStore{
 
     @Override
     public AccessToken refreshToken(String refreshToken) {
+        if (StringUtils.isBlank(refreshToken)){
+            throw new InvalidRefreshTokenException("The refreshToken must not be null");
+        }
         Authentication authentication = readAuthentication(refreshToken);
         return generateToken(authentication);
     }
