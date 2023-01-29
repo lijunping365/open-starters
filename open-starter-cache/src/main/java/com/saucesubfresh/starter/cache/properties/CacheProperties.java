@@ -29,7 +29,7 @@ public class CacheProperties {
     /**
      * 缓存实例 id
      */
-    private Long instanceId = ThreadLocalRandom.current().nextLong();
+    private String instanceId = "127.0.0.1:8080";
     /**
      * 配置文件
      */

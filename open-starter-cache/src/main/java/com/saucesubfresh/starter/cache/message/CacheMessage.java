@@ -46,7 +46,7 @@ public class CacheMessage implements Serializable {
     /**
      * The cache instance id
      */
-    private Long instanceId;
+    private String instanceId;
     /**
      * The message id
      */

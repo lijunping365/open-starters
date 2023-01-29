@@ -37,7 +37,7 @@ public class RedissonCacheMessageProducer implements CacheMessageProducer{
 
     @Override
     public void broadcastLocalCacheStore(CacheMessage message) {
-        Long instanceId = properties.getInstanceId();
+        String instanceId = properties.getInstanceId();
         message.setInstanceId(instanceId);
         try {
             topic.publish(message);

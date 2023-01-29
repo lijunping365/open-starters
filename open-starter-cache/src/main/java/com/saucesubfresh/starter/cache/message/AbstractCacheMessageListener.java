@@ -17,6 +17,7 @@ package com.saucesubfresh.starter.cache.message;
 
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
@@ -35,8 +36,8 @@ public abstract class AbstractCacheMessageListener implements CacheMessageListen
 
     @Override
     public void onMessage(CacheMessage message) {
-        Long instanceId = properties.getInstanceId();
-        if (Objects.equals(instanceId, message.getInstanceId())){
+        String instanceId = properties.getInstanceId();
+        if (StringUtils.equals(instanceId, message.getInstanceId())){
             return;
         }
         cacheExecutor.execute(message);
