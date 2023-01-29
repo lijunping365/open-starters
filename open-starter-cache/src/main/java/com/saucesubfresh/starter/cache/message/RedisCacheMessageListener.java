@@ -40,7 +40,6 @@ public class RedisCacheMessageListener extends AbstractCacheMessageListener impl
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CacheMessage cacheMessage = (CacheMessage) redisTemplate.getValueSerializer().deserialize(message.getBody());
-        log.info("received a message, cacheName={}", cacheMessage.getCacheName());
         super.onMessage(cacheMessage);
     }
 }

@@ -41,9 +41,8 @@ public class RedisCacheMessageProducer implements CacheMessageProducer {
         message.setInstanceId(instanceId);
         try {
             redisTemplate.convertAndSend(namespace, message);
-            log.info("发送缓存同步消息成功");
         }catch (Exception e){
-            log.error("发送缓存同步消息失败，{}，{}", e.getMessage(), e);
+            log.error("发送缓存同步消息失败：{}", e.getMessage());
         }
     }
 }

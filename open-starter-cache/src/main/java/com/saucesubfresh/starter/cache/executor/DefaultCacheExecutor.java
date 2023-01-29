@@ -56,7 +56,6 @@ public class DefaultCacheExecutor extends AbstractCacheExecutor {
                     throw new UnsupportedOperationException("Unsupported Operation");
             }
         }catch (Exception e){
-            log.error(e.getMessage(), e);
             onError(e.getMessage(), message);
         }
     }

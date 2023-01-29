@@ -33,10 +33,7 @@ public class RedissonCacheMessageListener extends AbstractCacheMessageListener {
         super(cacheExecutor, cacheProperties);
         String namespace = cacheProperties.getNamespace();
         RTopic topic = redissonClient.getTopic(namespace);
-        topic.addListener(CacheMessage.class, (channel, msg) -> {
-            log.info("received a message, cacheName={}", msg.getCacheName());
-            super.onMessage(msg);
-        });
+        topic.addListener(CacheMessage.class, (channel, msg) -> super.onMessage(msg));
     }
 
 }
