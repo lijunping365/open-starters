@@ -16,9 +16,7 @@
 package com.saucesubfresh.starter.cache.executor;
 
 import com.saucesubfresh.starter.cache.core.ClusterCache;
-import com.saucesubfresh.starter.cache.exception.CacheException;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
-import com.saucesubfresh.starter.cache.message.CacheMessage;
 
 /**
  * @author lijunping
@@ -26,19 +24,12 @@ import com.saucesubfresh.starter.cache.message.CacheMessage;
 public abstract class AbstractCacheExecutor implements CacheExecutor {
 
     private final CacheManager cacheManager;
-    private final CacheExecutorErrorHandler errorHandler;
 
-    protected AbstractCacheExecutor(CacheManager cacheManager, CacheExecutorErrorHandler errorHandler) {
+    protected AbstractCacheExecutor(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
-        this.errorHandler = errorHandler;
     }
 
     protected ClusterCache getCache(String cacheName){
         return cacheManager.getCache(cacheName);
-    }
-
-    protected void onError(String errMsg, CacheMessage message){
-        CacheException cacheException = new CacheException(errMsg, message);
-        errorHandler.onExecuteError(cacheException);
     }
 }

@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.cache.executor;
+package com.saucesubfresh.starter.cache.handler;
 
-import com.saucesubfresh.starter.cache.exception.CacheException;
+import com.saucesubfresh.starter.cache.exception.CacheExecuteException;
+import com.saucesubfresh.starter.cache.message.CacheMessage;
 
 /**
- * 执行失败策略
+ * 监听缓存消息执行失败策略，可根据具体业务实现该接口，比如记录失败日志，失败重试等策略
  *
  * @author lijunping
  */
-public interface CacheExecutorErrorHandler {
+public interface CacheListenerErrorHandler {
 
     /**
-     * 缓存操作执行失败后被调用
+     * 监听缓存消息执行失败策略
      *
-     * @param cacheException 异常信息
+     * @param exception 异常信息
+     * @param cacheMessage 缓存消息
      */
-    void onExecuteError(CacheException cacheException);
+    void onListenerError(CacheExecuteException exception, CacheMessage cacheMessage);
 }

@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.cache.executor;
 
 import com.saucesubfresh.starter.cache.core.ClusterCache;
+import com.saucesubfresh.starter.cache.exception.CacheExecuteException;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
 import com.saucesubfresh.starter.cache.message.CacheCommand;
@@ -27,8 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultCacheExecutor extends AbstractCacheExecutor {
 
-    public DefaultCacheExecutor(CacheManager cacheManager, CacheExecutorErrorHandler errorHandler) {
-        super(cacheManager, errorHandler);
+    public DefaultCacheExecutor(CacheManager cacheManager) {
+        super(cacheManager);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class DefaultCacheExecutor extends AbstractCacheExecutor {
                     throw new UnsupportedOperationException("Unsupported Operation");
             }
         }catch (Exception e){
-            onError(e.getMessage(), message);
+            throw new CacheExecuteException(e.getMessage(), e);
         }
     }
 }

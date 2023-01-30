@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.cache.executor;
+package com.saucesubfresh.starter.cache.handler;
 
-import com.saucesubfresh.starter.cache.exception.CacheException;
+import com.saucesubfresh.starter.cache.exception.CacheBroadcastException;
 import com.saucesubfresh.starter.cache.message.CacheCommand;
 import com.saucesubfresh.starter.cache.message.CacheMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author lijunping
+ * @author lijunping on 2023/1/30
  */
 @Slf4j
-public class DefaultCacheExecutorErrorHandler implements CacheExecutorErrorHandler {
+public class DefaultCacheProducerErrorHandler implements CacheProducerErrorHandler{
 
     @Override
-    public void onExecuteError(CacheException cacheException) {
-        CacheMessage message = cacheException.getCacheMessage();
+    public void onProducerError(CacheBroadcastException exception, CacheMessage message) {
         final String cacheName = message.getCacheName();
         CacheCommand command = message.getCommand();
-        log.error("缓存操作执行异常 = {}，cacheName = {}, 异常原因 = {}", command.name(), cacheName, message);
+        log.error("发送缓存同步消息异常 = {}，cacheName = {}, 异常原因 = {}", command.name(), cacheName, message);
     }
 }

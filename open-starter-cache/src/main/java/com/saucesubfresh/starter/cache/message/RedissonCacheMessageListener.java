@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.cache.message;
 
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
+import com.saucesubfresh.starter.cache.handler.CacheListenerErrorHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RTopic;
@@ -29,8 +30,9 @@ public class RedissonCacheMessageListener extends AbstractCacheMessageListener {
 
     public RedissonCacheMessageListener(CacheExecutor cacheExecutor,
                                         RedissonClient redissonClient,
-                                        CacheProperties cacheProperties) {
-        super(cacheExecutor, cacheProperties);
+                                        CacheProperties cacheProperties,
+                                        CacheListenerErrorHandler errorHandler) {
+        super(cacheExecutor, cacheProperties, errorHandler);
         String namespace = cacheProperties.getNamespace();
         RTopic topic = redissonClient.getTopic(namespace);
         topic.addListener(CacheMessage.class, (channel, msg) -> super.onMessage(msg));

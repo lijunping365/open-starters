@@ -15,11 +15,11 @@
  */
 package com.saucesubfresh.starter.cache.message;
 
+import com.saucesubfresh.starter.cache.exception.CacheExecuteException;
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
+import com.saucesubfresh.starter.cache.handler.CacheListenerErrorHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Objects;
 
 /**
  * @author lijunping
@@ -28,10 +28,14 @@ public abstract class AbstractCacheMessageListener implements CacheMessageListen
 
     private final CacheExecutor cacheExecutor;
     private final CacheProperties properties;
+    private final CacheListenerErrorHandler errorHandler;
 
-    protected AbstractCacheMessageListener(CacheExecutor cacheExecutor, CacheProperties properties) {
+    protected AbstractCacheMessageListener(CacheExecutor cacheExecutor,
+                                           CacheProperties properties,
+                                           CacheListenerErrorHandler errorHandler) {
         this.cacheExecutor = cacheExecutor;
         this.properties = properties;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -40,6 +44,10 @@ public abstract class AbstractCacheMessageListener implements CacheMessageListen
         if (StringUtils.equals(instanceId, message.getInstanceId())){
             return;
         }
-        cacheExecutor.execute(message);
+        try {
+            cacheExecutor.execute(message);
+        }catch (CacheExecuteException e){
+            errorHandler.onListenerError(e, message);
+        }
     }
 }

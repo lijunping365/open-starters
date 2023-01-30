@@ -15,34 +15,31 @@
  */
 package com.saucesubfresh.starter.cache.message;
 
+import com.saucesubfresh.starter.cache.exception.CacheBroadcastException;
+import com.saucesubfresh.starter.cache.handler.CacheProducerErrorHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
-import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 
 /**
  * @author lijunping
  */
-@Slf4j
-public class RedissonCacheMessageProducer implements CacheMessageProducer{
+public class RedissonCacheMessageProducer extends AbstractCacheMessageProducer{
 
     private final RTopic topic;
-    private final CacheProperties properties;
 
-    public RedissonCacheMessageProducer(RedissonClient redissonClient, CacheProperties properties) {
+    public RedissonCacheMessageProducer(RedissonClient redissonClient, CacheProperties properties, CacheProducerErrorHandler errorHandler) {
+        super(properties, errorHandler);
         String namespace = properties.getNamespace();
-        this.properties = properties;
         this.topic = redissonClient.getTopic(namespace);
     }
 
     @Override
-    public void broadcastLocalCacheStore(CacheMessage message) {
-        String instanceId = properties.getInstanceId();
-        message.setInstanceId(instanceId);
+    protected void broadcastCacheMessage(CacheMessage message){
         try {
             topic.publish(message);
         }catch (Exception e){
-            log.error("发送缓存同步消息失败：{}", e.getMessage());
+            throw new CacheBroadcastException(e.getMessage(), e);
         }
     }
 }
