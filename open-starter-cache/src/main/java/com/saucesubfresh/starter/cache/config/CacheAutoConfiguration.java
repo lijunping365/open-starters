@@ -18,13 +18,15 @@ package com.saucesubfresh.starter.cache.config;
 import com.saucesubfresh.starter.cache.annotation.EnableOpenCache;
 import com.saucesubfresh.starter.cache.aspect.CacheAspect;
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
-import com.saucesubfresh.starter.cache.executor.CacheExecutorErrorHandler;
+import com.saucesubfresh.starter.cache.handler.CacheListenerErrorHandler;
 import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutor;
-import com.saucesubfresh.starter.cache.executor.DefaultCacheExecutorErrorHandler;
+import com.saucesubfresh.starter.cache.handler.CacheProducerErrorHandler;
+import com.saucesubfresh.starter.cache.handler.DefaultCacheListenerErrorHandler;
 import com.saucesubfresh.starter.cache.factory.ConfigFactory;
 import com.saucesubfresh.starter.cache.factory.DefaultConfigFactory;
 import com.saucesubfresh.starter.cache.generator.KeyGenerator;
 import com.saucesubfresh.starter.cache.generator.SimpleKeyGenerator;
+import com.saucesubfresh.starter.cache.handler.DefaultCacheProducerErrorHandler;
 import com.saucesubfresh.starter.cache.manager.CacheManager;
 import com.saucesubfresh.starter.cache.manager.RedissonCaffeineCacheManager;
 import com.saucesubfresh.starter.cache.message.CacheMessageListener;
@@ -74,15 +76,20 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CacheExecutorErrorHandler cacheExecutorFailureHandler(){
-        return new DefaultCacheExecutorErrorHandler();
+    public CacheListenerErrorHandler cacheExecutorFailureHandler(){
+        return new DefaultCacheListenerErrorHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public CacheExecutor cacheExecutor(CacheManager cacheManager,
-                                       CacheExecutorErrorHandler executorErrorHandler){
-        return new DefaultCacheExecutor(cacheManager, executorErrorHandler);
+    public CacheProducerErrorHandler cacheProducerErrorHandler(){
+        return new DefaultCacheProducerErrorHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheExecutor cacheExecutor(CacheManager cacheManager){
+        return new DefaultCacheExecutor(cacheManager);
     }
 
     @Bean
@@ -121,8 +128,9 @@ public class CacheAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean(RedissonClient.class)
     public CacheMessageProducer cacheMessageProducer(CacheProperties properties,
-                                                     RedissonClient redissonClient){
-        return new RedissonCacheMessageProducer(redissonClient, properties);
+                                                     RedissonClient redissonClient,
+                                                     CacheProducerErrorHandler errorHandler){
+        return new RedissonCacheMessageProducer(redissonClient, properties, errorHandler);
     }
 
     @Bean
@@ -130,8 +138,9 @@ public class CacheAutoConfiguration {
     @ConditionalOnBean(RedissonClient.class)
     public CacheMessageListener cacheMessageListener(CacheExecutor cacheExecutor,
                                                      CacheProperties properties,
-                                                     RedissonClient redissonClient){
-        return new RedissonCacheMessageListener(cacheExecutor, redissonClient, properties);
+                                                     RedissonClient redissonClient,
+                                                     CacheListenerErrorHandler errorHandler){
+        return new RedissonCacheMessageListener(cacheExecutor, redissonClient, properties, errorHandler);
     }
 
     @Bean

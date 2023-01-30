@@ -16,15 +16,16 @@
 package com.saucesubfresh.starter.cache.exception;
 
 /**
- * @author lijunping
+ * @author: 李俊平
+ * @Date: 2023-01-29 22:43
  */
-public abstract class CacheException extends RuntimeException{
+public class CacheBroadcastException extends CacheException{
 
-    public CacheException(String msg, Throwable t) {
+    public CacheBroadcastException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public CacheException(String msg) {
+    public CacheBroadcastException(String msg) {
         super(msg);
     }
 }

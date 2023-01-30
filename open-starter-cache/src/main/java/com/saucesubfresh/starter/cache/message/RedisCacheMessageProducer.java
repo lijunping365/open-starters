@@ -15,34 +15,33 @@
  */
 package com.saucesubfresh.starter.cache.message;
 
+import com.saucesubfresh.starter.cache.exception.CacheBroadcastException;
+import com.saucesubfresh.starter.cache.handler.CacheProducerErrorHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * @author lijunping
  */
-@Slf4j
-public class RedisCacheMessageProducer implements CacheMessageProducer {
+public class RedisCacheMessageProducer extends AbstractCacheMessageProducer{
 
     private final CacheProperties properties;
     private final RedisTemplate<String, Object> redisTemplate;
-
     public RedisCacheMessageProducer(CacheProperties properties,
+                                     CacheProducerErrorHandler errorHandler,
                                      RedisTemplate<String, Object> redisTemplate) {
+        super(properties, errorHandler);
         this.properties = properties;
         this.redisTemplate = redisTemplate;
     }
 
     @Override
-    public void broadcastLocalCacheStore(CacheMessage message) {
+    public void broadcastCacheMessage(CacheMessage message) {
         String namespace = properties.getNamespace();
-        String instanceId = properties.getInstanceId();
-        message.setInstanceId(instanceId);
         try {
             redisTemplate.convertAndSend(namespace, message);
         }catch (Exception e){
-            log.error("发送缓存同步消息失败：{}", e.getMessage());
+            throw new CacheBroadcastException(e.getMessage(), e);
         }
     }
 }

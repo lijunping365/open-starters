@@ -15,35 +15,34 @@
  */
 package com.saucesubfresh.starter.cache.message;
 
-
 import com.saucesubfresh.starter.cache.exception.CacheBroadcastException;
 import com.saucesubfresh.starter.cache.handler.CacheProducerErrorHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
-import org.springframework.kafka.core.KafkaTemplate;
 
 /**
- * @author lijunping
+ * @author lijunping on 2023/1/30
  */
-public class KafkaCacheMessageProducer extends AbstractCacheMessageProducer{
+public abstract class AbstractCacheMessageProducer implements CacheMessageProducer{
 
     private final CacheProperties properties;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final CacheProducerErrorHandler errorHandler;
 
-    public KafkaCacheMessageProducer(CacheProperties properties,
-                                     CacheProducerErrorHandler errorHandler,
-                                     KafkaTemplate<String, Object> kafkaTemplate) {
-        super(properties, errorHandler);
+    protected AbstractCacheMessageProducer(CacheProperties properties,
+                                           CacheProducerErrorHandler errorHandler) {
         this.properties = properties;
-        this.kafkaTemplate = kafkaTemplate;
+        this.errorHandler = errorHandler;
     }
 
     @Override
-    public void broadcastCacheMessage(CacheMessage message) {
-        String namespace = properties.getNamespace();
+    public void broadcastLocalCacheStore(CacheMessage message) {
+        String instanceId = properties.getInstanceId();
+        message.setInstanceId(instanceId);
         try {
-            kafkaTemplate.send(namespace, message);
-        }catch (Exception e){
-            throw new CacheBroadcastException(e.getMessage(), e);
+            broadcastCacheMessage(message);
+        }catch (CacheBroadcastException e){
+            errorHandler.onProducerError(e, message);
         }
     }
+
+    protected abstract void broadcastCacheMessage(CacheMessage message);
 }

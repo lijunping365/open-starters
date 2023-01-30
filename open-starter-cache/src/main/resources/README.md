@@ -71,6 +71,8 @@ com:
       config-location: classpath:/open-cache-config.yaml
       # 应用名称
       namespace: applicationName
+      # 实例 id
+      instance-id: 127.0.0.1:8080
       # 是否开启自动缓存指标信息上报
       enable-metrics-report: true
       # 自动上报周期，默认 60，单位秒
@@ -155,10 +157,10 @@ public class CustomerKeyGenerator implements KeyGenerator{
 
 ```java
 @Component
-public class RocketMqCacheMessageProducer implements CacheMessageProducer{
+public class RocketMqCacheMessageProducer extends AbstractCacheMessageProducer{
 
     @Override
-    public void broadcastLocalCacheStore(CacheMessage message) {
+    public void broadcastCacheMessage(CacheMessage message) {
         
     }
 }
@@ -175,5 +177,10 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 
 ## 1.0.3 版本更新说明
 
-修复了重复广播同步消息的 bug。
+1. 修复了重复广播同步消息的 bug。
+
+2. 优化发送缓存同步消息，提供异常处理器。
+
+3. 优化监听同步消息执行异常，在执行时抛出异常，在监听处捕获异常，用异常处理器去处理，这样可以区分是监听消息异常还是远程调用异常。
+
 

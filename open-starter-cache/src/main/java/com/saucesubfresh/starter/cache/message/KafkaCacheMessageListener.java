@@ -17,6 +17,7 @@ package com.saucesubfresh.starter.cache.message;
 
 
 import com.saucesubfresh.starter.cache.executor.CacheExecutor;
+import com.saucesubfresh.starter.cache.handler.CacheListenerErrorHandler;
 import com.saucesubfresh.starter.cache.properties.CacheProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -33,8 +34,9 @@ public class KafkaCacheMessageListener extends AbstractCacheMessageListener impl
 
     public KafkaCacheMessageListener(CacheExecutor cacheExecutor,
                                      CacheProperties cacheProperties,
+                                     CacheListenerErrorHandler errorHandler,
                                      KafkaTemplate<String, Object> kafkaTemplate) {
-        super(cacheExecutor, cacheProperties);
+        super(cacheExecutor, cacheProperties, errorHandler);
         this.kafkaTemplate = kafkaTemplate;
     }
 
