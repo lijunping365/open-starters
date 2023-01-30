@@ -183,4 +183,5 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 
 3. 优化监听同步消息执行异常，在执行时抛出异常，在监听处捕获异常，用异常处理器去处理，这样可以区分是监听消息异常还是远程调用异常。
 
+4. 修改实例id为机器标识
 
