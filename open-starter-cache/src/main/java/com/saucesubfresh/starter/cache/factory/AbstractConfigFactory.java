@@ -27,8 +27,8 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * <p>
- *     1. 项目启动会自动加载缓存配置文件并放到 configMap 中
- *     2. 在 configMap 中未找到配置文件时会创建默认的 CacheConfig 并返回
+*  1. 项目启动会自动加载缓存配置文件并放到 configMap 中
+*  2. 在 configMap 中未找到配置文件时会创建默认的 CacheConfig 并返回
  * </p>
  *
  * @author lijunping
@@ -58,7 +58,7 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
     @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, ? extends CacheConfig> config = this.loadConfig();
-        if (CollectionUtils.isEmpty(config)){
+        if (!CollectionUtils.isEmpty(config)){
             configMap.putAll(config);
         }
     }
