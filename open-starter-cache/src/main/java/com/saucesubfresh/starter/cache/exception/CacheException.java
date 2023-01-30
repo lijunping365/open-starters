@@ -22,7 +22,7 @@ import lombok.Data;
  * @author lijunping
  */
 @Data
-public class CacheException extends RuntimeException{
+public abstract class CacheException extends RuntimeException{
 
     private final CacheMessage cacheMessage;
 

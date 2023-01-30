@@ -18,8 +18,6 @@ package com.saucesubfresh.starter.cache.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 /**
  * @author lijunping
  */
@@ -29,7 +27,7 @@ public class CacheProperties {
     /**
      * 缓存实例 id
      */
-    private Long instanceId = ThreadLocalRandom.current().nextLong();
+    private String instanceId = "127.0.0.1:8080";
     /**
      * 配置文件
      */

@@ -37,12 +37,12 @@ public class RedissonCacheMessageProducer implements CacheMessageProducer{
 
     @Override
     public void broadcastLocalCacheStore(CacheMessage message) {
-        Long instanceId = properties.getInstanceId();
+        String instanceId = properties.getInstanceId();
         message.setInstanceId(instanceId);
         try {
             topic.publish(message);
         }catch (Exception e){
-            log.error("发送缓存同步消息失败，{}，{}", e.getMessage(), e);
+            log.error("发送缓存同步消息失败：{}", e.getMessage());
         }
     }
 }

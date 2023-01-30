@@ -38,12 +38,12 @@ public class KafkaCacheMessageProducer implements CacheMessageProducer {
     @Override
     public void broadcastLocalCacheStore(CacheMessage message) {
         String namespace = properties.getNamespace();
-        Long instanceId = properties.getInstanceId();
+        String instanceId = properties.getInstanceId();
         message.setInstanceId(instanceId);
         try {
             kafkaTemplate.send(namespace, message);
         }catch (Exception e){
-            log.error("发送缓存同步消息失败，{}，{}", e.getMessage(), e);
+            log.error("发送缓存同步消息失败：{}", e.getMessage());
         }
     }
 }

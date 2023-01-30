@@ -61,7 +61,7 @@ public class DefaultCacheMetricsScheduler implements CacheMetricsScheduler, Init
             try{
                 pusher.pushCacheMetrics(cacheMetrics);
             } catch (Exception e){
-                log.error(e.getMessage(), e);
+                log.error("发送缓存指标数据异常：{}", e.getMessage());
             }
         },0, metricsReportCycle, TimeUnit.SECONDS);
     }
