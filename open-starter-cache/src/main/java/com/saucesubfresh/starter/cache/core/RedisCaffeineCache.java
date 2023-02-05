@@ -98,4 +98,9 @@ public class RedisCaffeineCache extends AbstractClusterCache {
         redisTemplate.delete(cacheHashKey);
         cache.invalidateAll();
     }
+
+    @Override
+    public int getCacheKeyCount() {
+        return cache.asMap().size();
+    }
 }

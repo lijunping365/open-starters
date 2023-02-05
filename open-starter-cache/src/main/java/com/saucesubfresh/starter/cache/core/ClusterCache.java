@@ -56,4 +56,9 @@ public interface ClusterCache{
      * 清空该 cacheName 下的缓存
      */
     void clear();
+
+    /**
+     * 获取缓存 key 数量
+     */
+    int getCacheKeyCount();
 }

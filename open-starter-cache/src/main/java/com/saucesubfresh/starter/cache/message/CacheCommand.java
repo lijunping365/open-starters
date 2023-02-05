@@ -15,45 +15,32 @@
  */
 package com.saucesubfresh.starter.cache.message;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author lijunping
  */
 @Getter
-@AllArgsConstructor
 public enum CacheCommand {
     /**
      * Invalidate local cache entry across all LocalCachedMap instances on map entry change. Broadcasts map entry hash (16 bytes) to all instances.
      */
-    INVALIDATE("invalidate"),
+    INVALIDATE,
 
     /**
      * Update local cache entry across all LocalCachedMap instances on map entry change. Broadcasts full map entry state (Key and Value objects) to all instances.
      */
-    UPDATE("update"),
+    UPDATE,
 
     /**
      * Clear local cache entry across all LocalCachedMap instances on map entry change.
      */
-    CLEAR("clear"),
+    CLEAR,
 
     /**
      * Preload local cache entry across all LocalCachedMap instances on map entry change. Broadcasts map entry hash (16 bytes) to all instances.
      */
-    PRELOAD("preload"),
+    PRELOAD,
+
     ;
-
-    private final String value;
-
-    public static CacheCommand of(String value){
-        for (CacheCommand cacheCommand : values()) {
-            if (StringUtils.equals(cacheCommand.getValue(), value)){
-                return cacheCommand;
-            }
-        }
-        return null;
-    }
 }

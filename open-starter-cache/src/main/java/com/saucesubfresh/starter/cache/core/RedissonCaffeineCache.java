@@ -76,4 +76,9 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     public void clear() {
         map.clear();
     }
+
+    @Override
+    public int getCacheKeyCount() {
+        return map.cachedKeySet().size();
+    }
 }
