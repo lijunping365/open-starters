@@ -24,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -102,5 +103,10 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     @Override
     public int getCacheKeyCount() {
         return cache.asMap().size();
+    }
+
+    @Override
+    public Set<Object> getCacheKeySet() {
+        return cache.asMap().keySet();
     }
 }

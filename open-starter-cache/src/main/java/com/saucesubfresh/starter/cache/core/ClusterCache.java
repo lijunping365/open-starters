@@ -17,6 +17,8 @@ package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.stats.CacheStats;
 
+import java.util.Set;
+
 /**
  * @author lijunping
  */
@@ -61,4 +63,9 @@ public interface ClusterCache{
      * 获取缓存 key 数量
      */
     int getCacheKeyCount();
+
+    /**
+     * 获取缓存 key set
+     */
+    Set<Object> getCacheKeySet();
 }
