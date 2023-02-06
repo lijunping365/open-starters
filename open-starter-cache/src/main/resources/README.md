@@ -186,3 +186,5 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 4. 修改实例id为机器标识
 
 5. 增加统计 cacheKey 数量方法
+
+6. 增加查询 cacheKeySet 方法
