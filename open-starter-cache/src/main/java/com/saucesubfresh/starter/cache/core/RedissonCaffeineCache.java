@@ -22,6 +22,8 @@ import org.redisson.api.LocalCachedMapOptions;
 import org.redisson.api.RLocalCachedMap;
 import org.redisson.api.RedissonClient;
 
+import java.util.Set;
+
 /**
  * @author lijunping
  */
@@ -80,5 +82,10 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     @Override
     public int getCacheKeyCount() {
         return map.cachedKeySet().size();
+    }
+
+    @Override
+    public Set<Object> getCacheKeySet() {
+        return map.cachedKeySet();
     }
 }
