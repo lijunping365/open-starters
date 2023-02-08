@@ -80,12 +80,12 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     }
 
     @Override
-    public int getCacheKeyCount() {
+    public long getCacheKeyCount() {
         return map.size();
     }
 
     @Override
-    public Set<Object> getCacheKeySet() {
-        return map.keySet();
+    public Set<Object> getCacheKeySet(String pattern, int count) {
+        return map.keySet(pattern,count);
     }
 }

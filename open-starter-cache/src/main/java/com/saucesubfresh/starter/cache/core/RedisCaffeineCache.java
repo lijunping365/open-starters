@@ -20,9 +20,12 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.stats.ConcurrentStatsCounter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -101,12 +104,19 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     }
 
     @Override
-    public int getCacheKeyCount() {
-        return cache.asMap().size();
+    public long getCacheKeyCount() {
+        return redisTemplate.opsForHash().size(cacheHashKey);
     }
 
     @Override
-    public Set<Object> getCacheKeySet() {
-        return cache.asMap().keySet();
+    public Set<Object> getCacheKeySet(String pattern, int count) {
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(cacheHashKey, scanOptions);
+        Set<Object> keySet = new HashSet<>();
+        while(cursor.hasNext()){
+            keySet.add(cursor.next().getKey());
+        }
+        cursor.close();
+        return keySet;
     }
 }

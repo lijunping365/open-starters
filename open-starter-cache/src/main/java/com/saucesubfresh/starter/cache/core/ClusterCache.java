@@ -62,10 +62,10 @@ public interface ClusterCache{
     /**
      * 获取缓存 key 数量
      */
-    int getCacheKeyCount();
+    long getCacheKeyCount();
 
     /**
      * 获取缓存 key set
      */
-    Set<Object> getCacheKeySet();
+    Set<Object> getCacheKeySet(String pattern, int count);
 }
