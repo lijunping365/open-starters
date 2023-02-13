@@ -32,10 +32,6 @@ import java.io.Serializable;
 public class CacheMessage implements Serializable {
     private static final long serialVersionUID = 6665887883761953554L;
     /**
-     * The cache name
-     */
-    private String cacheName;
-    /**
      * The cache key
      */
     private Object key;
@@ -44,13 +40,17 @@ public class CacheMessage implements Serializable {
      */
     private Object value;
     /**
-     * The cache instance id
-     */
-    private String instanceId;
-    /**
      * The message id
      */
     private String msgId;
+    /**
+     * The cache name
+     */
+    private String cacheName;
+    /**
+     * The cache instance id
+     */
+    private String instanceId;
     /**
      * The message command
      */

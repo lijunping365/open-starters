@@ -47,9 +47,6 @@ public class DefaultCacheExecutor extends AbstractCacheExecutor {
                 case INVALIDATE:
                     cache.evict(key);
                     break;
-                case PRELOAD:
-                    cache.preloadCache();
-                    break;
                 case UPDATE:
                     cache.put(key, value);
                     break;

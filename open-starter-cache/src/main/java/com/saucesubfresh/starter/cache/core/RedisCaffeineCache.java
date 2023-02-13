@@ -25,6 +25,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -59,12 +60,18 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     }
 
     @Override
-    public void preloadCache() {
-        Map<Object, Object> entries = redisTemplate.opsForHash().entries(cacheHashKey);
+    public void preloadCache(int count) {
+        ScanOptions scanOptions = ScanOptions.scanOptions().count(count).build();
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(cacheHashKey, scanOptions);
+        Map<Object, Object> entries = new HashMap<>();
+        while(cursor.hasNext()){
+            entries.put(cursor.next().getKey(), cursor.next().getValue());
+        }
         if (CollectionUtils.isEmpty(entries)){
             return;
         }
         entries.forEach(cache::put);
+        cursor.close();
     }
 
     @Override

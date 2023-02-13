@@ -188,3 +188,5 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 5. 增加统计 cacheKey 数量方法
 
 6. 增加查询 cacheKeySet 方法
+
+7. 优化 preloadCache 方法

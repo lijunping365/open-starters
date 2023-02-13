@@ -26,8 +26,9 @@ public interface ClusterCache{
 
     /**
      * 二级缓存数据加载到一级缓存
+     * @param count - size of keys batch
      */
-    void preloadCache();
+    void preloadCache(int count);
 
     /**
      * 获取统计数据
@@ -66,6 +67,8 @@ public interface ClusterCache{
 
     /**
      * 获取缓存 key set
+     * @param pattern - key pattern
+     * @param count - size of keys batch
      */
     Set<Object> getCacheKeySet(String pattern, int count);
 }
