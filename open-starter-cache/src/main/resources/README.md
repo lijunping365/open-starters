@@ -77,12 +77,10 @@ com:
       enable-metrics-report: true
       # 自动上报周期，默认 60，单位秒
       metrics-report-cycle: 60
-      # 键值输入的最大空闲时间(毫秒)。
-      max-idle-time: 720000
       # 缓存容量（缓存数量最大值）
       max-size: 100
-      # 键值条目的存活时间，以毫秒为单位。
-      ttl: 30000
+      # 键值条目的存活时间，以秒为单位，默认 30 min。
+      ttl: 1800
 ```
 
 ### 3. OpenCacheable
@@ -171,11 +169,17 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 }
 ```
 
-## 1.0.2 版本更新说明
+## 注意事项
+
+1. 如果并发量比较高，本地缓存同步消息组件尽量不要使用 redis 或 redisson ，防止加大 redis io
+
+## 版本更新说明
+
+### 1.0.2 版本更新说明
 
 1.0.2 是该组件的第一个版本，包含该组件的全部功能。
 
-## 1.0.3 版本更新说明
+### 1.0.3 版本更新说明
 
 1. 修复了重复广播同步消息的 bug。
 
@@ -190,3 +194,5 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 6. 增加查询 cacheKeySet 方法
 
 7. 优化 preloadCache 方法
+
+8. 修复 ttl 时间单位不一致问题 issues#27
