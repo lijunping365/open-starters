@@ -65,7 +65,6 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
 
     private CacheConfig createDefault(){
         return CacheConfig.builder()
-                .maxIdleTime(properties.getMaxIdleTime())
                 .maxSize(properties.getMaxSize())
                 .ttl(properties.getTtl())
                 .build();
