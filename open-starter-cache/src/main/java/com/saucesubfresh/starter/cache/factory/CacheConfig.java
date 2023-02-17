@@ -39,7 +39,7 @@ import java.util.Map;
 public class CacheConfig {
 
     /**
-     * 键值条目的存活时间，以毫秒为单位。
+     * 键值条目的存活时间，以秒为单位。
      */
     private long ttl;
 
@@ -47,11 +47,6 @@ public class CacheConfig {
      * 缓存容量
      */
     private int maxSize;
-
-    /**
-     * 键值输入的最大空闲时间(毫秒)。
-     */
-    private long maxIdleTime;
 
     /**
      * Read config objects stored in JSON format from <code>String</code>

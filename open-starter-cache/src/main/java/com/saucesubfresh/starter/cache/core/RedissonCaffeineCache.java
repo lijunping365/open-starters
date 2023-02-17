@@ -23,6 +23,7 @@ import org.redisson.api.RLocalCachedMap;
 import org.redisson.api.RedissonClient;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lijunping
@@ -44,8 +45,7 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
         options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);
         options.cacheSize(cacheConfig.getMaxSize());
-        options.timeToLive(cacheConfig.getTtl());
-        options.maxIdle(cacheConfig.getMaxIdleTime());
+        options.timeToLive(cacheConfig.getTtl(), TimeUnit.SECONDS);
         this.map = redissonClient.getLocalCachedMap(cacheHashKey, options);
     }
 
