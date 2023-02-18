@@ -9,8 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>open-starter-limiter</artifactId>
+    <artifactId>open-starter-distributed-limiter</artifactId>
     <description>简单的分布式限流插件</description>
+    <version>1.0.2</version>
 
     <properties>
         <redisson.version>3.17.4</redisson.version>
