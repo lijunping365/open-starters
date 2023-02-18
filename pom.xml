@@ -21,11 +21,11 @@
         <module>open-starter-http</module>
         <module>open-starter-executor</module>
         <module>open-starter-alarm</module>
-        <module>open-starter-lock</module>
         <module>open-starter-cache</module>
         <module>open-starter-crawler</module>
         <module>open-starter-limiter</module>
         <module>open-starter-job-register</module>
+        <module>open-starter-distributed-lock</module>
     </modules>
 
     <licenses>
