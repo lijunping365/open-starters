@@ -40,7 +40,7 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
                                  String namespace,
                                  CacheConfig cacheConfig,
                                  RedissonClient redissonClient) {
-        super(new ConcurrentStatsCounter());
+        super(cacheConfig, new ConcurrentStatsCounter());
         String cacheHashKey = super.generate(namespace, cacheName);
         LocalCachedMapOptions<Object, Object> options = LocalCachedMapOptions.defaults();
         options.cacheProvider(LocalCachedMapOptions.CacheProvider.CAFFEINE);

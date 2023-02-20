@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.cache.core;
 
 import com.saucesubfresh.starter.cache.domain.NullValue;
+import com.saucesubfresh.starter.cache.factory.CacheConfig;
 import com.saucesubfresh.starter.cache.stats.CacheStats;
 import com.saucesubfresh.starter.cache.stats.StatsCounter;
 
@@ -25,9 +26,11 @@ import com.saucesubfresh.starter.cache.stats.StatsCounter;
 public abstract class AbstractClusterCache implements ClusterCache {
 
     private static final String SAM = ":";
+    private final CacheConfig cacheConfig;
     private final StatsCounter statsCounter;
 
-    public AbstractClusterCache(StatsCounter statsCounter) {
+    public AbstractClusterCache(CacheConfig cacheConfig, StatsCounter statsCounter) {
+        this.cacheConfig = cacheConfig;
         this.statsCounter = statsCounter;
     }
 
