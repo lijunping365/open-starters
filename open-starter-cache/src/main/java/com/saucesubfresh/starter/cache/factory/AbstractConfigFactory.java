@@ -38,7 +38,7 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
 
     protected final CacheProperties properties;
 
-    private final ConcurrentMap<String, CacheConfig> configMap = new ConcurrentHashMap<>(16);
+    protected final ConcurrentMap<String, CacheConfig> configMap = new ConcurrentHashMap<>(16);
 
     public AbstractConfigFactory(CacheProperties properties) {
         this.properties = properties;
@@ -56,6 +56,11 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
     }
 
     @Override
+    public Map<String, CacheConfig> getCacheConfig() {
+        return configMap;
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, ? extends CacheConfig> config = this.loadConfig();
         if (!CollectionUtils.isEmpty(config)){
@@ -63,7 +68,7 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
         }
     }
 
-    private CacheConfig createDefault(){
+    protected CacheConfig createDefault(){
         return CacheConfig.builder()
                 .maxSize(properties.getMaxSize())
                 .ttl(properties.getTtl())

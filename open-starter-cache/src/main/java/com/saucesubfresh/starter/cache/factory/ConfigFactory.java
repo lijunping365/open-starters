@@ -15,10 +15,23 @@
  */
 package com.saucesubfresh.starter.cache.factory;
 
+import java.util.Map;
+
 /**
  * @author lijunping
  */
 public interface ConfigFactory {
 
+    /**
+     * 根据 cacheName 获取 CacheConfig
+     * @param cacheName
+     * @return
+     */
     CacheConfig create(String cacheName);
+
+    /**
+     * 获取所有 cacheName 的 CacheConfig
+     * @return
+     */
+    Map<String, CacheConfig> getCacheConfig();
 }
