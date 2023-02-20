@@ -63,6 +63,7 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
 
     protected CacheConfig createDefault(){
         return CacheConfig.builder()
+                .allowNullValues(properties.isAllowNullValues())
                 .maxSize(properties.getMaxSize())
                 .ttl(properties.getTtl())
                 .build();

@@ -47,7 +47,10 @@ public class CacheConfig {
      * 缓存容量
      */
     private int maxSize;
-
+    /**
+     * 是否存储空值
+     */
+    private boolean allowNullValues;
     /**
      * Read config objects stored in JSON format from <code>String</code>
      *
