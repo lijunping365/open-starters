@@ -21,7 +21,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -46,13 +45,7 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
 
     @Override
     public CacheConfig create(String cacheName) {
-        CacheConfig cacheConfig = configMap.get(cacheName);
-        if (Objects.nonNull(cacheConfig)){
-            return cacheConfig;
-        }
-        CacheConfig defaultConfig = createDefault();
-        configMap.put(cacheName, defaultConfig);
-        return defaultConfig;
+        return configMap.computeIfAbsent(cacheName, (t)-> createDefault());
     }
 
     @Override
