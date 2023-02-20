@@ -45,9 +45,6 @@ public abstract class AbstractClusterCache implements ClusterCache {
      * </p>
      */
     protected Object toValueWrapper(Object value) {
-        if (value == null) {
-            return null;
-        }
         if (value.getClass().getName().equals(NullValue.class.getName())) {
             return NullValue.INSTANCE;
         }
@@ -60,7 +57,7 @@ public abstract class AbstractClusterCache implements ClusterCache {
      * </p>
      */
     protected Object toStoreValue(Object userValue) {
-        if (userValue == null) {
+        if (cacheConfig.isAllowNullValues() && userValue == null) {
             return NullValue.INSTANCE;
         }
         return userValue;
