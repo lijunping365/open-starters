@@ -37,7 +37,7 @@ public class DefaultCacheProcessor extends AbstractCacheProcessor {
     }
 
     @Override
-    public Object handlerCacheable(Supplier<Object> callback, String cacheName, String cacheKey) throws Throwable {
+    public Object handlerCacheable(Supplier<Object> callback, String cacheName, String cacheKey, Class<?> returnType) throws Throwable {
         Object value;
         final ClusterCache cache = super.getCache(cacheName);
         value = cache.get(cacheKey);

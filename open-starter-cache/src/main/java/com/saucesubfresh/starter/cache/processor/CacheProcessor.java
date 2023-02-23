@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  */
 public interface CacheProcessor {
 
-    Object handlerCacheable(Supplier<Object> callback, String cacheName, String cacheKey) throws Throwable;
+    Object handlerCacheable(Supplier<Object> callback, String cacheName, String cacheKey, Class<?> returnType) throws Throwable;
 
     void handlerCacheEvict(String cacheName, String cacheKey) throws Throwable;
 
