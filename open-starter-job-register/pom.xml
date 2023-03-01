@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>open-starter-job-register</artifactId>
+    <description>用于扫描 Open-Job 处理器</description>
+    <version>1.0.3</version>
 
     <dependencies>
         <dependency>

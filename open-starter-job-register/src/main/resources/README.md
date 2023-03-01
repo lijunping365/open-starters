@@ -70,3 +70,7 @@ public class OpenJobHandlerMethodOne{
 ### 1.0.2 
 
 第一个版本
+
+### 1.0.3
+
+执行接口增加 jobId 参数，script 参数

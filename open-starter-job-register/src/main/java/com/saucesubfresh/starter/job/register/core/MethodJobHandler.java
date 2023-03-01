@@ -15,6 +15,8 @@
  */
 package com.saucesubfresh.starter.job.register.core;
 
+import com.saucesubfresh.starter.job.register.param.JobParam;
+
 import java.lang.reflect.Method;
 
 /**
@@ -31,7 +33,7 @@ public class MethodJobHandler implements OpenJobHandler{
     }
 
     @Override
-    public void handler(String params) throws Exception{
+    public void handler(JobParam params) throws Exception{
         Class<?>[] paramTypes = method.getParameterTypes();
         if (paramTypes.length > 0) {
             method.invoke(target, params);

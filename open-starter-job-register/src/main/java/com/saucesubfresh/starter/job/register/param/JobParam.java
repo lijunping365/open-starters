@@ -13,18 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.job.register.core;
+package com.saucesubfresh.starter.job.register.param;
 
-import com.saucesubfresh.starter.job.register.param.JobParam;
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
- * @author lijunping on 2022/1/19
+ * @author lijunping
  */
-public interface OpenJobHandler {
+@Data
+@Builder
+@Accessors(chain = true)
+public class JobParam implements Serializable {
+    private static final long serialVersionUID = 1135284528376646225L;
     /**
-     * Execute jobHandler
-     *
-     * @param params params
+     * The Id of job
      */
-    void handler(JobParam params) throws Exception;
+    private Long jobId;
+    /**
+     * The params of job
+     */
+    private String params;
+    /**
+     * The script of job
+     */
+    private String script;
 }
