@@ -18,7 +18,7 @@ Open-Job 之 jobHandler 扫描注册插件
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-job-register</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ Open-Job 之 jobHandler 扫描注册插件
 public class OpenJobHandlerOne implements OpenJobHandler {
 
     @Override
-    public void handler(String params) {
+    public void handler(JobParam jobParam) {
         log.info("JobHandlerOne 处理任务");
     }
 }
@@ -54,13 +54,13 @@ public class OpenJobHandlerOne implements OpenJobHandler {
 public class OpenJobHandlerMethodOne{
 
     @JobHandler(name = "job-method-one1")
-    public void handlerOne1(String params) {
-        log.info("JobHandlerOne 处理任务, 任务参数 {}", params);
+    public void handlerOne1(JobParam jobParam) {
+        log.info("JobHandlerOne 处理任务, 任务参数 {}", jobParam.getParams());
     }
 
     @JobHandler(name = "job-method-one2")
-    public void handlerOne2(String params) {
-        log.info("JobHandlerOne 处理任务, 任务参数 {}", params);
+    public void handlerOne2(JobParam jobParam) {
+        log.info("JobHandlerOne 处理任务, 任务参数 {}", jobParam.getParams());
     }
 }
 ```
