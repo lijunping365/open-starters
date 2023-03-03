@@ -15,8 +15,10 @@
  */
 package com.saucesubfresh.starter.job.register.param;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -27,6 +29,8 @@ import java.io.Serializable;
 @Data
 @Builder
 @Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobParam implements Serializable {
     private static final long serialVersionUID = 1135284528376646225L;
     /**
@@ -41,4 +45,8 @@ public class JobParam implements Serializable {
      * The script of job
      */
     private String script;
+    /**
+     * The update time of script
+     */
+    private String scriptUpdateTime;
 }
