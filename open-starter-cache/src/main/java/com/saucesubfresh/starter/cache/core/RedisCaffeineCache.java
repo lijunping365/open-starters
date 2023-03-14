@@ -50,7 +50,7 @@ public class RedisCaffeineCache extends AbstractClusterCache {
                               String namespace,
                               CacheConfig cacheConfig,
                               RedisTemplate<String, Object> redisTemplate) {
-        super(new ConcurrentStatsCounter());
+        super(cacheConfig, new ConcurrentStatsCounter());
         this.cacheHashKey = super.generate(namespace, cacheName);
         this.redisTemplate = redisTemplate;
         this.cache = Caffeine.newBuilder()

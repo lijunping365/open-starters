@@ -21,7 +21,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -38,7 +37,7 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
 
     protected final CacheProperties properties;
 
-    private final ConcurrentMap<String, CacheConfig> configMap = new ConcurrentHashMap<>(16);
+    protected final ConcurrentMap<String, CacheConfig> configMap = new ConcurrentHashMap<>(16);
 
     public AbstractConfigFactory(CacheProperties properties) {
         this.properties = properties;
@@ -46,13 +45,12 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
 
     @Override
     public CacheConfig create(String cacheName) {
-        CacheConfig cacheConfig = configMap.get(cacheName);
-        if (Objects.nonNull(cacheConfig)){
-            return cacheConfig;
-        }
-        CacheConfig defaultConfig = createDefault();
-        configMap.put(cacheName, defaultConfig);
-        return defaultConfig;
+        return configMap.computeIfAbsent(cacheName, (t)-> createDefault());
+    }
+
+    @Override
+    public Map<String, CacheConfig> getCacheConfig() {
+        return configMap;
     }
 
     @Override
@@ -63,8 +61,9 @@ public abstract class AbstractConfigFactory implements ConfigFactory, Initializi
         }
     }
 
-    private CacheConfig createDefault(){
+    protected CacheConfig createDefault(){
         return CacheConfig.builder()
+                .allowNullValues(properties.isAllowNullValues())
                 .maxSize(properties.getMaxSize())
                 .ttl(properties.getTtl())
                 .build();

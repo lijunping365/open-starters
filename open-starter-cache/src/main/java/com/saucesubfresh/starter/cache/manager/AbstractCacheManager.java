@@ -40,15 +40,10 @@ public abstract class AbstractCacheManager implements CacheManager{
 
     @Override
     public ClusterCache getCache(String cacheName) {
-        ClusterCache cache = cacheMap.get(cacheName);
-        if (Objects.nonNull(cache)){
-            return cache;
-        }
-
-        CacheConfig cacheConfig = configFactory.create(cacheName);
-        cache = this.createCache(cacheName, cacheConfig);
-        ClusterCache oldCache = cacheMap.putIfAbsent(cacheName, cache);
-        return oldCache == null ? cache : oldCache;
+        return cacheMap.computeIfAbsent(cacheName, (t)->{
+            CacheConfig cacheConfig = configFactory.create(cacheName);
+            return this.createCache(cacheName, cacheConfig);
+        });
     }
 
     @Override

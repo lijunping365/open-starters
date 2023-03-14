@@ -37,6 +37,10 @@ public class CacheProperties {
      */
     private long metricsReportCycle = 60;
     /**
+     * 是否存储空值，默认为 true
+     */
+    private boolean allowNullValues = true;
+    /**
      * 是否开启自动缓存指标信息上报
      */
     private boolean enableMetricsReport = false;

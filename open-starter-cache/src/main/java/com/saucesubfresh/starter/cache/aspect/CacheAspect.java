@@ -61,7 +61,7 @@ public class CacheAspect {
         OpenCacheable openCacheable = method.getAnnotation(OpenCacheable.class);
         final String cacheName = openCacheable.cacheName();
         String cacheKey = keyGenerator.generate(openCacheable.key(), method, joinPoint.getArgs());
-        return cacheProcessor.handlerCacheable(()-> proceed(joinPoint), cacheName, cacheKey);
+        return cacheProcessor.handlerCacheable(()-> proceed(joinPoint), cacheName, cacheKey, method.getReturnType());
     }
 
     @Around("doCacheEvict()")
