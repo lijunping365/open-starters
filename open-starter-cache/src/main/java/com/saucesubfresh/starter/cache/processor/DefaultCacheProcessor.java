@@ -45,13 +45,16 @@ public class DefaultCacheProcessor extends AbstractCacheProcessor {
             return super.fromStoreValue(value);
         }
         value = callback.get();
-        cache.put(cacheKey, value);
+        Object putValue = cache.put(cacheKey, value);
+        if (Objects.isNull(putValue)){
+            return value;
+        }
 
         CacheMessage cacheMessage = CacheMessage.builder()
                 .cacheName(cacheName)
                 .command(CacheCommand.UPDATE)
                 .key(cacheKey)
-                .value(value)
+                .value(putValue)
                 .build();
         publish(cacheMessage);
         return value;
@@ -85,13 +88,15 @@ public class DefaultCacheProcessor extends AbstractCacheProcessor {
     @Override
     public void handlerCachePut(String cacheName, String cacheKey, Object cacheValue) throws Throwable {
         final ClusterCache cache = super.getCache(cacheName);
-        cache.put(cacheKey, cacheValue);
-
+        Object putValue = cache.put(cacheKey, cacheValue);
+        if (Objects.isNull(putValue)){
+            return;
+        }
         CacheMessage cacheMessage = CacheMessage.builder()
                 .cacheName(cacheName)
                 .command(CacheCommand.UPDATE)
                 .key(cacheKey)
-                .value(cacheValue)
+                .value(putValue)
                 .build();
         publish(cacheMessage);
     }

@@ -47,7 +47,7 @@ public interface ClusterCache{
      * @param key
      * @param value
      */
-    void put(Object key, Object value);
+    Object put(Object key, Object value);
 
     /**
      * 根据 key 清除
