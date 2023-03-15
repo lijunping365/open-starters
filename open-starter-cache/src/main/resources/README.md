@@ -57,7 +57,7 @@ redis 压力也很大， redis 也快扛不住了，我们为了减轻 redis 的
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-cache</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
@@ -216,3 +216,9 @@ public class RocketMqCacheMessageListener extends AbstractCacheMessageListener {
 7. 优化 preloadCache 方法
 
 8. 修复 ttl 时间单位不一致问题 issues#27
+
+### 1.0.4 版本更新说明
+
+1. 缓存空值支持配置
+
+2. 缓存配置可查询
