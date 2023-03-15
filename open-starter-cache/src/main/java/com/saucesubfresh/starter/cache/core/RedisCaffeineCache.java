@@ -25,10 +25,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -91,11 +88,14 @@ public class RedisCaffeineCache extends AbstractClusterCache {
     }
 
     @Override
-    public void put(Object key, Object value) {
+    public Object put(Object key, Object value) {
         value = toStoreValue(value);
-        redisTemplate.opsForHash().put(cacheHashKey, key, value);
-        cache.put(key, value);
-        this.afterPut();
+        if (Objects.nonNull(value)){
+            redisTemplate.opsForHash().put(cacheHashKey, key, value);
+            cache.put(key, value);
+            this.afterPut();
+        }
+        return value;
     }
 
     @Override

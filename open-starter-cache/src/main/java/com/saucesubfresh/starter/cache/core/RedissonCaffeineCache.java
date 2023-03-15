@@ -22,6 +22,7 @@ import org.redisson.api.LocalCachedMapOptions;
 import org.redisson.api.RLocalCachedMap;
 import org.redisson.api.RedissonClient;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -63,10 +64,13 @@ public class RedissonCaffeineCache extends AbstractClusterCache{
     }
 
     @Override
-    public void put(Object key, Object value) {
+    public Object put(Object key, Object value) {
         value = toStoreValue(value);
-        map.fastPut(key, value);
-        this.afterPut();
+        if (Objects.nonNull(value)){
+            map.fastPut(key, value);
+            this.afterPut();
+        }
+        return value;
     }
 
     @Override
