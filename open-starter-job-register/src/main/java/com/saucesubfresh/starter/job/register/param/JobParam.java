@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author lijunping
@@ -46,11 +47,11 @@ public class JobParam implements Serializable {
      */
     private String script;
     /**
-     * 任务分片数量
-     */
-    private Long shardingNumber;
-    /**
      * The update time of script
      */
     private String scriptUpdateTime;
+    /**
+     * 任务分片参数
+     */
+    private List<String> shardingParams;
 }
