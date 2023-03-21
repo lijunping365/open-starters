@@ -51,7 +51,7 @@ public class JobParam implements Serializable {
      */
     private String scriptUpdateTime;
     /**
-     * 任务分片参数
+     * 任务分片节点列表
      */
-    private List<String> shardingParams;
+    private List<String> shardingNodes;
 }
