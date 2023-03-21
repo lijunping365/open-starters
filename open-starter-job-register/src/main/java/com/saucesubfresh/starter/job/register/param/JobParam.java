@@ -46,6 +46,10 @@ public class JobParam implements Serializable {
      */
     private String script;
     /**
+     * 任务分片数量
+     */
+    private Long shardingNumber;
+    /**
      * The update time of script
      */
     private String scriptUpdateTime;
