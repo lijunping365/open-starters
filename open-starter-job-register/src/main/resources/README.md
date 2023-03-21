@@ -74,3 +74,7 @@ public class OpenJobHandlerMethodOne{
 ### 1.0.3
 
 执行接口增加 jobId 参数，script 参数
+
+### 1.0.4
+
+执行接口增加分片参数
