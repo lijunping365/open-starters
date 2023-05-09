@@ -2,6 +2,7 @@
 
 1. 钉钉机器人报警
 2. 邮件报警
+3. 企业微信报警
 
 # 注意
 
@@ -28,7 +29,7 @@ public class DingtalkTest {
     public static void main(String[] args) {
         // 接收者相关
         DingtalkMessageRequest.AtVO atVo = DingtalkMessageRequest.AtVO.builder().build();
-        atVo.setAtMobiles(Collections.singletonList("18242076871"));
+        atVo.setAtMobiles(Collections.singletonList("182****6871"));
 
         // 消息内容
         DingtalkMessageRequest.TextVO textVO = DingtalkMessageRequest.TextVO.builder().content(contentModel.getContent()).build();
@@ -54,3 +55,17 @@ public class DingtalkTest {
     }
 }
 ```
+
+## 版本更新说明
+
+### 1.0.2
+
+1. 集成了钉钉机器人报警
+
+2. 集成了邮件报警
+
+### 1.0.3
+
+1. 集成了企业机器人报警
+
+2. 优化报警配置类

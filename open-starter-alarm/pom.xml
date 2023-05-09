@@ -11,6 +11,7 @@
 
     <artifactId>open-starter-alarm</artifactId>
     <description>集成各种报警</description>
+    <version>1.0.3</version>
 
     <dependencies>
         <!-- mail-starter -->
