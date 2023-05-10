@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 企业微信自定义机器人报警入参
+ * 飞书自定义机器人报警入参
  * @author lijunping
  */
 @Data
