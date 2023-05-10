@@ -21,39 +21,112 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 spring.mail.properties.mail.smtp.starttls.required=true
 spring.mail.properties.mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 ```
+## 示例
 
-dingtalk
+### 钉钉自定义机器人
 
-@指定的人
+- @指定的人
+
 ```java
-public class DingtalkTest {
+public class DingDingTest {
 
     public static void main(String[] args) {
         // 接收者相关
-        DingtalkMessageRequest.AtVO atVo = DingtalkMessageRequest.AtVO.builder().build();
+        DingDingRobotAlarmRequest.AtVO atVo = DingDingRobotAlarmRequest.AtVO.builder().build();
         atVo.setAtMobiles(Collections.singletonList("182****6871"));
-
         // 消息内容
-        DingtalkMessageRequest.TextVO textVO = DingtalkMessageRequest.TextVO.builder().content(contentModel.getContent()).build();
-
-        DingtalkMessageRequest.builder().at(atVo).msgtype("text").text(textVO).build();
+        DingDingRobotAlarmRequest.TextVO textVO = DingDingRobotAlarmRequest.TextVO.builder().content(contentModel.getContent()).build();
+        DingDingRobotAlarmRequest request = DingDingRobotAlarmRequest.builder().at(atVo).msgtype("text").text(textVO).build();
+        dingDingRobotAlarmExecutor.doAlarm(request);
     }
 }
 ```
 
-@所有人
+- @所有人
+
 ```java
-public class DingtalkTest {
+public class DingDingTest {
 
     public static void main(String[] args) {
         // 接收者相关
-        DingtalkMessageRequest.AtVO atVo = DingtalkMessageRequest.AtVO.builder().build();
+        DingDingRobotAlarmRequest.AtVO atVo = DingDingRobotAlarmRequest.AtVO.builder().build();
         atVo.setIsAtAll(true);
-
         // 消息内容
-        DingtalkMessageRequest.TextVO textVO = DingtalkMessageRequest.TextVO.builder().content(contentModel.getContent()).build();
+        DingDingRobotAlarmRequest.TextVO textVO = DingDingRobotAlarmRequest.TextVO.builder().content(contentModel.getContent()).build();
+        DingDingRobotAlarmRequest request = DingDingRobotAlarmRequest.builder().at(atVo).msgtype("text").text(textVO).build();
+        dingDingRobotAlarmExecutor.doAlarm(request);
+    }
+}
+```
 
-        DingtalkMessageRequest.builder().at(atVo).msgtype("text").text(textVO).build();
+### 飞书自定义机器人
+
+```java
+public class FeiShuTest {
+
+    public static void main(String[] args) {
+        FeiShuRobotAlarmRequest request = new FeiShuRobotAlarmRequest();
+        request.setMsgType("text");
+        FeiShuRobotAlarmRequest.ContentDTO contentDTO = new FeiShuRobotAlarmRequest.ContentDTO();
+        contentDTO.setText("test message");
+        request.setContent(contentDTO);
+        feiShuRobotAlarmExecutor.doAlarm(request);
+    }
+}
+```
+
+### 企业微信自定义机器人
+
+- 群发
+
+```java
+public class WeChatTest {
+
+    public static void main(String[] args) {
+        WeChatRobotAlarmRequest request = new WeChatRobotAlarmRequest();
+        request.setMsgType("text");
+        WeChatRobotAlarmRequest.TextDTO textDTO = new WeChatRobotAlarmRequest.TextDTO();
+        textDTO.setContent("test-message");
+        request.setText(textDTO);
+        weChatRobotAlarmExecutor.doAlarm(request);
+    }
+}
+```
+
+- @指定的人
+
+```java
+public class WeChatTest {
+
+    public static void main(String[] args) {
+        WeChatRobotAlarmRequest request = new WeChatRobotAlarmRequest();
+        request.setMsgType("text");
+        WeChatRobotAlarmRequest.TextDTO textDTO = new WeChatRobotAlarmRequest.TextDTO();
+        List<String> mentionedList = new ArrayList<>();
+        mentionedList.add("30123132");
+        textDTO.setContent("test-message");
+        textDTO.setMentionedList(mentionedList);
+        request.setText(textDTO);
+        weChatRobotAlarmExecutor.doAlarm(request);
+    }
+}
+```
+
+- @所有人
+
+```java
+public class WeChatTest {
+
+    public static void main(String[] args) {
+        WeChatRobotAlarmRequest request = new WeChatRobotAlarmRequest();
+        request.setMsgType("text");
+        WeChatRobotAlarmRequest.TextDTO textDTO = new WeChatRobotAlarmRequest.TextDTO();
+        List<String> mentionedList = new ArrayList<>();
+        mentionedList.add("@all");
+        textDTO.setContent("test-message");
+        textDTO.setMentionedList(mentionedList);
+        request.setText(textDTO);
+        weChatRobotAlarmExecutor.doAlarm(request);
     }
 }
 ```
