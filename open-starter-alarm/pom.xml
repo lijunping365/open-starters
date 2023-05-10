@@ -13,6 +13,10 @@
     <description>集成各种报警</description>
     <version>1.0.3</version>
 
+    <properties>
+        <weixin-java>4.3.0</weixin-java>
+    </properties>
+
     <dependencies>
         <!-- mail-starter -->
         <dependency>
@@ -31,6 +35,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!--企业微信发送消息-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-cp</artifactId>
+            <version>${weixin-java}</version>
         </dependency>
 
         <dependency>

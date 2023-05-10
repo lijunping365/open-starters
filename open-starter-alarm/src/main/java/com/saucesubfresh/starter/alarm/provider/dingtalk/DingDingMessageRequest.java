@@ -24,13 +24,14 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ * 钉钉自定义机器人报警入参
  * @author lijunping
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DingtalkMessageRequest extends BaseAlarmMessage {
+public class DingDingMessageRequest extends BaseAlarmMessage {
 
     /**
      * at

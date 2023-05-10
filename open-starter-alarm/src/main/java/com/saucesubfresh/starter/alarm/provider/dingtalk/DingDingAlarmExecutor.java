@@ -18,6 +18,7 @@ package com.saucesubfresh.starter.alarm.provider.dingtalk;
 import com.saucesubfresh.starter.alarm.AbstractAlarmExecutor;
 import com.saucesubfresh.starter.alarm.exception.AlarmException;
 import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
+import com.saucesubfresh.starter.alarm.properties.DingDingAlarmProperties;
 import com.saucesubfresh.starter.alarm.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,21 +35,22 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 /**
+ * 钉钉机器人报警
  * @author lijunping
  */
 @Slf4j
-public class DingtalkAlarmExecutor extends AbstractAlarmExecutor<DingtalkMessageRequest> {
+public class DingDingAlarmExecutor extends AbstractAlarmExecutor<DingDingMessageRequest> {
     private static final String SIGN_METHOD = "HmacSHA256";
     private static final String RESPONSE_MSG = "errmsg";
     private static final String SUCCESS_SIGN = "ok";
-    private final AlarmProperties alarmProperties;
+    private final DingDingAlarmProperties alarmProperties;
 
-    public DingtalkAlarmExecutor(AlarmProperties alarmProperties) {
-        this.alarmProperties = alarmProperties;
+    public DingDingAlarmExecutor(AlarmProperties alarmProperties) {
+        this.alarmProperties = alarmProperties.getDingDing();
     }
 
     @Override
-    public void doAlarm(DingtalkMessageRequest message) throws AlarmException {
+    public void doAlarm(DingDingMessageRequest message) throws AlarmException {
         String errMsg;
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
             String url = getSignUrl();

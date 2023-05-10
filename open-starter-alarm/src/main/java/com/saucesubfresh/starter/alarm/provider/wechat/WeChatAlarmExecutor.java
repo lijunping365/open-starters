@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.alarm.properties;
+package com.saucesubfresh.starter.alarm.provider.wechat;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import com.saucesubfresh.starter.alarm.AbstractAlarmExecutor;
+import com.saucesubfresh.starter.alarm.exception.AlarmException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 企业微信自定义机器人报警
  * @author lijunping
  */
-@Data
-@ConfigurationProperties(prefix = "com.saucesubfresh.alarm")
-public class AlarmProperties {
+@Slf4j
+public class WeChatAlarmExecutor extends AbstractAlarmExecutor<WeChatMessageRequest> {
+    @Override
+    public void doAlarm(WeChatMessageRequest message) throws AlarmException {
 
-    /**封装钉钉报警相关的属性*/
-    @NestedConfigurationProperty
-    private DingDingAlarmProperties dingDing = new DingDingAlarmProperties();
-
-    /**封装企业微信报警相关的属性*/
-    @NestedConfigurationProperty
-    private WeChatAlarmProperties weChat = new WeChatAlarmProperties();
+    }
 }

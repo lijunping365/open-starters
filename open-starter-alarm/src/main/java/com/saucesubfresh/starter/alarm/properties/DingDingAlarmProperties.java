@@ -16,21 +16,20 @@
 package com.saucesubfresh.starter.alarm.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author lijunping
  */
 @Data
-@ConfigurationProperties(prefix = "com.saucesubfresh.alarm")
-public class AlarmProperties {
+public class DingDingAlarmProperties {
 
-    /**封装钉钉报警相关的属性*/
-    @NestedConfigurationProperty
-    private DingDingAlarmProperties dingDing = new DingDingAlarmProperties();
+    /**
+     * 钉钉机器人密钥
+     */
+    private String secret;
 
-    /**封装企业微信报警相关的属性*/
-    @NestedConfigurationProperty
-    private WeChatAlarmProperties weChat = new WeChatAlarmProperties();
+    /**
+     * 自定义群机器人中的 webhook
+     */
+    private String webhook;
 }

@@ -15,22 +15,8 @@
  */
 package com.saucesubfresh.starter.alarm.properties;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
 /**
  * @author lijunping
  */
-@Data
-@ConfigurationProperties(prefix = "com.saucesubfresh.alarm")
-public class AlarmProperties {
-
-    /**封装钉钉报警相关的属性*/
-    @NestedConfigurationProperty
-    private DingDingAlarmProperties dingDing = new DingDingAlarmProperties();
-
-    /**封装企业微信报警相关的属性*/
-    @NestedConfigurationProperty
-    private WeChatAlarmProperties weChat = new WeChatAlarmProperties();
+public class WeChatAlarmProperties {
 }
