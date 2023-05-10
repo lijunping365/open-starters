@@ -30,7 +30,7 @@ import java.util.Objects;
 
 
 /**
- * 企业微信自定义机器人报警
+ * 飞书自定义机器人报警
  * @author lijunping
  */
 @Slf4j

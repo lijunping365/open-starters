@@ -7,12 +7,17 @@
     },
     {
       "name": "com.saucesubfresh.alarm.ding-ding",
-      "type": "com.saucesubfresh.starter.alarm.properties.DingDingAlarmProperties",
+      "type": "com.saucesubfresh.starter.alarm.properties.DingDingRobotAlarmProperties",
+      "sourceType": "com.saucesubfresh.starter.alarm.properties.AlarmProperties"
+    },
+    {
+      "name": "com.saucesubfresh.alarm.fei-shu",
+      "type": "com.saucesubfresh.starter.alarm.properties.FeiShuRobotAlarmProperties",
       "sourceType": "com.saucesubfresh.starter.alarm.properties.AlarmProperties"
     },
     {
       "name": "com.saucesubfresh.alarm.we-chat",
-      "type": "com.saucesubfresh.starter.alarm.properties.WeChatAlarmProperties",
+      "type": "com.saucesubfresh.starter.alarm.properties.WeChatRobotAlarmProperties",
       "sourceType": "com.saucesubfresh.starter.alarm.properties.AlarmProperties"
     }
   ],
@@ -21,19 +26,25 @@
       "name": "com.saucesubfresh.alarm.ding-ding.secret",
       "type": "java.lang.String",
       "description": "钉钉机器人密钥",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.DingDingAlarmProperties"
+      "sourceType": "com.saucesubfresh.starter.alarm.properties.DingDingRobotAlarmProperties"
     },
     {
       "name": "com.saucesubfresh.alarm.ding-ding.webhook",
       "type": "java.lang.String",
       "description": "自定义群机器人中的 webhook",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.DingDingAlarmProperties"
+      "sourceType": "com.saucesubfresh.starter.alarm.properties.DingDingRobotAlarmProperties"
+    },
+    {
+      "name": "com.saucesubfresh.alarm.fei-shu.webhook",
+      "type": "java.lang.String",
+      "description": "自定义群机器人中的 webhook",
+      "sourceType": "com.saucesubfresh.starter.alarm.properties.FeiShuRobotAlarmProperties"
     },
     {
       "name": "com.saucesubfresh.alarm.we-chat.webhook",
       "type": "java.lang.String",
       "description": "自定义群机器人中的 webhook",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.WeChatAlarmProperties"
+      "sourceType": "com.saucesubfresh.starter.alarm.properties.WeChatRobotAlarmProperties"
     }
   ],
   "hints": []
