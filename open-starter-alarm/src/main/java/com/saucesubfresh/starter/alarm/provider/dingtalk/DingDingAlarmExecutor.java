@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Map;
 
 /**
  * 钉钉机器人报警
@@ -42,7 +43,7 @@ import java.util.Base64;
 public class DingDingAlarmExecutor extends AbstractAlarmExecutor<DingDingMessageRequest> {
     private static final String SIGN_METHOD = "HmacSHA256";
     private static final String RESPONSE_MSG = "errmsg";
-    private static final String SUCCESS_SIGN = "ok";
+    private static final String RESPONSE_CODE = "errcode";
     private final DingDingAlarmProperties alarmProperties;
 
     public DingDingAlarmExecutor(AlarmProperties alarmProperties) {
@@ -52,15 +53,18 @@ public class DingDingAlarmExecutor extends AbstractAlarmExecutor<DingDingMessage
     @Override
     public void doAlarm(DingDingMessageRequest message) throws AlarmException {
         String errMsg;
+        String errCode = "";
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
-            String url = getSignUrl();
+            String url = getSignUrl(message);
             String response = sendAlarmMessage(httpClient, url, JSON.toJSON(message));
-            errMsg = JSON.parseMap(response, String.class, String.class).get(RESPONSE_MSG);
+            Map<String, String> res = JSON.parseMap(response, String.class, String.class);
+            errMsg = res.get(RESPONSE_MSG);
+            errCode = res.get(RESPONSE_CODE);
         } catch (Exception e) {
             errMsg = e.getMessage();
         }
 
-        if (!StringUtils.equals(errMsg, SUCCESS_SIGN)){
+        if (!StringUtils.equals(errCode, "0")){
             throw new AlarmException(errMsg);
         }
     }
@@ -68,10 +72,19 @@ public class DingDingAlarmExecutor extends AbstractAlarmExecutor<DingDingMessage
     /**
      * Sign webhook url using secret and timestamp
      */
-    private String getSignUrl() {
+    private String getSignUrl(DingDingMessageRequest message) {
+        DingDingMessageRequest.ConfigVO config = message.getConfig();
+        String webhook = alarmProperties.getWebhook();
+        if (StringUtils.isNotBlank(config.getWebhook())){
+            webhook = config.getWebhook();
+        }
+        String secret = alarmProperties.getSecret();
+        if (StringUtils.isNotBlank(config.getSecret())){
+            secret = config.getSecret();
+        }
         try {
             Long timestamp = System.currentTimeMillis();
-            return String.format("%s&timestamp=%s&sign=%s", alarmProperties.getWebhook(), timestamp, sign(timestamp, alarmProperties.getSecret()));
+            return String.format("%s&timestamp=%s&sign=%s", webhook, timestamp, sign(timestamp, secret));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {
             throw new RuntimeException(e);
         }

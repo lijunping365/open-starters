@@ -18,6 +18,7 @@ package com.saucesubfresh.starter.alarm.config;
 import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
 import com.saucesubfresh.starter.alarm.provider.dingtalk.DingDingAlarmExecutor;
 import com.saucesubfresh.starter.alarm.provider.email.EmailAlarmExecutor;
+import com.saucesubfresh.starter.alarm.provider.wechat.WeChatAlarmExecutor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -46,5 +47,11 @@ public class AlarmAutoConfiguration {
     @ConditionalOnMissingBean
     public DingDingAlarmExecutor dingDingAlarmExecutor(AlarmProperties alarmProperties){
         return new DingDingAlarmExecutor(alarmProperties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public WeChatAlarmExecutor weChatAlarmExecutor(AlarmProperties alarmProperties){
+        return new WeChatAlarmExecutor(alarmProperties);
     }
 }

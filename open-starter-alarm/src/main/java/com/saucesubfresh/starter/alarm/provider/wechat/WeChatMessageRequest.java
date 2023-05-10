@@ -35,7 +35,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
     /**
      * msgtype
      */
-    private String msgType;
+    private String msgtype;
     /**
      * text
      */
@@ -61,6 +61,11 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
      * templateCard
      */
     private TemplateCardDTO templateCard;
+
+    /**
+     * 配置
+     */
+    private ConfigVO config;
 
     /**
      * TextDTO
@@ -392,5 +397,18 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
              */
             private String pagepath;
         }
+    }
+
+    /**
+     * ConfigVO
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ConfigVO {
+        /**
+         * 自定义群机器人中的 webhook
+         */
+        private String webhook;
     }
 }

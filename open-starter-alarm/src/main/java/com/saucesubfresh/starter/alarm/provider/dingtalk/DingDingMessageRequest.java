@@ -32,7 +32,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DingDingMessageRequest extends BaseAlarmMessage {
-
     /**
      * at
      */
@@ -61,6 +60,10 @@ public class DingDingMessageRequest extends BaseAlarmMessage {
      * msgtype
      */
     private String msgtype;
+    /**
+     * 配置
+     */
+    private ConfigVO config;
 
     /**
      * AtVO
@@ -214,5 +217,23 @@ public class DingDingMessageRequest extends BaseAlarmMessage {
              */
             private String picURL;
         }
+    }
+
+    /**
+     * ConfigVO
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ConfigVO {
+        /**
+         * 钉钉机器人密钥
+         */
+        private String secret;
+
+        /**
+         * 自定义群机器人中的 webhook
+         */
+        private String webhook;
     }
 }

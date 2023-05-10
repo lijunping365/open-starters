@@ -17,7 +17,16 @@ package com.saucesubfresh.starter.alarm.provider.wechat;
 
 import com.saucesubfresh.starter.alarm.AbstractAlarmExecutor;
 import com.saucesubfresh.starter.alarm.exception.AlarmException;
+import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
+import com.saucesubfresh.starter.alarm.properties.WeChatAlarmProperties;
+import com.saucesubfresh.starter.alarm.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
+import java.util.Map;
+
 
 /**
  * 企业微信自定义机器人报警
@@ -25,8 +34,34 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class WeChatAlarmExecutor extends AbstractAlarmExecutor<WeChatMessageRequest> {
+
+    private static final String RESPONSE_MSG = "errmsg";
+    private static final String RESPONSE_CODE = "errcode";
+    private final WeChatAlarmProperties alarmProperties;
+
+    public WeChatAlarmExecutor(AlarmProperties alarmProperties){
+        this.alarmProperties = alarmProperties.getWeChat();
+    }
     @Override
     public void doAlarm(WeChatMessageRequest message) throws AlarmException {
+        String errMsg;
+        String errCode = "";
+        try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
+            String url = alarmProperties.getWebhook();
+            WeChatMessageRequest.ConfigVO config = message.getConfig();
+            if (StringUtils.isNotBlank(config.getWebhook())){
+                url = config.getWebhook();
+            }
+            String response = sendAlarmMessage(httpClient, url, JSON.toJSON(message));
+            Map<String, String> res = JSON.parseMap(response, String.class, String.class);
+            errMsg = res.get(RESPONSE_MSG);
+            errCode = res.get(RESPONSE_CODE);
+        } catch (Exception e) {
+            errMsg = e.getMessage();
+        }
 
+        if (!StringUtils.equals(errCode, "0")){
+            throw new AlarmException(errMsg);
+        }
     }
 }

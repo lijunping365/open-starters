@@ -15,8 +15,15 @@
  */
 package com.saucesubfresh.starter.alarm.properties;
 
+import lombok.Data;
+
 /**
  * @author lijunping
  */
+@Data
 public class WeChatAlarmProperties {
+    /**
+     * 自定义群机器人中的 webhook
+     */
+    private String webhook;
 }
