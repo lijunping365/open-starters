@@ -21,13 +21,7 @@ import lombok.Data;
  * @author lijunping
  */
 @Data
-public class DingDingAlarmProperties {
-
-    /**
-     * 钉钉机器人密钥
-     */
-    private String secret;
-
+public class WeChatRobotAlarmProperties {
     /**
      * 自定义群机器人中的 webhook
      */

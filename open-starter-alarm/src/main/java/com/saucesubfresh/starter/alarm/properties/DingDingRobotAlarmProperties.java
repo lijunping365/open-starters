@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.alarm.request;
+package com.saucesubfresh.starter.alarm.properties;
+
+import lombok.Data;
 
 /**
  * @author lijunping
  */
-public class BaseAlarmMessage {
+@Data
+public class DingDingRobotAlarmProperties {
+
+    /**
+     * 钉钉机器人密钥
+     */
+    private String secret;
+
+    /**
+     * 自定义群机器人中的 webhook
+     */
+    private String webhook;
 }

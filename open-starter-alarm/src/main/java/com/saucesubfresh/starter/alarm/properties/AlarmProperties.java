@@ -26,11 +26,15 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @ConfigurationProperties(prefix = "com.saucesubfresh.alarm")
 public class AlarmProperties {
 
-    /**封装钉钉报警相关的属性*/
+    /**封装钉钉自定义机器人报警相关的属性*/
     @NestedConfigurationProperty
-    private DingDingAlarmProperties dingDing = new DingDingAlarmProperties();
+    private DingDingRobotAlarmProperties dingDing = new DingDingRobotAlarmProperties();
 
-    /**封装企业微信报警相关的属性*/
+    /**封装企业微信自定义机器人报警相关的属性*/
     @NestedConfigurationProperty
-    private WeChatAlarmProperties weChat = new WeChatAlarmProperties();
+    private WeChatRobotAlarmProperties weChat = new WeChatRobotAlarmProperties();
+
+    /**封装飞书自定义机器人报警相关的属性*/
+    @NestedConfigurationProperty
+    private FeiShuRobotAlarmProperties feiShu = new FeiShuRobotAlarmProperties();
 }

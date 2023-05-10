@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.alarm.provider.wechat;
 import com.saucesubfresh.starter.alarm.AbstractAlarmExecutor;
 import com.saucesubfresh.starter.alarm.exception.AlarmException;
 import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
-import com.saucesubfresh.starter.alarm.properties.WeChatAlarmProperties;
+import com.saucesubfresh.starter.alarm.properties.WeChatRobotAlarmProperties;
 import com.saucesubfresh.starter.alarm.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,22 +34,22 @@ import java.util.Objects;
  * @author lijunping
  */
 @Slf4j
-public class WeChatAlarmExecutor extends AbstractAlarmExecutor<WeChatMessageRequest> {
+public class WeChatRobotAlarmExecutor extends AbstractAlarmExecutor<WeChatRobotAlarmRequest> {
 
     private static final String RESPONSE_MSG = "errmsg";
     private static final String RESPONSE_CODE = "errcode";
-    private final WeChatAlarmProperties alarmProperties;
+    private final WeChatRobotAlarmProperties alarmProperties;
 
-    public WeChatAlarmExecutor(AlarmProperties alarmProperties){
+    public WeChatRobotAlarmExecutor(AlarmProperties alarmProperties){
         this.alarmProperties = alarmProperties.getWeChat();
     }
     @Override
-    public void doAlarm(WeChatMessageRequest message) throws AlarmException {
+    public void doAlarm(WeChatRobotAlarmRequest message) throws AlarmException {
         String errMsg;
         String errCode = "";
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
             String url = alarmProperties.getWebhook();
-            WeChatMessageRequest.ConfigVO config = message.getConfig();
+            WeChatRobotAlarmRequest.ConfigVO config = message.getConfig();
             if (Objects.nonNull(config) && StringUtils.isNotBlank(config.getWebhook())){
                 url = config.getWebhook();
             }

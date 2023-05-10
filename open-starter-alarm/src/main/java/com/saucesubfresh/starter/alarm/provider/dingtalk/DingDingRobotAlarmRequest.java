@@ -15,7 +15,7 @@
  */
 package com.saucesubfresh.starter.alarm.provider.dingtalk;
 
-import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
+import com.saucesubfresh.starter.alarm.request.BaseAlarmRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +31,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DingDingMessageRequest extends BaseAlarmMessage {
+public class DingDingRobotAlarmRequest extends BaseAlarmRequest {
     /**
      * at
      */

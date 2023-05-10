@@ -16,7 +16,7 @@
 package com.saucesubfresh.starter.alarm;
 
 import com.saucesubfresh.starter.alarm.exception.AlarmException;
-import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
+import com.saucesubfresh.starter.alarm.request.BaseAlarmRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -35,7 +35,7 @@ import java.io.IOException;
  * @author lijunping
  */
 @Slf4j
-public abstract class AbstractAlarmExecutor<T extends BaseAlarmMessage> implements AlarmExecutor<T> {
+public abstract class AbstractAlarmExecutor<T extends BaseAlarmRequest> implements AlarmExecutor<T> {
 
     private static final int HTTP_CONNECT_TIMEOUT = 1000;
     private static final int HTTP_CONNECTION_REQUEST_TIMEOUT = 1000;

@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.alarm.provider.dingtalk;
 import com.saucesubfresh.starter.alarm.AbstractAlarmExecutor;
 import com.saucesubfresh.starter.alarm.exception.AlarmException;
 import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
-import com.saucesubfresh.starter.alarm.properties.DingDingAlarmProperties;
+import com.saucesubfresh.starter.alarm.properties.DingDingRobotAlarmProperties;
 import com.saucesubfresh.starter.alarm.utils.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,18 +41,18 @@ import java.util.Objects;
  * @author lijunping
  */
 @Slf4j
-public class DingDingAlarmExecutor extends AbstractAlarmExecutor<DingDingMessageRequest> {
+public class DingDingRobotAlarmExecutor extends AbstractAlarmExecutor<DingDingRobotAlarmRequest> {
     private static final String SIGN_METHOD = "HmacSHA256";
     private static final String RESPONSE_MSG = "errmsg";
     private static final String RESPONSE_CODE = "errcode";
-    private final DingDingAlarmProperties alarmProperties;
+    private final DingDingRobotAlarmProperties alarmProperties;
 
-    public DingDingAlarmExecutor(AlarmProperties alarmProperties) {
+    public DingDingRobotAlarmExecutor(AlarmProperties alarmProperties) {
         this.alarmProperties = alarmProperties.getDingDing();
     }
 
     @Override
-    public void doAlarm(DingDingMessageRequest message) throws AlarmException {
+    public void doAlarm(DingDingRobotAlarmRequest message) throws AlarmException {
         String errMsg;
         String errCode = "";
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
@@ -73,8 +73,8 @@ public class DingDingAlarmExecutor extends AbstractAlarmExecutor<DingDingMessage
     /**
      * Sign webhook url using secret and timestamp
      */
-    private String getSignUrl(DingDingMessageRequest message) {
-        DingDingMessageRequest.ConfigVO config = message.getConfig();
+    private String getSignUrl(DingDingRobotAlarmRequest message) {
+        DingDingRobotAlarmRequest.ConfigVO config = message.getConfig();
         String webhook = alarmProperties.getWebhook();
         if (Objects.nonNull(config) && StringUtils.isNotBlank(config.getWebhook())){
             webhook = config.getWebhook();

@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.alarm;
+package com.saucesubfresh.starter.alarm.properties;
 
-import com.saucesubfresh.starter.alarm.exception.AlarmException;
-import com.saucesubfresh.starter.alarm.request.BaseAlarmRequest;
+import lombok.Data;
 
 /**
  * @author lijunping
  */
-public interface AlarmExecutor<T extends BaseAlarmRequest> {
-
-    void doAlarm(T message) throws AlarmException;
+@Data
+public class FeiShuRobotAlarmProperties {
+    /**
+     * 自定义群机器人中的 webhook
+     */
+    private String webhook;
 }

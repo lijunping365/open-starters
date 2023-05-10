@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.alarm.properties;
-
-import lombok.Data;
+package com.saucesubfresh.starter.alarm.request;
 
 /**
  * @author lijunping
  */
-@Data
-public class WeChatAlarmProperties {
-    /**
-     * 自定义群机器人中的 webhook
-     */
-    private String webhook;
+public class BaseAlarmRequest {
 }

@@ -30,7 +30,7 @@ import java.util.Set;
  * @author lijunping
  */
 @Slf4j
-public class EmailAlarmExecutor implements AlarmExecutor<EmailMessageRequest> {
+public class EmailAlarmExecutor implements AlarmExecutor<EmailRequestRequest> {
     private final JavaMailSender mailSender;
 
     public EmailAlarmExecutor(JavaMailSender mailSender) {
@@ -38,7 +38,7 @@ public class EmailAlarmExecutor implements AlarmExecutor<EmailMessageRequest> {
     }
 
     @Override
-    public void doAlarm(EmailMessageRequest request) throws AlarmException {
+    public void doAlarm(EmailRequestRequest request) throws AlarmException {
         final String alarmEmail = request.getToEmail();
         Set<String> emailSet = new HashSet<>(Arrays.asList(alarmEmail.split(",")));
         emailSet.forEach(email->{

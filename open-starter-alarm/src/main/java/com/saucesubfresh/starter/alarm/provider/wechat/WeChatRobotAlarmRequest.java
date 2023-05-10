@@ -16,7 +16,7 @@
 package com.saucesubfresh.starter.alarm.provider.wechat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
+import com.saucesubfresh.starter.alarm.request.BaseAlarmRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,7 +32,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeChatMessageRequest extends BaseAlarmMessage {
+public class WeChatRobotAlarmRequest extends BaseAlarmRequest {
     /**
      * msgtype
      */

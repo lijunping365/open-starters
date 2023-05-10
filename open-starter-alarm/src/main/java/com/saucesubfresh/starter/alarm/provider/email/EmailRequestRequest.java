@@ -15,7 +15,7 @@
  */
 package com.saucesubfresh.starter.alarm.provider.email;
 
-import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
+import com.saucesubfresh.starter.alarm.request.BaseAlarmRequest;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -24,7 +24,7 @@ import javax.validation.constraints.NotBlank;
  * @author lijunping
  */
 @Data
-public class EmailMessageRequest extends BaseAlarmMessage {
+public class EmailRequestRequest extends BaseAlarmRequest {
 
     /**
      * 发件人

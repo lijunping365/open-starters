@@ -16,9 +16,10 @@
 package com.saucesubfresh.starter.alarm.config;
 
 import com.saucesubfresh.starter.alarm.properties.AlarmProperties;
-import com.saucesubfresh.starter.alarm.provider.dingtalk.DingDingAlarmExecutor;
+import com.saucesubfresh.starter.alarm.provider.dingtalk.DingDingRobotAlarmExecutor;
 import com.saucesubfresh.starter.alarm.provider.email.EmailAlarmExecutor;
-import com.saucesubfresh.starter.alarm.provider.wechat.WeChatAlarmExecutor;
+import com.saucesubfresh.starter.alarm.provider.feishu.FeiShuRobotAlarmExecutor;
+import com.saucesubfresh.starter.alarm.provider.wechat.WeChatRobotAlarmExecutor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -45,13 +46,19 @@ public class AlarmAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public DingDingAlarmExecutor dingDingAlarmExecutor(AlarmProperties alarmProperties){
-        return new DingDingAlarmExecutor(alarmProperties);
+    public DingDingRobotAlarmExecutor dingDingAlarmExecutor(AlarmProperties alarmProperties){
+        return new DingDingRobotAlarmExecutor(alarmProperties);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public WeChatAlarmExecutor weChatAlarmExecutor(AlarmProperties alarmProperties){
-        return new WeChatAlarmExecutor(alarmProperties);
+    public WeChatRobotAlarmExecutor weChatAlarmExecutor(AlarmProperties alarmProperties){
+        return new WeChatRobotAlarmExecutor(alarmProperties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public FeiShuRobotAlarmExecutor feiShuRobotAlarmExecutor(AlarmProperties alarmProperties){
+        return new FeiShuRobotAlarmExecutor(alarmProperties);
     }
 }
