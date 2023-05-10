@@ -26,6 +26,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -49,9 +50,10 @@ public class WeChatAlarmExecutor extends AbstractAlarmExecutor<WeChatMessageRequ
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
             String url = alarmProperties.getWebhook();
             WeChatMessageRequest.ConfigVO config = message.getConfig();
-            if (StringUtils.isNotBlank(config.getWebhook())){
+            if (Objects.nonNull(config) && StringUtils.isNotBlank(config.getWebhook())){
                 url = config.getWebhook();
             }
+
             String response = sendAlarmMessage(httpClient, url, JSON.toJSON(message));
             Map<String, String> res = JSON.parseMap(response, String.class, String.class);
             errMsg = res.get(RESPONSE_MSG);

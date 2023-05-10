@@ -34,6 +34,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 钉钉机器人报警
@@ -75,13 +76,14 @@ public class DingDingAlarmExecutor extends AbstractAlarmExecutor<DingDingMessage
     private String getSignUrl(DingDingMessageRequest message) {
         DingDingMessageRequest.ConfigVO config = message.getConfig();
         String webhook = alarmProperties.getWebhook();
-        if (StringUtils.isNotBlank(config.getWebhook())){
+        if (Objects.nonNull(config) && StringUtils.isNotBlank(config.getWebhook())){
             webhook = config.getWebhook();
         }
         String secret = alarmProperties.getSecret();
-        if (StringUtils.isNotBlank(config.getSecret())){
+        if (Objects.nonNull(config) && StringUtils.isNotBlank(config.getSecret())){
             secret = config.getSecret();
         }
+
         try {
             Long timestamp = System.currentTimeMillis();
             return String.format("%s&timestamp=%s&sign=%s", webhook, timestamp, sign(timestamp, secret));
