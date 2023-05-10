@@ -15,6 +15,7 @@
  */
 package com.saucesubfresh.starter.alarm.provider.wechat;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saucesubfresh.starter.alarm.request.BaseAlarmMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,8 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
     /**
      * msgtype
      */
-    private String msgtype;
+    @JsonProperty("msgtype")
+    private String msgType;
     /**
      * text
      */
@@ -60,6 +62,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
     /**
      * templateCard
      */
+    @JsonProperty("template_card")
     private TemplateCardDTO templateCard;
 
     /**
@@ -82,10 +85,12 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
         /**
          * mentionedList
          */
+        @JsonProperty("mentioned_list")
         private List<String> mentionedList;
         /**
          * mentionedMobileList
          */
+        @JsonProperty("mentioned_mobile_list")
         private List<String> mentionedMobileList;
     }
 
@@ -172,6 +177,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
         /**
          * mediaId
          */
+        @JsonProperty("media_id")
         private String mediaId;
     }
 
@@ -186,6 +192,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
         /**
          * cardType
          */
+        @JsonProperty("card_type")
         private String cardType;
         /**
          * source
@@ -194,30 +201,37 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
         /**
          * mainTitle
          */
+        @JsonProperty("main_title")
         private MainTitleDTO mainTitle;
         /**
          * emphasisContent
          */
+        @JsonProperty("emphasis_content")
         private EmphasisContentDTO emphasisContent;
         /**
          * quoteArea
          */
+        @JsonProperty("quote_area")
         private QuoteAreaDTO quoteArea;
         /**
          * subTitleText
          */
+        @JsonProperty("sub_title_text")
         private String subTitleText;
         /**
          * horizontalContentList
          */
+        @JsonProperty("horizontal_content_list")
         private List<HorizontalContentListDTO> horizontalContentList;
         /**
          * jumpList
          */
+        @JsonProperty("jump_list")
         private List<JumpListDTO> jumpList;
         /**
          * cardAction
          */
+        @JsonProperty("card_action")
         private CardActionDTO cardAction;
 
         /**
@@ -231,6 +245,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * iconUrl
              */
+            @JsonProperty("icon_url")
             private String iconUrl;
             /**
              * desc
@@ -239,6 +254,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * descColor
              */
+            @JsonProperty("desc_color")
             private Integer descColor;
         }
 
@@ -297,11 +313,13 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * appid
              */
-            private String appid;
+            @JsonProperty("appid")
+            private String appId;
             /**
              * pagepath
              */
-            private String pagepath;
+            @JsonProperty("pagepath")
+            private String pagePath;
             /**
              * title
              */
@@ -309,6 +327,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * quoteText
              */
+            @JsonProperty("quote_text")
             private String quoteText;
         }
 
@@ -331,11 +350,13 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * appid
              */
-            private String appid;
+            @JsonProperty("appid")
+            private String appId;
             /**
              * pagepath
              */
-            private String pagepath;
+            @JsonProperty("pagepath")
+            private String pagePath;
         }
 
         /**
@@ -349,7 +370,8 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * keyname
              */
-            private String keyname;
+            @JsonProperty("keyname")
+            private String keyName;
             /**
              * value
              */
@@ -365,6 +387,7 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * mediaId
              */
+            @JsonProperty("media_id")
             private String mediaId;
         }
 
@@ -391,11 +414,13 @@ public class WeChatMessageRequest extends BaseAlarmMessage {
             /**
              * appid
              */
-            private String appid;
+            @JsonProperty("appid")
+            private String appId;
             /**
              * pagepath
              */
-            private String pagepath;
+            @JsonProperty("pagepath")
+            private String pagePath;
         }
     }
 
