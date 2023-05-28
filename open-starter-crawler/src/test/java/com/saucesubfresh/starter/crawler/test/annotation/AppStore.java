@@ -2,7 +2,7 @@ package com.saucesubfresh.starter.crawler.test.annotation;
 
 
 import com.saucesubfresh.starter.crawler.annotation.ExtractBy;
-import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
+import com.saucesubfresh.starter.crawler.annotation.OpenCrawler;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
 import com.saucesubfresh.starter.crawler.utils.ExtractorUtils;
@@ -14,6 +14,7 @@ import java.util.List;
  * @author lijunping
  */
 @Data
+@OpenCrawler(url = "http://www.baidu.com")
 public class AppStore {
 
     @ExtractBy(type = ExpressionType.JsonPath, value = "$..trackName")
@@ -32,10 +33,10 @@ public class AppStore {
     private String supportedDevices;
 
     public void extractorRuleFromClass(){
-        List<FieldExtractor> fieldExtractors = ExtractorUtils.getFieldExtractors(AppStore.class);
-        // 进行采集
-        SpiderRequest request = new SpiderRequest();
-        request.setExtract(fieldExtractors);
+        SpiderRequest request = ExtractorUtils.getSpiderRequest(AppStore.class);
+        //request.setHeaders();
+        //request.setHeaders();
+        //进行采集
     }
 
 }

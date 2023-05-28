@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * 用于实体类
+ * 用于实体类中的属性
  *
  * @author lijunping
  */

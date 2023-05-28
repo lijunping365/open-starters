@@ -17,7 +17,9 @@ package com.saucesubfresh.starter.crawler.utils;
 
 
 import com.saucesubfresh.starter.crawler.annotation.ExtractBy;
+import com.saucesubfresh.starter.crawler.annotation.OpenCrawler;
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
+import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
 import com.saucesubfresh.starter.crawler.parser.Selector;
 import com.saucesubfresh.starter.crawler.parser.provider.CssSelector;
@@ -29,11 +31,30 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author lijunping
  */
 public class ExtractorUtils {
+
+    public static SpiderRequest getSpiderRequest(Class<?> clazz) {
+        SpiderRequest request = new SpiderRequest();
+        List<FieldExtractor> extractors = getFieldExtractors(clazz);
+        request.setExtract(extractors);
+        OpenCrawler annotation = clazz.getAnnotation(OpenCrawler.class);
+        if (Objects.isNull(annotation)){
+            return request;
+        }
+
+        request.setUrl(annotation.url());
+        request.setMethod(annotation.method());
+        request.setRetryTimes(annotation.retryTimes());
+        request.setSleepTime(annotation.sleepTime());
+        request.setSpiderId(annotation.spiderId());
+        request.setMulti(annotation.multi());
+        return request;
+    }
 
     public static List<FieldExtractor> getFieldExtractors(Class<?> clazz) {
         List<FieldExtractor> fieldExtractors = new ArrayList<>();
