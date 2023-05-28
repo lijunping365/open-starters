@@ -46,7 +46,7 @@ public class FieldExtractor {
     private String defaultValue;
 
     /**
-     * 定义提取器是否返回多个结果，对应【循环】
+     * 定义提取器是否返回多个结果，对应【数组】
      */
     private boolean multi = false;
 

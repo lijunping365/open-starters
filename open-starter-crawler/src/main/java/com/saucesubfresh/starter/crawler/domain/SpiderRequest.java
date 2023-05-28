@@ -50,6 +50,10 @@ public class SpiderRequest implements Serializable {
      */
     private int sleepTime = 5000;
     /**
+     * 定义提取器是否返回多个结果，对应【循环】
+     */
+    private boolean multi = false;
+    /**
      * 请求参数
      */
     private Map<String, String> params;
