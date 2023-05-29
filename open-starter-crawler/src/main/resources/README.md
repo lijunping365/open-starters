@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-crawler</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 
@@ -231,19 +231,19 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 
 ## 1.0.4 版本更新说明
 
-支持在爬虫主流程上增加拦截器
+1. 支持在爬虫主流程上增加拦截器
+
+2. 优化值创建时间的设置
 
 ## 1.0.5 版本更新说明
 
-优化值创建时间的设置
+列表转置优化及注解增强
 
 ## 注意事项
 
 1. JsonPath 不可以与其他解析方法混用
 
-2. 默认解析中如果每条抽取规则的 multi 都为 true ，那么对应的值将进行转置，即意为采集列表，否则将不会转置
-
-3. id 生成规则：如果指定了 id 字段，则指定的 id 字段将会被当作主键，
+2. id 生成规则：如果指定了 id 字段，则指定的 id 字段将会被当作主键，
 
 如果没有指定 id 字段而是在某些字段上勾选了主键则将会拼接这些字段的值进行散列生成一个 8 位的唯一字符串当作主键，
 
