@@ -18,6 +18,7 @@ package com.saucesubfresh.starter.oauth.request;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author lijunping
@@ -25,4 +26,5 @@ import java.io.Serializable;
 @Data
 public class BaseLoginRequest implements Serializable {
 
+    private Map<String, Object> value;
 }
