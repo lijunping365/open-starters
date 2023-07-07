@@ -17,6 +17,7 @@ package com.saucesubfresh.starter.oauth.component;
 
 
 import com.saucesubfresh.starter.oauth.exception.AuthenticationException;
+import com.saucesubfresh.starter.oauth.request.BaseLoginRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandler{
 
     @Override
-    public void onAuthenticationFailureHandler(AuthenticationException authenticationException) {
+    public <T extends BaseLoginRequest> void onAuthenticationFailureHandler(AuthenticationException authenticationException, T request) {
         log.error("[登录失败-失败原因]:{}",authenticationException.getMessage());
     }
 }

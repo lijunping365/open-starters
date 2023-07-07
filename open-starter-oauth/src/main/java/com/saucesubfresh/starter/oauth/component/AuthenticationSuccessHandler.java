@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.oauth.component;
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
+import com.saucesubfresh.starter.oauth.request.BaseLoginRequest;
 
 /**
  * 认证成功处理器
@@ -27,5 +28,5 @@ public interface AuthenticationSuccessHandler {
     /**
      * 登录成功处理
      */
-    void onAuthenticationSuccess(Authentication authentication);
+    <T extends BaseLoginRequest> void onAuthenticationSuccess(Authentication authentication, T request);
 }

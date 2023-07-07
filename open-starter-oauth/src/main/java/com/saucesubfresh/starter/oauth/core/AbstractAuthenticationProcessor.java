@@ -49,10 +49,10 @@ public abstract class AbstractAuthenticationProcessor<T extends BaseLoginRequest
             checkAccountLock(userDetails);
             Authentication authentication = new Authentication(userDetails);
             AccessToken accessToken = tokenStore.generateToken(authentication);
-            authenticationSuccessHandler.onAuthenticationSuccess(authentication);
+            authenticationSuccessHandler.onAuthenticationSuccess(authentication, request);
             return accessToken;
         } catch (AuthenticationException exception){
-            authenticationFailureHandler.onAuthenticationFailureHandler(exception);
+            authenticationFailureHandler.onAuthenticationFailureHandler(exception, request);
             throw exception;
         }
     }
