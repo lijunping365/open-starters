@@ -283,3 +283,7 @@ public class SecurityAutoConfiguration {
 ### 1.0.4
 
 1. 新增自动为 token 续期，即自动刷新 token 能力
+
+### 1.0.5
+
+认证成功处理和认证失败处理添加请求参数字段，方便在处理时获取关键请求信息

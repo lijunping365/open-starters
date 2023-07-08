@@ -19,13 +19,13 @@ package com.saucesubfresh.starter.oauth.exception;
  * @author: 李俊平
  * @Date: 2022-11-01 17:50
  */
-public class UsernameNotFoundException extends AuthenticationException{
+public class UserNotFoundException extends AuthenticationException{
 
-    public UsernameNotFoundException(String msg, Throwable t) {
+    public UserNotFoundException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public UsernameNotFoundException(String msg) {
+    public UserNotFoundException(String msg) {
         super(msg);
     }
 }

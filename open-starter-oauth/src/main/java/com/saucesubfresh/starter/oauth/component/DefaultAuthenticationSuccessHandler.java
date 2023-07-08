@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.oauth.component;
 
 import com.saucesubfresh.starter.oauth.authentication.Authentication;
+import com.saucesubfresh.starter.oauth.request.BaseLoginRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandler{
 
     @Override
-    public void onAuthenticationSuccess(Authentication authentication) {
+    public <T extends BaseLoginRequest> void onAuthenticationSuccess(Authentication authentication, T request) {
         log.info("[登录成功]-[用户编号：{}]", authentication.getUserDetails().getId());
     }
 }

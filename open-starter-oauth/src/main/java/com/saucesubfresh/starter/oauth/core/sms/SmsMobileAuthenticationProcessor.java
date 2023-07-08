@@ -21,7 +21,7 @@ import com.saucesubfresh.starter.oauth.core.AbstractAuthenticationProcessor;
 import com.saucesubfresh.starter.oauth.domain.UserDetails;
 import com.saucesubfresh.starter.oauth.exception.AuthenticationException;
 import com.saucesubfresh.starter.oauth.exception.InvalidArgumentException;
-import com.saucesubfresh.starter.oauth.exception.UsernameNotFoundException;
+import com.saucesubfresh.starter.oauth.exception.UserNotFoundException;
 import com.saucesubfresh.starter.oauth.request.MobileLoginRequest;
 import com.saucesubfresh.starter.oauth.service.UserDetailService;
 import com.saucesubfresh.starter.oauth.token.TokenStore;
@@ -49,7 +49,7 @@ public class SmsMobileAuthenticationProcessor extends AbstractAuthenticationProc
 
         final UserDetails userDetails = userDetailService.loadUserByMobile(request.getMobile());
         if (Objects.isNull(userDetails)){
-            throw new UsernameNotFoundException("User not found:" + request.getMobile());
+            throw new UserNotFoundException("User not found:" + request.getMobile());
         }
         return userDetails;
     }
