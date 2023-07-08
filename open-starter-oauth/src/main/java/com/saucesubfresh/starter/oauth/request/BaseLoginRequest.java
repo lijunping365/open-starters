@@ -26,5 +26,5 @@ import java.util.Map;
 @Data
 public class BaseLoginRequest implements Serializable {
 
-    private Map<String, Object> value;
+    private Map<String, Object> additional;
 }
