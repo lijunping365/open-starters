@@ -46,6 +46,9 @@ public class ResultSetWrapperHandler implements CrawlerHandler {
     @Override
     public void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException {
         List<Map<String, Object>> rows = (List<Map<String, Object>>) msg;
+        if (CollectionUtils.isEmpty(rows)){
+            return;
+        }
         List<Map<String, Object>> wrapperRows = fillValue(request, rows);
         ctx.fireCrawlerHandler(request, wrapperRows);
     }
