@@ -13,39 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.handler;
+package com.saucesubfresh.starter.crawler.pipeline.provider;
 
-
-import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
-import com.saucesubfresh.starter.crawler.enums.ExpressionType;
-import com.saucesubfresh.starter.crawler.parser.ParserProcessor;
-import com.saucesubfresh.starter.crawler.plugin.UsePlugin;
-import org.apache.commons.lang3.StringUtils;
+import com.saucesubfresh.starter.crawler.exception.CrawlerException;
+import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandler;
+import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandlerContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
 /**
- * 默认结果处理器
- *
  * @author lijunping
  */
-@UsePlugin
-public class DefaultResultSetHandler implements ResultSetHandler{
-
+public class ResultSetTransformHandler implements CrawlerHandler {
     @Override
-    public List<Map<String, Object>> handler(SpiderRequest request, String body) {
-        final List<FieldExtractor> fieldExtractors = request.getExtract();
-        if (StringUtils.isBlank(body) || CollectionUtils.isEmpty(fieldExtractors)){
-            return null;
-        }
-
-        Map<String, Object> parseResult = parse(body, fieldExtractors);
+    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException {
+        Map<String, Object> parseResult = (Map<String, Object>) msg;
         if (CollectionUtils.isEmpty(parseResult)){
-            return null;
+            return;
         }
-        return format(parseResult, request.isMulti());
+        List<Map<String, Object>> format = format(parseResult, request.isMulti());
+        ctx.fireCrawlerHandler(request, format);
     }
 
     /**
@@ -76,22 +65,7 @@ public class DefaultResultSetHandler implements ResultSetHandler{
         }
     }
 
-    /**
-     * @return 数据解析结果，类似此结构的 json
-     *
-     * <pre>
-     * {
-     *  "time" : [ "18:36", "18:31"],
-     *  "title" : [ "【长春发布若干政策措施支持市场主体纾困促进经济恢复发展】", "【佩斯科夫：克宫不支持无差别对“不友好国家”公司资产进行国有化】"],
-     *  "url" : [ "http://finance.eastmoney.com/a/202204212352230938.html", "http://finance.eastmoney.com/a/202204212352227421.html"]
-     * }
-     * </pre>
-     *
-     */
-    private Map<String, Object> parse(String body, List<FieldExtractor> fieldExtractors){
-        ExpressionType of = ExpressionType.of(fieldExtractors.get(0).getExpressionType());
-        return ParserProcessor.processor(of, body, fieldExtractors);
-    }
+
 
     /**
      * 格式化解析结果

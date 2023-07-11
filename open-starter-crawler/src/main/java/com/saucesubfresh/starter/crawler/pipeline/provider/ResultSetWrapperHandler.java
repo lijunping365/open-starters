@@ -13,52 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.interceptor;
+package com.saucesubfresh.starter.crawler.pipeline.provider;
 
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
-import com.saucesubfresh.starter.crawler.handler.ResultSetHandler;
-import com.saucesubfresh.starter.crawler.plugin.*;
-import lombok.extern.slf4j.Slf4j;
+import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandler;
+import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandlerContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 插件示例
- * @author lijunping on 2022/10/27
+ * @author lijunping
  */
-@Slf4j
-@Intercepts({@Signature(type = ResultSetHandler.class, method = "handler", args = {SpiderRequest.class, String.class})})
-public class ResultSetInterceptor implements Interceptor {
+public class ResultSetWrapperHandler implements CrawlerHandler {
 
     private static final String ID = "id";
     private static final String CREATE_TIME = "createTime";
     private final KeyGenerator keyGenerator;
 
-    public ResultSetInterceptor(KeyGenerator keyGenerator) {
+    public ResultSetWrapperHandler(KeyGenerator keyGenerator) {
         this.keyGenerator = keyGenerator;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Object intercept(Invocation invocation) throws Throwable {
-        Object result = invocation.proceed();
-        if (Objects.isNull(result)){
-            return null;
-        }
-        final Object arg = invocation.getArgs()[0];
-        SpiderRequest spiderRequest = (SpiderRequest) arg;
-        List<Map<String, Object>> list = (List<Map<String, Object>>) result;
-        return fillValue(spiderRequest, list);
-    }
-
-    @Override
-    public Object plugin(Object target) {
-        return Plugin.wrap(target,this);
+    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException {
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) msg;
+        List<Map<String, Object>> wrapperRows = fillValue(request, rows);
+        ctx.fireCrawlerHandler(request, wrapperRows);
     }
 
     /**

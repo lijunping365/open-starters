@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.crawler.plugin;
+package com.saucesubfresh.starter.crawler.pipeline;
+
+import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 
 /**
- * @author lijunping on 2022/10/12
+ * @author lijunping
  */
-public interface Interceptor {
-
-    Object intercept(Invocation invocation) throws Throwable;
-
-    default Object plugin(Object target) {
-        return Plugin.wrap(target, this);
-    }
+public interface CrawlerHandler {
+    /**
+     * Invoked when the current {@link CrawlerHandler} has read a message from the peer.
+     */
+    void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException;
 }
