@@ -97,7 +97,7 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 
 ## 1.0.6 版本更新说明
 
-爬虫执行流程重构，使用更为简单、方便
+爬虫执行流程重构，在爬虫执行链上添加其他流程更加简单、方便，更容易拓展，相信这是一个好的功能更新。
 
 ## 注意事项
 
