@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.crawler.pipeline;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 
 /**
  * @author lijunping
@@ -37,8 +38,8 @@ public interface CrawlerHandlerContext {
     /**
      * A {@link CrawlerHandler} received a message.
      *
-     * This will result in having the {@link CrawlerHandler#handler(CrawlerHandlerContext, SpiderRequest, Object)}
+     * This will result in having the {@link CrawlerHandler#handler(CrawlerHandlerContext, SpiderRequest, SpiderResponse)}
      * method  called of the next {@link CrawlerHandler} contained in the {@link CrawlerPipeline}.
      */
-    void fireCrawlerHandler(SpiderRequest request, Object msg);
+    void fireCrawlerHandler(SpiderRequest request, SpiderResponse response);
 }

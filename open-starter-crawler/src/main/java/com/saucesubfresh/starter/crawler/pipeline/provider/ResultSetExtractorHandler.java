@@ -17,16 +17,17 @@ package com.saucesubfresh.starter.crawler.pipeline.provider;
 
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.enums.ExpressionType;
 import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 import com.saucesubfresh.starter.crawler.parser.ParserProcessor;
 import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandler;
 import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandlerContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author lijunping
@@ -34,14 +35,16 @@ import java.util.Objects;
 public class ResultSetExtractorHandler implements CrawlerHandler {
 
     @Override
-    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException {
+    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, SpiderResponse response) throws CrawlerException {
+        String body = response.getBody();
         final List<FieldExtractor> fieldExtractors = request.getExtract();
-        if (Objects.isNull(msg) || CollectionUtils.isEmpty(fieldExtractors)){
+        if (StringUtils.isBlank(body) || CollectionUtils.isEmpty(fieldExtractors)){
             return;
         }
 
-        Map<String, Object> parseResult = parse((String) msg, fieldExtractors);
-        ctx.fireCrawlerHandler(request, parseResult);
+        Map<String, Object> parseResult = parse(body, fieldExtractors);
+        response.setData(parseResult);
+        ctx.fireCrawlerHandler(request, response);
     }
 
     /**

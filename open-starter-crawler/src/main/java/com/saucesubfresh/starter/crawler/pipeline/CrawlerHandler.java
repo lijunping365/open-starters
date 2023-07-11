@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.crawler.pipeline;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 
 /**
@@ -25,5 +26,5 @@ public interface CrawlerHandler {
     /**
      * Invoked when the current {@link CrawlerHandler} has read a message from the peer.
      */
-    void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException;
+    void handler(CrawlerHandlerContext ctx, SpiderRequest request, SpiderResponse response) throws CrawlerException;
 }

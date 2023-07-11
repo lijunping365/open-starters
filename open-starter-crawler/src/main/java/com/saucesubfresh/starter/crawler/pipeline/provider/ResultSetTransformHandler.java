@@ -16,10 +16,11 @@
 package com.saucesubfresh.starter.crawler.pipeline.provider;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandler;
 import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandlerContext;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.*;
 
@@ -28,13 +29,15 @@ import java.util.*;
  */
 public class ResultSetTransformHandler implements CrawlerHandler {
     @Override
-    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException {
-        Map<String, Object> parseResult = (Map<String, Object>) msg;
-        if (CollectionUtils.isEmpty(parseResult)){
+    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, SpiderResponse response) throws CrawlerException {
+        Object data = response.getData();
+        if (ObjectUtils.isEmpty(data)){
             return;
         }
-        List<Map<String, Object>> format = format(parseResult, request.isMulti());
-        ctx.fireCrawlerHandler(request, format);
+        Map<String, Object> parseResult = (Map<String, Object>) data;
+        List<Map<String, Object>> transformData = format(parseResult, request.isMulti());
+        response.setData(transformData);
+        ctx.fireCrawlerHandler(request, response);
     }
 
     /**

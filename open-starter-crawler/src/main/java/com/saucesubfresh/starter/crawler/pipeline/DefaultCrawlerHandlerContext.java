@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.crawler.pipeline;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 
 /**
  * @author lijunping
@@ -47,21 +48,21 @@ public class DefaultCrawlerHandlerContext implements CrawlerHandlerContext{
     }
 
     @Override
-    public void fireCrawlerHandler(SpiderRequest request, Object msg) {
-        invokeCrawlerHandler(next, request, msg);
+    public void fireCrawlerHandler(SpiderRequest request, SpiderResponse response) {
+        invokeCrawlerHandler(next, request, response);
     }
 
-    public static void invokeCrawlerHandler(final DefaultCrawlerHandlerContext next, SpiderRequest request, Object msg) {
+    public static void invokeCrawlerHandler(final DefaultCrawlerHandlerContext next, SpiderRequest request, SpiderResponse response) {
         if (null != next){
-            next.invokeCrawlerHandler(request, msg);
+            next.invokeCrawlerHandler(request, response);
         }
     }
 
-    private void invokeCrawlerHandler(SpiderRequest request, Object msg) {
+    private void invokeCrawlerHandler(SpiderRequest request, SpiderResponse response) {
         if (null != handler){
-            handler.handler(this, request, msg);
+            handler.handler(this, request, response);
         } else {
-            fireCrawlerHandler(request, msg);
+            fireCrawlerHandler(request, response);
         }
     }
 }

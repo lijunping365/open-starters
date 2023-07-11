@@ -16,6 +16,7 @@
 package com.saucesubfresh.starter.crawler.pipeline;
 
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 
 import java.util.NoSuchElementException;
 
@@ -79,8 +80,8 @@ public class DefaultCrawlerPipeline implements CrawlerPipeline{
     }
 
     @Override
-    public void fireCrawlerHandler(SpiderRequest request, Object msg) {
-        DefaultCrawlerHandlerContext.invokeCrawlerHandler(head, request, msg);
+    public void fireCrawlerHandler(SpiderRequest request, SpiderResponse response) {
+        DefaultCrawlerHandlerContext.invokeCrawlerHandler(head, request, response);
     }
 
     private DefaultCrawlerHandlerContext newHandlerNode(String name, CrawlerHandler handler) {

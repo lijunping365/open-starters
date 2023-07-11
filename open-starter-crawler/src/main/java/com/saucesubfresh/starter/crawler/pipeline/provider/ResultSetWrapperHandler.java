@@ -17,10 +17,12 @@ package com.saucesubfresh.starter.crawler.pipeline.provider;
 
 import com.saucesubfresh.starter.crawler.domain.FieldExtractor;
 import com.saucesubfresh.starter.crawler.domain.SpiderRequest;
+import com.saucesubfresh.starter.crawler.domain.SpiderResponse;
 import com.saucesubfresh.starter.crawler.exception.CrawlerException;
 import com.saucesubfresh.starter.crawler.generator.KeyGenerator;
 import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandler;
 import com.saucesubfresh.starter.crawler.pipeline.CrawlerHandlerContext;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -44,13 +46,15 @@ public class ResultSetWrapperHandler implements CrawlerHandler {
     }
 
     @Override
-    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, Object msg) throws CrawlerException {
-        List<Map<String, Object>> rows = (List<Map<String, Object>>) msg;
-        if (CollectionUtils.isEmpty(rows)){
+    public void handler(CrawlerHandlerContext ctx, SpiderRequest request, SpiderResponse response) throws CrawlerException {
+        Object data = response.getData();
+        if (ObjectUtils.isEmpty(data)){
             return;
         }
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) data;
         List<Map<String, Object>> wrapperRows = fillValue(request, rows);
-        ctx.fireCrawlerHandler(request, wrapperRows);
+        response.setData(wrapperRows);
+        ctx.fireCrawlerHandler(request, response);
     }
 
     /**
