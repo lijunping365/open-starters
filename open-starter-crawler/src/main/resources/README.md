@@ -22,157 +22,13 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-crawler</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 </dependency>
 ```
 
 ### 2. 配置参数
 
 暂无
-
-### 3. 动态解析规则实例
-
-节选自 Open-Crawler
-
-```java
-@Slf4j
-@Component
-public class CrawlerMessageProcess {
-
-    private final CrawlerExecutor crawlerExecutor;
-    private final PersistenceHandler persistenceHandler;
-    private final ResultFillHandler resultFillHandler;
-    private final ResultFilterHandler resultFilterHandler;
-    private final KafkaTemplate<String, byte[]> kafkaTemplate;
-    private final ThreadPoolExecutor threadPoolExecutor;
-
-    public CrawlerMessageProcess(CrawlerExecutor crawlerExecutor,
-                                 PersistenceHandler persistenceHandler,
-                                 ResultFillHandler resultFillHandler,
-                                 ResultFilterHandler resultFilterHandler,
-                                 KafkaTemplate<String, byte[]> kafkaTemplate,
-                                 ThreadPoolExecutor threadPoolExecutor) {
-        this.crawlerExecutor = crawlerExecutor;
-        this.persistenceHandler = persistenceHandler;
-        this.resultFillHandler = resultFillHandler;
-        this.resultFilterHandler = resultFilterHandler;
-        this.kafkaTemplate = kafkaTemplate;
-        this.threadPoolExecutor = threadPoolExecutor;
-    }
-
-    /**
-     * 执行爬虫并存储结果
-     * @param requests
-     */
-    private void doProcess(List<ISpiderRequest> requests){
-        requests.forEach(request-> CompletableFuture.runAsync(()->{
-            long beginTime = System.currentTimeMillis();
-            String errMsg = null;
-            try {
-                List<CrawlerData> dataList = crawlerExecutor.handler(request, CrawlerData.class);
-                dataList = resultFilterHandler.handler(request, dataList);
-                dataList = resultFillHandler.handler(request, dataList);
-                persistenceHandler.handler(request, dataList);
-            }catch (Exception e){
-                errMsg = e.getMessage();
-            }
-            long useTime = System.currentTimeMillis() - beginTime;
-            recordLog(request, useTime, errMsg);
-        }, threadPoolExecutor));
-    }
-
-    /**
-     * 异步记录采集日志
-     * @param request request
-     * @param useTime 采集耗时
-     * @param errMsg 采集异常信息
-     */
-    public void recordLog(ISpiderRequest request, long useTime, String errMsg) {
-        Map<String, Object> traceInfo = new HashMap<>();
-        traceInfo.put("total", useTime);
-        CrawlerSpiderLog build = CrawlerSpiderLog.builder()
-                .spiderId(request.getSpiderId())
-                .cause(errMsg)
-                .status(StringUtils.isBlank(errMsg) ? CommonStatusEnum.YES.getValue() : CommonStatusEnum.NO.getValue())
-                .trace(JSON.toJSON(traceInfo))
-                .createTime(LocalDateTime.now())
-                .build();
-        try {
-            kafkaTemplate.send("crawler-log", SerializationUtils.serialize(build));
-        }catch (Exception e){
-            log.error(e.getMessage(), e);
-        }
-    }
-}
-
-```
-
-### 4. 类注解解析规则实例
-
-节选自 Open-Crawler
-
-1. 定义类
-
-```java
-@Data
-public class AppStore {
-
-    @ExtractBy(type = ExpressionType.JsonPath, value = "$.data.list[*].title", multi = true, unique = true)
-    private String title;
-
-    @ExtractBy(type = ExpressionType.JsonPath, value = "$.data.list[*].digest", multi = true)
-    private String content;
-}
-
-```
-
-2. 爬取
-
-```java
-
-import java.util.ArrayList;
-
-@Slf4j
-@Component
-public class CrawlerTest {
-
-    private final CrawlerExecutor crawlerExecutor;
-    private final ThreadPoolExecutor threadPoolExecutor;
-
-    public CrawlerTest(CrawlerExecutor crawlerExecutor,
-                       ThreadPoolExecutor threadPoolExecutor) {
-        this.crawlerExecutor = crawlerExecutor;
-        this.threadPoolExecutor = threadPoolExecutor;
-    }
-
-    @PostConstruct
-    public void test() {
-        List<ISpiderRequest> spiderRequests = buildRequest();
-        spiderRequests.forEach(request-> CompletableFuture.runAsync(()->{
-            try {
-                List<CrawlerData> dataList = crawlerExecutor.handler(request, CrawlerData.class);
-                dataList = resultFilterHandler.handler(request, dataList);
-                dataList = resultFillHandler.handler(request, dataList);
-                log.info("data: {}", dataList);
-            }catch (Exception e){
-                log.error(e.getMessage());
-            }
-        }, threadPoolExecutor));
-
-    }
-
-    public List<ISpiderRequest> buildRequest() {
-        List<ISpiderRequest> requestList = new ArrayList<>();
-        ISpiderRequest request = new ISpiderRequest();
-        List<FieldExtractor> fieldExtractors = ExtractorUtils.getFieldExtractors(AppStore.class);
-        request.setExtract(fieldExtractors);
-        request.setUrl("http://www.ccc.com");
-        requestList.add(request);
-        return requestList;
-    }
-}
-
-```
 
 ## 1.0.0 版本说明
 
@@ -238,6 +94,10 @@ public class DefaultSpiderExecutor implements SpiderExecutor{
 ## 1.0.5 版本更新说明
 
 列表转置优化及注解增强
+
+## 1.0.6 版本更新说明
+
+爬虫执行流程重构
 
 ## 注意事项
 
