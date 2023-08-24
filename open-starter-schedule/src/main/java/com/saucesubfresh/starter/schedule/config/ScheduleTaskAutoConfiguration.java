@@ -45,7 +45,7 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskService taskService(){
+  public ScheduleTaskService scheduleTaskService(){
     return new DefaultScheduleTaskService();
   }
 
@@ -63,7 +63,7 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskTrigger taskTrigger(TimeWheel timeWheel, ScheduleTaskService scheduleTaskService, ScheduleTaskExecutor scheduleTaskExecutor){
+  public ScheduleTaskTrigger scheduleTaskTrigger(TimeWheel timeWheel, ScheduleTaskService scheduleTaskService, ScheduleTaskExecutor scheduleTaskExecutor){
     return new DefaultScheduleTaskTrigger(timeWheel, scheduleTaskService, scheduleTaskExecutor);
   }
 
@@ -75,7 +75,7 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskInitializer taskInitializer(TimeWheel timeWheel, ScheduleTaskService scheduleTaskService, TaskJobScheduler taskJobScheduler){
+  public ScheduleTaskInitializer scheduleTaskInitializer(TimeWheel timeWheel, ScheduleTaskService scheduleTaskService, TaskJobScheduler taskJobScheduler){
     return new DefaultScheduleTaskInitializer(timeWheel, scheduleTaskService, taskJobScheduler);
   }
 }
