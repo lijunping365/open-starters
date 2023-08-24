@@ -23,7 +23,7 @@ import java.util.List;
 public interface TimeWheel {
 
     /**
-     * 任务放入到队列
+     * 任务放入到时间轮
      *
      * @param taskId
      * @param cron
@@ -31,7 +31,7 @@ public interface TimeWheel {
     void put(Long taskId, String cron);
 
     /**
-     * 从任务队列获取任务
+     * 从时间轮获取任务
      *
      * @return
      */

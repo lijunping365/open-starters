@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.schedule.manager;
-
-import java.util.List;
+package com.saucesubfresh.starter.schedule.trigger;
 
 /**
  * @author lijunping
  */
-public interface ScheduleTaskQueueManager {
+public interface TaskTrigger {
 
     /**
-     * 任务放入到队列
-     *
-     * @param taskId
-     * @param cron
+     * 任务触发
      */
-    void put(Long taskId, String cron);
-
-    /**
-     * 从任务队列获取任务
-     *
-     * @return
-     */
-    List<Long> take();
+    void trigger();
 }

@@ -25,22 +25,12 @@ import java.util.Collection;
 public class DefaultTaskService implements TaskService {
 
     @Override
-    public Collection<ScheduleTask> getAll() {
-        return null;
-    }
-
-    @Override
     public ScheduleTask get(Long taskId) {
         return null;
     }
 
     @Override
-    public void add(ScheduleTask task) {
-
-    }
-
-    @Override
-    public void remove(Long taskId) {
-
+    public Collection<ScheduleTask> loadTask() {
+        return null;
     }
 }

@@ -23,7 +23,8 @@ package com.saucesubfresh.starter.schedule.initializer;
 public interface ScheduleTaskInitializer {
 
     /**
-     * 初始化调度任务
+     * 1. 转载时间轮
+     * 2. 启动定时器
      */
     void initialize();
 }

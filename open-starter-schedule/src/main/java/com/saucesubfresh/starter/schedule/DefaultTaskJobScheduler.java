@@ -15,31 +15,80 @@
  */
 package com.saucesubfresh.starter.schedule;
 
-import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
-import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
-import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
+import com.saucesubfresh.starter.schedule.trigger.TaskTrigger;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lijunping
  */
 @Slf4j
-public class DefaultTaskJobScheduler extends AbstractTaskJobScheduler {
+public class DefaultTaskJobScheduler implements TaskJobScheduler {
 
-    private final ScheduleTaskExecutor scheduleTaskExecutor;
+    private Thread scheduleThread;
+    private final TaskTrigger taskTrigger;
+    private volatile boolean scheduleThreadToStop = false;
 
-    public DefaultTaskJobScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
-                                   ScheduleTaskPoolManager scheduleTaskPoolManager,
-                                   ScheduleTaskQueueManager scheduleTaskQueueManager) {
-        super(scheduleTaskPoolManager, scheduleTaskQueueManager);
-        this.scheduleTaskExecutor = scheduleTaskExecutor;
+    public DefaultTaskJobScheduler(TaskTrigger taskTrigger) {
+        this.taskTrigger = taskTrigger;
+    }
+
+
+    @Override
+    public void start() {
+        scheduleThread = new Thread(()->{
+            while (!scheduleThreadToStop) {
+                taskTrigger.trigger();
+                threadSleep();
+            }
+            log.info("scheduleThread stop");
+        });
+        scheduleThread.setDaemon(true);
+        scheduleThread.setName("scheduleThread");
+        scheduleThread.start();
+        log.info("scheduleThread start success");
     }
 
     @Override
-    protected void runTask(List<Long> taskIds) {
-        scheduleTaskExecutor.execute(taskIds);
-        super.threadSleep();
+    public void stop() {
+        scheduleThreadToStop = true;
+        stopThread(scheduleThread);
+        log.info("scheduleThread stop success");
+    }
+
+
+    protected void threadSleep(){
+        try {
+            TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis() % 1000);
+        } catch (InterruptedException e) {
+            if (!scheduleThreadToStop) {
+                log.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    /**
+     * 停止线程
+     * @param thread 要停止的线程
+     */
+    private void stopThread(Thread thread){
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        if (thread.getState() == Thread.State.TERMINATED){
+            return;
+        }
+
+        // interrupt and wait
+        thread.interrupt();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

@@ -15,17 +15,16 @@
  */
 package com.saucesubfresh.starter.schedule.initializer;
 
-import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
-import com.saucesubfresh.starter.schedule.loader.ScheduleTaskLoader;
-import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
-import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import com.saucesubfresh.starter.schedule.TaskJobScheduler;
+import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
+import com.saucesubfresh.starter.schedule.service.TaskService;
+import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author lijunping
@@ -33,30 +32,21 @@ import java.util.List;
 @Slf4j
 public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, InitializingBean, DisposableBean {
 
+    private final TimeWheel timeWheel;
+    private final TaskService taskService;
     private final TaskJobScheduler taskJobScheduler;
-    private final ScheduleTaskLoader scheduleTaskLoader;
-    private final ScheduleTaskPoolManager scheduleTaskPoolManager;
-    private final ScheduleTaskQueueManager scheduleTaskQueueManager;
 
-    public DefaultScheduleTaskInitializer(TaskJobScheduler taskJobScheduler,
-                                          ScheduleTaskLoader scheduleTaskLoader,
-                                          ScheduleTaskPoolManager scheduleTaskPoolManager,
-                                          ScheduleTaskQueueManager scheduleTaskQueueManager) {
+    public DefaultScheduleTaskInitializer(TimeWheel timeWheel,
+                                          TaskService taskService,
+                                          TaskJobScheduler taskJobScheduler) {
+        this.timeWheel = timeWheel;
+        this.taskService = taskService;
         this.taskJobScheduler = taskJobScheduler;
-        this.scheduleTaskLoader = scheduleTaskLoader;
-        this.scheduleTaskPoolManager = scheduleTaskPoolManager;
-        this.scheduleTaskQueueManager = scheduleTaskQueueManager;
     }
 
     @Override
     public void initialize() {
-        List<ScheduleTask> scheduleTasks = scheduleTaskLoader.loadScheduleTask();
-        if (!CollectionUtils.isEmpty(scheduleTasks)){
-            scheduleTaskPoolManager.addAll(scheduleTasks);
-            for (ScheduleTask task : scheduleTasks) {
-                scheduleTaskQueueManager.put(task.getTaskId(), task.getCronExpression());
-            }
-        }
+        loadTask();
         taskJobScheduler.start();
     }
 
@@ -73,5 +63,16 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
     @Override
     public void destroy() throws Exception {
         taskJobScheduler.stop();
+    }
+
+    private void loadTask(){
+        Collection<ScheduleTask> scheduleTasks = taskService.loadTask();
+        if (CollectionUtils.isEmpty(scheduleTasks)){
+            return;
+        }
+
+        for (ScheduleTask task : scheduleTasks) {
+            timeWheel.put(task.getTaskId(), task.getCronExpression());
+        }
     }
 }

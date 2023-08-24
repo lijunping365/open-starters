@@ -22,13 +22,13 @@ import com.saucesubfresh.starter.schedule.executor.DefaultScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.initializer.DefaultScheduleTaskInitializer;
 import com.saucesubfresh.starter.schedule.initializer.ScheduleTaskInitializer;
-import com.saucesubfresh.starter.schedule.loader.DefaultScheduleTaskLoader;
-import com.saucesubfresh.starter.schedule.loader.ScheduleTaskLoader;
-import com.saucesubfresh.starter.schedule.manager.HashedWheelScheduleTaskQueueManager;
-import com.saucesubfresh.starter.schedule.manager.LocalScheduleTaskPoolManager;
-import com.saucesubfresh.starter.schedule.manager.ScheduleTaskPoolManager;
-import com.saucesubfresh.starter.schedule.manager.ScheduleTaskQueueManager;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
+import com.saucesubfresh.starter.schedule.service.DefaultTaskService;
+import com.saucesubfresh.starter.schedule.service.TaskService;
+import com.saucesubfresh.starter.schedule.trigger.DefaultTaskTrigger;
+import com.saucesubfresh.starter.schedule.trigger.TaskTrigger;
+import com.saucesubfresh.starter.schedule.wheel.HashedTimeWheel;
+import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -45,20 +45,14 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskPoolManager scheduleTaskManager(){
-    return new LocalScheduleTaskPoolManager();
+  public TaskService taskService(){
+    return new DefaultTaskService();
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskQueueManager scheduleTaskQueueManager(ScheduleProperties scheduleProperties){
-    return new HashedWheelScheduleTaskQueueManager(scheduleProperties);
-  }
-
-  @Bean
-  @ConditionalOnMissingBean
-  public ScheduleTaskLoader scheduleTaskLoader(){
-    return new DefaultScheduleTaskLoader();
+  public TimeWheel timeWheel(ScheduleProperties scheduleProperties){
+    return new HashedTimeWheel(scheduleProperties);
   }
 
   @Bean
@@ -69,18 +63,19 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskJobScheduler taskJobScheduler(ScheduleTaskExecutor scheduleTaskExecutor,
-                                           ScheduleTaskPoolManager scheduleTaskPoolManager,
-                                           ScheduleTaskQueueManager scheduleTaskQueueManager){
-    return new DefaultTaskJobScheduler(scheduleTaskExecutor, scheduleTaskPoolManager, scheduleTaskQueueManager);
+  public TaskTrigger taskTrigger(TimeWheel timeWheel, TaskService taskService, ScheduleTaskExecutor scheduleTaskExecutor){
+    return new DefaultTaskTrigger(timeWheel, taskService, scheduleTaskExecutor);
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskInitializer taskInitializer(TaskJobScheduler taskJobScheduler,
-                                                 ScheduleTaskLoader scheduleTaskLoader,
-                                                 ScheduleTaskPoolManager scheduleTaskPoolManager,
-                                                 ScheduleTaskQueueManager scheduleTaskQueueManager){
-    return new DefaultScheduleTaskInitializer(taskJobScheduler, scheduleTaskLoader, scheduleTaskPoolManager, scheduleTaskQueueManager);
+  public TaskJobScheduler taskJobScheduler(TaskTrigger taskTrigger){
+    return new DefaultTaskJobScheduler(taskTrigger);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ScheduleTaskInitializer taskInitializer(TimeWheel timeWheel, TaskService taskService, TaskJobScheduler taskJobScheduler){
+    return new DefaultScheduleTaskInitializer(timeWheel, taskService, taskJobScheduler);
   }
 }

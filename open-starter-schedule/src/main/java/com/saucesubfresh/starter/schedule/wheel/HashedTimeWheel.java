@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * 基于时间轮算法的分布式任务调度系统
+ * 哈希时间轮实现
  *
  * @author lijunping
  */
@@ -50,15 +50,12 @@ public class HashedTimeWheel implements TimeWheel {
         if (nextTime <= nowTime){
             throw new ScheduleException("The nextTime must more than the nowTime");
         }
+
         long diff = nextTime - nowTime;
         long round = diff / tickDuration;
         int tick = (int) (nextTime % tickDuration);
 
-        Set<WheelEntity> taskSet = timeWheel.get(tick);
-        if (CollectionUtils.isEmpty(taskSet)) {
-            taskSet = new HashSet<>();
-        }
-
+        Set<WheelEntity> taskSet = timeWheel.getOrDefault(tick, new HashSet<>());
         WheelEntity wheelEntity = new WheelEntity();
         wheelEntity.setRound(round);
         wheelEntity.setTaskId(taskId);
@@ -74,20 +71,22 @@ public class HashedTimeWheel implements TimeWheel {
             return Collections.emptyList();
         }
 
-        Set<WheelEntity> tasks = entities.stream()
-                .filter(e -> Objects.equals(e.getRound(), 0L) || Objects.equals(e.getRound() -1, 0L))
-                .collect(Collectors.toSet());
+        Set<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() <= 1L).collect(Collectors.toSet());
 
         entities.removeAll(tasks);
 
+        updateRound(nowSecond, entities);
+
+        return tasks.stream().map(WheelEntity::getTaskId).collect(Collectors.toList());
+    }
+
+    private void updateRound(int tick, Set<WheelEntity> entities){
         if (!CollectionUtils.isEmpty(entities)){
             for (WheelEntity entity : entities) {
                 entity.setRound(entity.getRound() - 1L);
             }
 
-            timeWheel.put(nowSecond, entities);
+            timeWheel.put(tick, entities);
         }
-
-        return tasks.stream().map(WheelEntity::getTaskId).collect(Collectors.toList());
     }
 }
