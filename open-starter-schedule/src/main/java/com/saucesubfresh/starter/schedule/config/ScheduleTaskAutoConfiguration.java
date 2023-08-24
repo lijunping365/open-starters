@@ -23,10 +23,10 @@ import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.initializer.DefaultScheduleTaskInitializer;
 import com.saucesubfresh.starter.schedule.initializer.ScheduleTaskInitializer;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
-import com.saucesubfresh.starter.schedule.service.DefaultTaskService;
-import com.saucesubfresh.starter.schedule.service.TaskService;
-import com.saucesubfresh.starter.schedule.trigger.DefaultTaskTrigger;
-import com.saucesubfresh.starter.schedule.trigger.TaskTrigger;
+import com.saucesubfresh.starter.schedule.service.DefaultScheduleTaskService;
+import com.saucesubfresh.starter.schedule.service.ScheduleTaskService;
+import com.saucesubfresh.starter.schedule.trigger.DefaultScheduleTaskTrigger;
+import com.saucesubfresh.starter.schedule.trigger.ScheduleTaskTrigger;
 import com.saucesubfresh.starter.schedule.wheel.HashedTimeWheel;
 import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -45,8 +45,8 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskService taskService(){
-    return new DefaultTaskService();
+  public ScheduleTaskService taskService(){
+    return new DefaultScheduleTaskService();
   }
 
   @Bean
@@ -63,19 +63,19 @@ public class ScheduleTaskAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskTrigger taskTrigger(TimeWheel timeWheel, TaskService taskService, ScheduleTaskExecutor scheduleTaskExecutor){
-    return new DefaultTaskTrigger(timeWheel, taskService, scheduleTaskExecutor);
+  public ScheduleTaskTrigger taskTrigger(TimeWheel timeWheel, ScheduleTaskService scheduleTaskService, ScheduleTaskExecutor scheduleTaskExecutor){
+    return new DefaultScheduleTaskTrigger(timeWheel, scheduleTaskService, scheduleTaskExecutor);
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public TaskJobScheduler taskJobScheduler(TaskTrigger taskTrigger){
-    return new DefaultTaskJobScheduler(taskTrigger);
+  public TaskJobScheduler taskJobScheduler(ScheduleTaskTrigger scheduleTaskTrigger){
+    return new DefaultTaskJobScheduler(scheduleTaskTrigger);
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public ScheduleTaskInitializer taskInitializer(TimeWheel timeWheel, TaskService taskService, TaskJobScheduler taskJobScheduler){
-    return new DefaultScheduleTaskInitializer(timeWheel, taskService, taskJobScheduler);
+  public ScheduleTaskInitializer taskInitializer(TimeWheel timeWheel, ScheduleTaskService scheduleTaskService, TaskJobScheduler taskJobScheduler){
+    return new DefaultScheduleTaskInitializer(timeWheel, scheduleTaskService, taskJobScheduler);
   }
 }

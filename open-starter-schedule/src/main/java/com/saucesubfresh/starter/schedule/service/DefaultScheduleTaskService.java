@@ -22,17 +22,15 @@ import java.util.Collection;
 /**
  * @author lijunping
  */
-public interface TaskService {
+public class DefaultScheduleTaskService implements ScheduleTaskService {
 
-    /**
-     * 获取即将被调度的任务
-     * @return 调度任务集合
-     */
-    ScheduleTask get(Long taskId);
+    @Override
+    public ScheduleTask get(Long taskId) {
+        return null;
+    }
 
-    /**
-     * 获取任务池中存在的全部任务
-     * @return 任务池中存在的全部任务
-     */
-    Collection<ScheduleTask> loadTask();
+    @Override
+    public Collection<ScheduleTask> loadTask() {
+        return null;
+    }
 }

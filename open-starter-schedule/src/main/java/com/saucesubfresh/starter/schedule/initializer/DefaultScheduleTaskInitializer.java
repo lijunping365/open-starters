@@ -17,7 +17,7 @@ package com.saucesubfresh.starter.schedule.initializer;
 
 import com.saucesubfresh.starter.schedule.TaskJobScheduler;
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
-import com.saucesubfresh.starter.schedule.service.TaskService;
+import com.saucesubfresh.starter.schedule.service.ScheduleTaskService;
 import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -33,14 +33,14 @@ import java.util.Collection;
 public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, InitializingBean, DisposableBean {
 
     private final TimeWheel timeWheel;
-    private final TaskService taskService;
+    private final ScheduleTaskService scheduleTaskService;
     private final TaskJobScheduler taskJobScheduler;
 
     public DefaultScheduleTaskInitializer(TimeWheel timeWheel,
-                                          TaskService taskService,
+                                          ScheduleTaskService scheduleTaskService,
                                           TaskJobScheduler taskJobScheduler) {
         this.timeWheel = timeWheel;
-        this.taskService = taskService;
+        this.scheduleTaskService = scheduleTaskService;
         this.taskJobScheduler = taskJobScheduler;
     }
 
@@ -66,7 +66,7 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
     }
 
     private void loadTask(){
-        Collection<ScheduleTask> scheduleTasks = taskService.loadTask();
+        Collection<ScheduleTask> scheduleTasks = scheduleTaskService.loadTask();
         if (CollectionUtils.isEmpty(scheduleTasks)){
             return;
         }

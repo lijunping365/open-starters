@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.schedule.trigger;
 /**
  * @author lijunping
  */
-public interface TaskTrigger {
+public interface ScheduleTaskTrigger {
 
     /**
      * 任务触发

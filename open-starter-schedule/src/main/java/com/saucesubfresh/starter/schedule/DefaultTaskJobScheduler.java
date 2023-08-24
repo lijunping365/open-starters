@@ -15,7 +15,7 @@
  */
 package com.saucesubfresh.starter.schedule;
 
-import com.saucesubfresh.starter.schedule.trigger.TaskTrigger;
+import com.saucesubfresh.starter.schedule.trigger.ScheduleTaskTrigger;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -27,11 +27,11 @@ import java.util.concurrent.TimeUnit;
 public class DefaultTaskJobScheduler implements TaskJobScheduler {
 
     private Thread scheduleThread;
-    private final TaskTrigger taskTrigger;
+    private final ScheduleTaskTrigger scheduleTaskTrigger;
     private volatile boolean scheduleThreadToStop = false;
 
-    public DefaultTaskJobScheduler(TaskTrigger taskTrigger) {
-        this.taskTrigger = taskTrigger;
+    public DefaultTaskJobScheduler(ScheduleTaskTrigger scheduleTaskTrigger) {
+        this.scheduleTaskTrigger = scheduleTaskTrigger;
     }
 
 
@@ -39,7 +39,7 @@ public class DefaultTaskJobScheduler implements TaskJobScheduler {
     public void start() {
         scheduleThread = new Thread(()->{
             while (!scheduleThreadToStop) {
-                taskTrigger.trigger();
+                scheduleTaskTrigger.trigger();
                 threadSleep();
             }
             log.info("scheduleThread stop");

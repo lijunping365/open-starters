@@ -17,7 +17,7 @@ package com.saucesubfresh.starter.schedule.trigger;
 
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
-import com.saucesubfresh.starter.schedule.service.TaskService;
+import com.saucesubfresh.starter.schedule.service.ScheduleTaskService;
 import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -29,17 +29,17 @@ import java.util.Objects;
  * @author lijunping
  */
 @Slf4j
-public class DefaultTaskTrigger implements TaskTrigger{
+public class DefaultScheduleTaskTrigger implements ScheduleTaskTrigger {
 
     private final TimeWheel timeWheel;
-    private final TaskService taskService;
+    private final ScheduleTaskService scheduleTaskService;
     private final ScheduleTaskExecutor executor;
 
-    public DefaultTaskTrigger(TimeWheel timeWheel,
-                              TaskService taskService,
-                              ScheduleTaskExecutor executor) {
+    public DefaultScheduleTaskTrigger(TimeWheel timeWheel,
+                                      ScheduleTaskService scheduleTaskService,
+                                      ScheduleTaskExecutor executor) {
         this.timeWheel = timeWheel;
-        this.taskService = taskService;
+        this.scheduleTaskService = scheduleTaskService;
         this.executor = executor;
     }
 
@@ -66,7 +66,7 @@ public class DefaultTaskTrigger implements TaskTrigger{
      */
     private void refreshNextTime(List<Long> taskIds) {
         for (Long taskId : taskIds) {
-            ScheduleTask task = taskService.get(taskId);
+            ScheduleTask task = scheduleTaskService.get(taskId);
             if (Objects.isNull(task)){
                 continue;
             }
