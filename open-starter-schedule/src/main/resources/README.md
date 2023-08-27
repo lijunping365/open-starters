@@ -26,7 +26,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-schedule</artifactId>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -42,7 +42,7 @@ com:
 
 ### 3. 实现调度任务加载接口
 
-实现 TaskService 接口
+实现 ScheduleTaskService 接口
 
 ## 1.0.0 版本
 
@@ -65,5 +65,3 @@ com:
 ## 1.1.0 版本更新说明
 
 组件重构
-
-重构
