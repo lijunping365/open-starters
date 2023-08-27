@@ -31,9 +31,9 @@ public interface TimeWheel {
     void put(Long taskId, String cron);
 
     /**
-     * 从时间轮获取任务
+     * 获取时间轮指定槽位的任务
      *
      * @return
      */
-    List<Long> take();
+    List<Long> take(int slot);
 }

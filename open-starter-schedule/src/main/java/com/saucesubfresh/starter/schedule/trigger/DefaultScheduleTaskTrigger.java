@@ -22,6 +22,7 @@ import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,7 +47,8 @@ public class DefaultScheduleTaskTrigger implements ScheduleTaskTrigger {
 
     @Override
     public void trigger() {
-        List<Long> taskIds = timeWheel.take();
+        int slot = Calendar.getInstance().get(Calendar.SECOND);
+        List<Long> taskIds = timeWheel.take(slot);
         if (CollectionUtils.isEmpty(taskIds)){
             return;
         }

@@ -64,9 +64,9 @@ public class HashedTimeWheel implements TimeWheel {
     }
 
     @Override
-    public List<Long> take() {
-        int nowSecond = Calendar.getInstance().get(Calendar.SECOND);
-        Set<WheelEntity> entities = timeWheel.get(nowSecond);
+    public List<Long> take(int slot) {
+        Set<WheelEntity> entities = timeWheel.get(slot);
+
         if (CollectionUtils.isEmpty(entities)){
             return Collections.emptyList();
         }
@@ -75,7 +75,7 @@ public class HashedTimeWheel implements TimeWheel {
 
         entities.removeAll(tasks);
 
-        updateRound(nowSecond, entities);
+        updateRound(slot, entities);
 
         return tasks.stream().map(WheelEntity::getTaskId).collect(Collectors.toList());
     }
