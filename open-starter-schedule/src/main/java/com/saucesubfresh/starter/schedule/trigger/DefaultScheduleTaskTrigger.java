@@ -16,15 +16,16 @@
 package com.saucesubfresh.starter.schedule.trigger;
 
 import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
+import com.saucesubfresh.starter.schedule.domain.WheelEntity;
 import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
 import com.saucesubfresh.starter.schedule.service.ScheduleTaskService;
 import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author lijunping
@@ -48,12 +49,14 @@ public class DefaultScheduleTaskTrigger implements ScheduleTaskTrigger {
     @Override
     public void trigger() {
         int slot = Calendar.getInstance().get(Calendar.SECOND);
-        List<Long> taskIds = timeWheel.take(slot);
-        if (CollectionUtils.isEmpty(taskIds)){
+        Set<WheelEntity> taskList = timeWheel.take(slot);
+        if (CollectionUtils.isEmpty(taskList)){
             return;
         }
 
-        refreshNextTime(taskIds);
+        List<ScheduleTask> scheduleTasks = refreshNextTime(taskList);
+        List<Long> taskIds = scheduleTasks.stream().map(ScheduleTask::getTaskId).collect(Collectors.toList());
+
         try {
             executor.execute(taskIds);
         }catch (Exception e){
@@ -64,19 +67,29 @@ public class DefaultScheduleTaskTrigger implements ScheduleTaskTrigger {
     /**
      * 刷新下次执行时间
      *
-     * @param taskIds
+     * @param taskList
+     * @return 任务列表
      */
-    private void refreshNextTime(List<Long> taskIds) {
-        for (Long taskId : taskIds) {
-            ScheduleTask task = scheduleTaskService.get(taskId);
+    private List<ScheduleTask> refreshNextTime(Set<WheelEntity> taskList) {
+        List<ScheduleTask> tasks = new ArrayList<>();
+        for (WheelEntity entity : taskList) {
+            ScheduleTask task = scheduleTaskService.get(entity.getTaskId());
             if (Objects.isNull(task)){
                 continue;
             }
+
             try {
-                timeWheel.put(taskId, task.getCronExpression());
+                timeWheel.put(task.getTaskId(), task.getCronExpression());
             }catch (Exception e){
                 log.error("Refresh task error:{}", e.getMessage(), e);
             }
+
+            if (!StringUtils.equals(entity.getCron(), task.getCronExpression())){
+                continue;
+            }
+
+            tasks.add(task);
         }
+        return tasks;
     }
 }

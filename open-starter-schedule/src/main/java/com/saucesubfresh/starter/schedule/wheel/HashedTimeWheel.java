@@ -52,41 +52,26 @@ public class HashedTimeWheel implements TimeWheel {
         }
 
         long diff = nextTime - nowTime;
-        long round = diff / tickDuration;
+        long round = diff / tickDuration + 1;
         int tick = (int) (nextTime % tickDuration);
 
         Set<WheelEntity> taskSet = timeWheel.getOrDefault(tick, new HashSet<>());
-        WheelEntity wheelEntity = new WheelEntity();
-        wheelEntity.setRound(round);
-        wheelEntity.setTaskId(taskId);
+        WheelEntity wheelEntity = new WheelEntity(taskId, round, cron);
         taskSet.add(wheelEntity);
         timeWheel.put(tick, taskSet);
     }
 
     @Override
-    public List<Long> take(int slot) {
+    public Set<WheelEntity> take(int slot) {
         Set<WheelEntity> entities = timeWheel.get(slot);
 
         if (CollectionUtils.isEmpty(entities)){
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
-        Set<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() <= 1L).collect(Collectors.toSet());
-
+        Set<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() == 1L).collect(Collectors.toSet());
         entities.removeAll(tasks);
-
-        updateRound(slot, entities);
-
-        return tasks.stream().map(WheelEntity::getTaskId).collect(Collectors.toList());
-    }
-
-    private void updateRound(int tick, Set<WheelEntity> entities){
-        if (!CollectionUtils.isEmpty(entities)){
-            for (WheelEntity entity : entities) {
-                entity.setRound(entity.getRound() - 1L);
-            }
-
-            timeWheel.put(tick, entities);
-        }
+        timeWheel.put(slot, entities);
+        return tasks;
     }
 }

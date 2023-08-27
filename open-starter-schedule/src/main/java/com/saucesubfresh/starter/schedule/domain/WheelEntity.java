@@ -15,7 +15,9 @@
  */
 package com.saucesubfresh.starter.schedule.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
@@ -23,11 +25,15 @@ import java.util.Objects;
  * @author lijunping
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class WheelEntity {
 
     private Long taskId;
 
     private Long round;
+
+    private String cron;
 
     @Override
     public boolean equals(Object o) {
