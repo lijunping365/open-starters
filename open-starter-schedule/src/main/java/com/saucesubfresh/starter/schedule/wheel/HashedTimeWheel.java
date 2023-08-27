@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class HashedTimeWheel implements TimeWheel {
 
     private final long tickDuration;
-    private static final Map<Integer, Set<WheelEntity>> timeWheel = new ConcurrentHashMap<>();
+    private static final Map<Integer, List<WheelEntity>> timeWheel = new ConcurrentHashMap<>();
 
     public HashedTimeWheel(ScheduleProperties scheduleProperties){
         long tickDuration = scheduleProperties.getTickDuration();
@@ -55,21 +55,21 @@ public class HashedTimeWheel implements TimeWheel {
         long round = diff / tickDuration + 1;
         int tick = (int) (nextTime % tickDuration);
 
-        Set<WheelEntity> taskSet = timeWheel.getOrDefault(tick, new HashSet<>());
+        List<WheelEntity> taskList = timeWheel.getOrDefault(tick, new ArrayList<>());
         WheelEntity wheelEntity = new WheelEntity(taskId, round, cron);
-        taskSet.add(wheelEntity);
-        timeWheel.put(tick, taskSet);
+        taskList.add(wheelEntity);
+        timeWheel.put(tick, taskList);
     }
 
     @Override
-    public Set<WheelEntity> take(int slot) {
-        Set<WheelEntity> entities = timeWheel.get(slot);
+    public List<WheelEntity> take(int slot) {
+        List<WheelEntity> entities = timeWheel.get(slot);
 
         if (CollectionUtils.isEmpty(entities)){
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
-        Set<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() == 1L).collect(Collectors.toSet());
+        List<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() == 1L).collect(Collectors.toList());
         entities.removeAll(tasks);
         timeWheel.put(slot, entities);
         return tasks;

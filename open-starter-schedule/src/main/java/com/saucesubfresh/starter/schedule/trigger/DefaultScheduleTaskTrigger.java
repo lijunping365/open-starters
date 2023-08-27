@@ -49,7 +49,7 @@ public class DefaultScheduleTaskTrigger implements ScheduleTaskTrigger {
     @Override
     public void trigger() {
         int slot = Calendar.getInstance().get(Calendar.SECOND);
-        Set<WheelEntity> taskList = timeWheel.take(slot);
+        List<WheelEntity> taskList = timeWheel.take(slot);
         if (CollectionUtils.isEmpty(taskList)){
             return;
         }
@@ -70,7 +70,7 @@ public class DefaultScheduleTaskTrigger implements ScheduleTaskTrigger {
      * @param taskList
      * @return 任务列表
      */
-    private List<ScheduleTask> refreshNextTime(Set<WheelEntity> taskList) {
+    private List<ScheduleTask> refreshNextTime(List<WheelEntity> taskList) {
         List<ScheduleTask> tasks = new ArrayList<>();
         for (WheelEntity entity : taskList) {
             ScheduleTask task = scheduleTaskService.get(entity.getTaskId());
