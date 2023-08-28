@@ -13,10 +13,6 @@
     <description>A distributed scheduling component</description>
     <version>1.1.0</version>
 
-    <properties>
-        <redisson.version>3.17.4</redisson.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
