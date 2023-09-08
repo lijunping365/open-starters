@@ -23,5 +23,5 @@ import com.saucesubfresh.starter.alarm.request.BaseAlarmRequest;
  */
 public interface AlarmExecutor<T extends BaseAlarmRequest> {
 
-    void doAlarm(T message) throws AlarmException;
+    void sendAlarm(T message) throws AlarmException;
 }

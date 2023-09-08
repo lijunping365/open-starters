@@ -18,6 +18,7 @@ package com.saucesubfresh.starter.alarm;
 import com.saucesubfresh.starter.alarm.exception.AlarmException;
 import com.saucesubfresh.starter.alarm.request.BaseAlarmRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -30,6 +31,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author lijunping
@@ -48,6 +50,13 @@ public abstract class AbstractAlarmExecutor<T extends BaseAlarmRequest> implemen
                 .setConnectionRequestTimeout(HTTP_CONNECTION_REQUEST_TIMEOUT)
                 .setSocketTimeout(HTTP_SOCKET_TIMEOUT)
                 .build();
+    }
+
+    protected String getWebHook(String defaultWebhook, BaseAlarmRequest request){
+        if (StringUtils.isNotBlank(request.getWebhook())){
+            defaultWebhook = request.getWebhook();
+        }
+        return defaultWebhook;
     }
 
     /**

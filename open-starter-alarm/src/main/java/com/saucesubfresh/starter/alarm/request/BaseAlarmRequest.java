@@ -15,8 +15,16 @@
  */
 package com.saucesubfresh.starter.alarm.request;
 
+import lombok.Data;
+
 /**
  * @author lijunping
  */
+@Data
 public class BaseAlarmRequest {
+
+    /**
+     * 自定义群机器人中的 webhook
+     */
+    private String webhook;
 }

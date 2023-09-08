@@ -66,11 +66,6 @@ public class WeChatRobotAlarmRequest extends BaseAlarmRequest {
     private TemplateCardDTO templateCard;
 
     /**
-     * 配置
-     */
-    private ConfigVO config;
-
-    /**
      * TextDTO
      */
     @NoArgsConstructor
@@ -422,18 +417,5 @@ public class WeChatRobotAlarmRequest extends BaseAlarmRequest {
             @JsonProperty("pagepath")
             private String pagePath;
         }
-    }
-
-    /**
-     * ConfigVO
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ConfigVO {
-        /**
-         * 自定义群机器人中的 webhook
-         */
-        private String webhook;
     }
 }

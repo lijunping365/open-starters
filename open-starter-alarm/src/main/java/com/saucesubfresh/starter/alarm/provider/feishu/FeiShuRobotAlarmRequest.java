@@ -46,10 +46,6 @@ public class FeiShuRobotAlarmRequest extends BaseAlarmRequest {
      * card
      */
     private CardDTO card;
-    /**
-     * 配置
-     */
-    private ConfigVO config;
 
     /**
      * ContentDTO
@@ -294,17 +290,5 @@ public class FeiShuRobotAlarmRequest extends BaseAlarmRequest {
                 }
             }
         }
-    }
-    /**
-     * ConfigVO
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ConfigVO {
-        /**
-         * 自定义群机器人中的 webhook
-         */
-        private String webhook;
     }
 }

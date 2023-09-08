@@ -52,7 +52,7 @@ public class DingDingRobotAlarmExecutor extends AbstractAlarmExecutor<DingDingRo
     }
 
     @Override
-    public void doAlarm(DingDingRobotAlarmRequest message) throws AlarmException {
+    public void sendAlarm(DingDingRobotAlarmRequest message) throws AlarmException {
         String errMsg;
         String errCode = "";
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {

@@ -44,17 +44,12 @@ public class WeChatRobotAlarmExecutor extends AbstractAlarmExecutor<WeChatRobotA
         this.alarmProperties = alarmProperties.getWeChat();
     }
     @Override
-    public void doAlarm(WeChatRobotAlarmRequest message) throws AlarmException {
+    public void sendAlarm(WeChatRobotAlarmRequest message) throws AlarmException {
         String errMsg;
         String errCode = "";
         try (CloseableHttpClient httpClient = HttpClients.custom().build()) {
-            String url = alarmProperties.getWebhook();
-            WeChatRobotAlarmRequest.ConfigVO config = message.getConfig();
-            if (Objects.nonNull(config) && StringUtils.isNotBlank(config.getWebhook())){
-                url = config.getWebhook();
-            }
-
-            String response = sendAlarmMessage(httpClient, url, JSON.toJSON(message));
+            String webHook = super.getWebHook(alarmProperties.getWebhook(), message);
+            String response = sendAlarmMessage(httpClient, webHook, JSON.toJSON(message));
             Map<String, String> res = JSON.parseMap(response, String.class, String.class);
             errMsg = res.get(RESPONSE_MSG);
             errCode = res.get(RESPONSE_CODE);
