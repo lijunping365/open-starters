@@ -68,4 +68,4 @@ com:
 
 ## 1.1.1 版本更新说明
 
-修复更新 round 的bug
+修复 round 未更新的bug
