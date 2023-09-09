@@ -33,12 +33,12 @@ import java.util.stream.Collectors;
 public class HashedTimeWheel implements TimeWheel {
 
     private final long tickDuration;
-    private static final Map<Integer, List<WheelEntity>> timeWheel = new ConcurrentHashMap<>();
+    private static final Map<Integer, Set<WheelEntity>> timeWheel = new ConcurrentHashMap<>();
 
     public HashedTimeWheel(ScheduleProperties scheduleProperties){
         long tickDuration = scheduleProperties.getTickDuration();
         if (tickDuration <= 0){
-            throw new ScheduleException("The tickDuration must more than zero.");
+            throw new ScheduleException("The tickDuration must more than zero");
         }
         this.tickDuration = tickDuration;
     }
@@ -52,10 +52,10 @@ public class HashedTimeWheel implements TimeWheel {
         }
 
         long diff = nextTime - nowTime;
-        long round = diff / tickDuration + 1;
+        long round = diff / tickDuration;
         int tick = (int) (nextTime % tickDuration);
 
-        List<WheelEntity> taskList = timeWheel.getOrDefault(tick, new ArrayList<>());
+        Set<WheelEntity> taskList = timeWheel.getOrDefault(tick, new HashSet<>());
         WheelEntity wheelEntity = new WheelEntity(taskId, round, cron);
         taskList.add(wheelEntity);
         timeWheel.put(tick, taskList);
@@ -63,19 +63,19 @@ public class HashedTimeWheel implements TimeWheel {
 
     @Override
     public List<WheelEntity> take(int slot) {
-        List<WheelEntity> entities = timeWheel.get(slot);
+        Set<WheelEntity> entities = timeWheel.get(slot);
 
         if (CollectionUtils.isEmpty(entities)){
             return Collections.emptyList();
         }
 
-        List<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() == 1L).collect(Collectors.toList());
+        List<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() == 0L).collect(Collectors.toList());
         entities.removeAll(tasks);
         updateRound(slot, entities);
         return tasks;
     }
 
-    private void updateRound(int tick, List<WheelEntity> entities){
+    private void updateRound(int tick, Set<WheelEntity> entities){
         if (!CollectionUtils.isEmpty(entities)){
             for (WheelEntity entity : entities) {
                 entity.setRound(entity.getRound() - 1L);
