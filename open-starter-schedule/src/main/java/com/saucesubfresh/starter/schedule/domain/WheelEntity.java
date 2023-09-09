@@ -19,8 +19,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 /**
  * @author lijunping
  */
@@ -34,18 +32,4 @@ public class WheelEntity {
     private Long round;
 
     private String cron;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WheelEntity that = (WheelEntity) o;
-        return Objects.equals(taskId, that.taskId) &&
-                Objects.equals(round, that.round);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(taskId, round);
-    }
 }
