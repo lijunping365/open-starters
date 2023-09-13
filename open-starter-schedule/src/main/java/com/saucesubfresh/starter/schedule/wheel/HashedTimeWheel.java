@@ -38,7 +38,7 @@ public class HashedTimeWheel implements TimeWheel {
     public HashedTimeWheel(ScheduleProperties scheduleProperties){
         long tickDuration = scheduleProperties.getTickDuration();
         if (tickDuration <= 0){
-            throw new ScheduleException("The TaskPoolName cannot be empty.");
+            throw new ScheduleException("The tickDuration must more than zero");
         }
         this.tickDuration = tickDuration;
     }
@@ -52,7 +52,7 @@ public class HashedTimeWheel implements TimeWheel {
         }
 
         long diff = nextTime - nowTime;
-        long round = diff / tickDuration + 1;
+        long round = diff / tickDuration;
         int tick = (int) (nextTime % tickDuration);
 
         List<WheelEntity> taskList = timeWheel.getOrDefault(tick, new ArrayList<>());
@@ -69,9 +69,19 @@ public class HashedTimeWheel implements TimeWheel {
             return Collections.emptyList();
         }
 
-        List<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() == 1L).collect(Collectors.toList());
+        List<WheelEntity> tasks = entities.stream().filter(e -> e.getRound() == 0L).collect(Collectors.toList());
         entities.removeAll(tasks);
-        timeWheel.put(slot, entities);
+        updateRound(slot, entities);
         return tasks;
+    }
+
+    private void updateRound(int tick, List<WheelEntity> entities){
+        if (!CollectionUtils.isEmpty(entities)){
+            for (WheelEntity entity : entities) {
+                entity.setRound(entity.getRound() - 1L);
+            }
+
+            timeWheel.put(tick, entities);
+        }
     }
 }
