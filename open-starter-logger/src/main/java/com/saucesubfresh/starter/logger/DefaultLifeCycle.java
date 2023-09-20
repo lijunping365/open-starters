@@ -17,10 +17,12 @@ package com.saucesubfresh.starter.logger;
 
 import com.saucesubfresh.starter.logger.properties.LoggerProperties;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
 
-public class DefaultLifeCycle implements LifeCycle{
+public class DefaultLifeCycle implements LifeCycle, InitializingBean, DisposableBean {
 
     private static final String ROOT = "/";
 
@@ -53,4 +55,13 @@ public class DefaultLifeCycle implements LifeCycle{
         loggerEvict.evict();
     }
 
+    @Override
+    public void destroy() throws Exception {
+        start();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        start();
+    }
 }
