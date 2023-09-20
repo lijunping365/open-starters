@@ -26,6 +26,7 @@
         <module>open-starter-job-register</module>
         <module>open-starter-distributed-lock</module>
         <module>open-starter-distributed-limiter</module>
+        <module>open-starter-logger</module>
     </modules>
 
     <licenses>
