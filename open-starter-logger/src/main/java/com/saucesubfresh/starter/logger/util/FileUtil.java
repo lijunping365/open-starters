@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 
 /**
  * file tool
@@ -28,28 +27,6 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 public class FileUtil {
-
-    /**
-     * log filename, like "logPath/yyyy-MM-dd/logId.log"
-     *
-     * @param triggerDate
-     * @param logId
-     * @return
-     */
-    public static String makeLogFileName(LocalDateTime triggerDate, long logId) {
-        String format = LocalDateTimeUtil.format(triggerDate, LocalDateTimeUtil.DATE_FORMATTER);
-        File logFilePath = new File(getBaseLogPath(), format);
-        if (!logFilePath.exists()) {
-            logFilePath.mkdir();
-        }
-
-        // filePath/yyyy-MM-dd/jobId.log
-        String logFileName = logFilePath.getPath()
-                .concat(File.separator)
-                .concat(String.valueOf(logId))
-                .concat(".log");
-        return logFileName;
-    }
 
     /**
      * delete recursively
@@ -93,55 +70,22 @@ public class FileUtil {
         }
     }
 
-
-
-    /**
-     * read log data
-     * @param logFile
-     * @return log line content
-     */
-    public static String readLines(File logFile){
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
-            if (reader != null) {
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-                return sb.toString();
-            }
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        }
-        return null;
-    }
-
-
     /**
      * support read log-file
      *
      * @param logFileName
      * @return log content
      */
-    public static JobLogResult readLog(String logFileName, int fromLineNum){
+    public static String readFileLine(String logFileName, int fromLineNum){
         // valid log file
         if (logFileName==null || logFileName.trim().length()==0) {
-            return new JobLogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
+            return null;
         }
+
         File logFile = new File(logFileName);
 
         if (!logFile.exists()) {
-            return new JobLogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);
+            return null;
         }
 
         // read file
@@ -171,40 +115,6 @@ public class FileUtil {
             }
         }
 
-        // result
-        JobLogResult logResult = new JobLogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
-        return logResult;
-
-		/*
-        // it will return the number of characters actually skipped
-        reader.skip(Long.MAX_VALUE);
-        int maxLineNum = reader.getLineNumber();
-        maxLineNum++;	// 最大行号
-        */
-    }
-
-    public static byte[] readFileContent(File file) {
-        Long fileLength = file.length();
-        byte[] fileContent = new byte[fileLength.intValue()];
-
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream(file);
-            in.read(fileContent);
-            in.close();
-
-            return fileContent;
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return null;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        }
+        return logContentBuffer.toString();
     }
 }
