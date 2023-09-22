@@ -15,7 +15,16 @@
  */
 package com.saucesubfresh.starter.logger;
 
+/**
+ * logger evict
+ *
+ * @author lijunping
+ */
 public interface LoggerEvict {
+
+    void start();
+
+    void stop();
 
     void evict();
 

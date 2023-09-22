@@ -15,6 +15,11 @@
  */
 package com.saucesubfresh.starter.logger;
 
+/**
+ * logger appender
+ *
+ * @author lijunping
+ */
 public interface LoggerAppender {
 
     /**

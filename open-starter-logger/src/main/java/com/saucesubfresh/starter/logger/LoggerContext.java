@@ -15,6 +15,11 @@
  */
 package com.saucesubfresh.starter.logger;
 
+/**
+ * logger context
+ *
+ * @author lijunping
+ */
 public class LoggerContext {
 
     private static final InheritableThreadLocal<LoggerContext> contextHolder = new InheritableThreadLocal<>();

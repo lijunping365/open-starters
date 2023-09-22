@@ -22,6 +22,11 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
 
+/**
+ * default logger lifeCycle
+ *
+ * @author lijunping
+ */
 public class DefaultLifeCycle implements LifeCycle, InitializingBean, DisposableBean {
 
     private static final String ROOT = "/";
@@ -48,16 +53,17 @@ public class DefaultLifeCycle implements LifeCycle, InitializingBean, Disposable
         }
         logBasePath = logPathDir.getPath();
         LoggerContext.setLogBasePath(logBasePath);
+        loggerEvict.start();
     }
 
     @Override
     public void stop() {
-        loggerEvict.evict();
+        loggerEvict.stop();
     }
 
     @Override
     public void destroy() throws Exception {
-        start();
+        stop();
     }
 
     @Override

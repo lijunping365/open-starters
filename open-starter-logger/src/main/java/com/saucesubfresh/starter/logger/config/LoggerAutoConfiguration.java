@@ -15,13 +15,35 @@
  */
 package com.saucesubfresh.starter.logger.config;
 
+import com.saucesubfresh.starter.logger.DefaultLifeCycle;
+import com.saucesubfresh.starter.logger.DefaultLoggerEvict;
+import com.saucesubfresh.starter.logger.LifeCycle;
+import com.saucesubfresh.starter.logger.LoggerEvict;
 import com.saucesubfresh.starter.logger.properties.LoggerProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * logger autoConfiguration
+ *
+ * @author lijunping
+ */
 @Configuration
 @EnableConfigurationProperties(LoggerProperties.class)
 public class LoggerAutoConfiguration {
 
+    @Bean
+    @ConditionalOnMissingBean
+    public LoggerEvict loggerEvict(LoggerProperties properties){
+        return new DefaultLoggerEvict(properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LifeCycle lifeCycle(LoggerProperties properties, LoggerEvict loggerEvict){
+        return new DefaultLifeCycle(properties, loggerEvict);
+    }
 
 }

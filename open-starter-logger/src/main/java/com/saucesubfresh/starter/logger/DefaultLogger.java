@@ -24,14 +24,19 @@ import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * default logger
+ *
+ * @author lijunping
+ */
 public class DefaultLogger implements Logger{
 
     private static final String DATETIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
 
     private final LoggerAppender loggerAppender;
 
-    public DefaultLogger() {
-        this.loggerAppender = new DefaultFileLoggerAppender();
+    public DefaultLogger(LoggerAppender loggerAppender) {
+        this.loggerAppender = loggerAppender;
     }
 
     @Override

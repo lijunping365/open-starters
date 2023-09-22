@@ -15,6 +15,11 @@
  */
 package com.saucesubfresh.starter.logger;
 
+/**
+ * logger lifeCycle hook
+ *
+ * @author lijunping
+ */
 public interface LifeCycle {
 
     void start();

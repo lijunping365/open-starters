@@ -22,6 +22,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * default file logger appender
+ *
+ * @author lijunping
+ */
 @Slf4j
 public class DefaultFileLoggerAppender implements LoggerAppender {
 
