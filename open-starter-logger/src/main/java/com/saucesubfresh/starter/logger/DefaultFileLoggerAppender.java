@@ -15,10 +15,10 @@
  */
 package com.saucesubfresh.starter.logger;
 
+import com.saucesubfresh.starter.logger.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -53,22 +53,6 @@ public class DefaultFileLoggerAppender implements LoggerAppender {
         }
         appendLog += "\r\n";
 
-        // append file content
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(logFile, true);
-            fos.write(appendLog.getBytes(StandardCharsets.UTF_8));
-            fos.flush();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        }
+        FileUtil.writeFileContent(logFile, appendLog.getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -73,14 +73,8 @@ public class FileUtil {
     }
 
 
+    // append file content
     public static void writeFileContent(File file, byte[] data) {
-
-        // file
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-        }
-
-        // append file content
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
@@ -97,7 +91,6 @@ public class FileUtil {
                 }
             }
         }
-
     }
 
 
