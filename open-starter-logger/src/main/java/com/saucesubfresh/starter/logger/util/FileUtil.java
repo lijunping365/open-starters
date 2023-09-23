@@ -76,7 +76,7 @@ public class FileUtil {
      * @param logFileName
      * @return log content
      */
-    public static String readFileLine(String logFileName, int fromLineNum){
+    public static String[] readFileLine(String logFileName, int fromLineNum){
         // valid log file
         if (logFileName==null || logFileName.trim().length()==0) {
             return null;
@@ -115,6 +115,6 @@ public class FileUtil {
             }
         }
 
-        return logContentBuffer.toString();
+        return new String[]{logContentBuffer.toString(), String.valueOf(toLineNum)};
     }
 }
