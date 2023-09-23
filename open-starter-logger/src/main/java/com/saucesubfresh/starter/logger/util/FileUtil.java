@@ -54,7 +54,7 @@ public class FileUtil {
     public static void writeFileContent(File file, byte[] data) {
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file, true);
             fos.write(data);
             fos.flush();
         } catch (Exception e) {
