@@ -15,17 +15,43 @@
  */
 package com.saucesubfresh.starter.logger;
 
+import com.saucesubfresh.starter.logger.util.FileUtil;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 /**
  * logger appender
  *
  * @author lijunping
  */
-public interface LoggerAppender {
+@Slf4j
+public class LoggerAppender {
 
-    /**
-     * Append log
-     * @param logFileName
-     * @param appendLog
-     */
-    void appendLog(String logFileName, String appendLog);
+    public static void appendLog(String logFileName, String appendLog) {
+        // log file
+        if (logFileName==null || logFileName.trim().length()==0) {
+            return;
+        }
+        File logFile = new File(logFileName);
+
+        if (!logFile.exists()) {
+            try {
+                logFile.createNewFile();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                return;
+            }
+        }
+
+        // log
+        if (appendLog == null) {
+            appendLog = "";
+        }
+        appendLog += "\r\n";
+
+        FileUtil.writeFileContent(logFile, appendLog.getBytes(StandardCharsets.UTF_8));
+    }
 }

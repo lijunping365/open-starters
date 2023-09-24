@@ -33,12 +33,6 @@ public class DefaultLogger implements Logger{
 
     private static final String DATETIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
 
-    private final LoggerAppender loggerAppender;
-
-    public DefaultLogger(LoggerAppender loggerAppender) {
-        this.loggerAppender = loggerAppender;
-    }
-
     @Override
     public void log(String msg) {
         log(msg, null);
@@ -97,6 +91,6 @@ public class DefaultLogger implements Logger{
                 .append(appendLog != null ? appendLog : "");
 
         String formatAppendLog = stringBuffer.toString();
-        loggerAppender.appendLog(logFileName, formatAppendLog);
+        LoggerAppender.appendLog(logFileName, formatAppendLog);
     }
 }

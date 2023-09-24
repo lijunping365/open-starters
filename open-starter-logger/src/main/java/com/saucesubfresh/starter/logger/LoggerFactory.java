@@ -28,7 +28,7 @@ public final class LoggerFactory {
         if (instance == null) {
             synchronized (Logger.class) {
                 if (instance == null) {
-                    instance = new DefaultLogger(new DefaultFileLoggerAppender());
+                    instance = new DefaultLogger();
                 }
             }
         }
