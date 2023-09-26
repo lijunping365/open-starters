@@ -13,20 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.executor.component;
+package com.saucesubfresh.starter.executor.per;
 
-import com.saucesubfresh.starter.executor.domain.Task;
-import lombok.extern.slf4j.Slf4j;
-
-/**
- * 默认任务执行失败处理器
- *
- * @author lijunping
- */
-@Slf4j
-public class DefaultTaskExecuteFailureHandler implements TaskExecuteFailureHandler {
-  @Override
-  public void onTaskExecuteFailure(Task task, String msg) {
-    log.info("任务执行失败了");
-  }
+public class Task {
 }

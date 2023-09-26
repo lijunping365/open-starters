@@ -22,8 +22,8 @@ import com.saucesubfresh.starter.executor.component.DefaultTaskExecuteFailureHan
 import com.saucesubfresh.starter.executor.component.DefaultTaskExecuteSuccessHandler;
 import com.saucesubfresh.starter.executor.component.TaskExecuteFailureHandler;
 import com.saucesubfresh.starter.executor.component.TaskExecuteSuccessHandler;
-import com.saucesubfresh.starter.executor.executor.DefaultTaskExecutor;
-import com.saucesubfresh.starter.executor.executor.ITaskExecutor;
+import com.saucesubfresh.starter.executor.ThreadPerTaskExecutor;
+import com.saucesubfresh.starter.executor.TaskExecutor;
 import com.saucesubfresh.starter.executor.interceptor.DefaultTaskAfterInterceptor;
 import com.saucesubfresh.starter.executor.interceptor.DefaultTaskBeforeInterceptor;
 import com.saucesubfresh.starter.executor.interceptor.TaskAfterInterceptor;
@@ -64,47 +64,11 @@ public class TaskExecutorAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ITaskExecutor iTaskExecutor(ThreadPoolExecutor threadPoolExecutor) {
-    return new DefaultTaskExecutor(threadPoolExecutor);
+  public TaskExecutor iTaskExecutor(ThreadPoolExecutor threadPoolExecutor) {
+    return new ThreadPerTaskExecutor(threadPoolExecutor);
   }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public TaskBuilder taskBuilder(TaskExecuteSuccessHandler taskExecuteSuccessHandler,
-                                 TaskExecuteFailureHandler taskExecuteFailureHandler,
-                                 TaskBeforeInterceptor taskBeforeInterceptor,
-                                 TaskAfterInterceptor taskAfterInterceptor) {
-    return new DefaultTaskBuilder(taskExecuteSuccessHandler, taskExecuteFailureHandler, taskBeforeInterceptor, taskAfterInterceptor);
-  }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public TaskProcessor<?> taskProcessor(TaskBuilder taskBuilder, ITaskExecutor iTaskExecutor){
-    return new DefaultTaskProcessor<>(taskBuilder, iTaskExecutor);
-  }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public TaskExecuteSuccessHandler taskExecuteSuccessHandler() {
-    return new DefaultTaskExecuteSuccessHandler();
-  }
-
-  @Bean
-  @ConditionalOnMissingBean
-  public TaskExecuteFailureHandler taskExecuteFailureHandler() {
-    return new DefaultTaskExecuteFailureHandler();
-  }
-
-  @Bean
-  @ConditionalOnMissingBean
-  public TaskBeforeInterceptor taskBeforeInterceptor() {
-    return new DefaultTaskBeforeInterceptor();
-  }
-
-  @Bean
-  @ConditionalOnMissingBean
-  public TaskAfterInterceptor taskAfterInterceptor() {
-    return new DefaultTaskAfterInterceptor();
-  }
 
 }

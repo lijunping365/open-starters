@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.executor.interceptor;
+package com.saucesubfresh.starter.executor;
 
-
-import com.saucesubfresh.starter.executor.domain.Task;
-import lombok.extern.slf4j.Slf4j;
+import java.io.Closeable;
+import java.util.concurrent.Executor;
 
 /**
- * 默认的任务的前置拦截器
+ * 任务的执行器接口
  *
  * @author lijunping
  */
-@Slf4j
-public class DefaultTaskBeforeInterceptor implements TaskBeforeInterceptor {
+public interface TaskExecutor extends Executor, Closeable {
 
-  @Override
-  public void before(Task task) throws Throwable {
-    log.info("任务前置拦截器 {}", task);
-  }
+    /**
+     * Executes the given command at some time in the future.  The command
+     * may execute in a new thread, in a pooled thread, or in the calling
+     * thread, at the discretion of the {@code Executor} implementation.
+     */
+    @Override
+    void execute(Runnable command);
+
+    /**
+     * 关闭执行器
+     */
+    @Override
+    void close();
+
 }
