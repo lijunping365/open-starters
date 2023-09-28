@@ -10,7 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>open-starter-executor</artifactId>
-    <version>1.0.4</version>
+    <description>任务执行组件</description>
+    <version>1.0.5</version>
 
     <dependencies>
         <dependency>
