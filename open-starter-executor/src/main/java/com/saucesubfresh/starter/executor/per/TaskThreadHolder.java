@@ -62,7 +62,7 @@ public class TaskThreadHolder {
     }
 
     /**
-     * 释放资源
+     * 结束线程
      */
     public static void shutdown(){
         if (taskThreadMap.size() == 0) {
