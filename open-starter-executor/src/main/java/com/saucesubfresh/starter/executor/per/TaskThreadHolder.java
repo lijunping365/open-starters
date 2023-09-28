@@ -17,6 +17,7 @@ package com.saucesubfresh.starter.executor.per;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -35,18 +36,16 @@ public class TaskThreadHolder {
     }
 
     /**
-     * 将 taskId 和线程绑定并返回绑定的线程
+     * 将 taskId 和线程放入 map
      * @param taskId
      * @return
      */
-    public static TaskThread putThread(Long taskId, TaskThread newTaskThread) {
+    public static void putThread(Long taskId, TaskThread newTaskThread) {
         TaskThread oldTaskThread = taskThreadMap.put(taskId, newTaskThread);
         if (oldTaskThread != null) {
             oldTaskThread.toStop();
             oldTaskThread.interrupt();
         }
-
-        return newTaskThread;
     }
 
     /**
@@ -59,24 +58,30 @@ public class TaskThreadHolder {
             oldJobThread.toStop();
             oldJobThread.interrupt();
         }
-
         return oldJobThread;
     }
 
     /**
-     * 获取 map
-     * @return
+     * 释放资源
      */
-    public static ConcurrentMap<Long, TaskThread> getTaskThreadMap() {
-        return taskThreadMap;
-    }
+    public static void shutdown(){
+        if (taskThreadMap.size() == 0) {
+            return;
+        }
 
-    /**
-     * 清理 map
-     */
-    public static void clear(){
+        for (Map.Entry<Long, TaskThread> item: taskThreadMap.entrySet()) {
+            TaskThread oldTaskThread = removeThread(item.getKey());
+            // wait for job thread write response
+            if (oldTaskThread == null) {
+                continue;
+            }
+            try {
+                oldTaskThread.join();
+            } catch (InterruptedException e) {
+                log.error("TaskThread destroy(join) error, taskId:{}", item.getKey(), e);
+            }
+        }
+
         taskThreadMap.clear();
     }
-
-
 }

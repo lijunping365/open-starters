@@ -15,12 +15,12 @@
  */
 package com.saucesubfresh.starter.executor;
 
+import com.saucesubfresh.starter.executor.per.Executor;
 import com.saucesubfresh.starter.executor.per.TaskThread;
 import com.saucesubfresh.starter.executor.per.TaskThreadHolder;
+import com.saucesubfresh.starter.executor.per.ThreadQueueNode;
+import com.saucesubfresh.starter.executor.properties.TaskExecutorProperties;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * 默认线程池任务执行器
@@ -30,30 +30,37 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public class ThreadPerTaskExecutor implements TaskExecutor {
 
+    private final TaskExecutorProperties properties;
+
+    public ThreadPerTaskExecutor(TaskExecutorProperties properties) {
+        this.properties = properties;
+    }
+
     @Override
     public void execute(Runnable runnable) {
-        TaskThread taskThread = new TaskThread(runnable);
-        TaskThreadHolder.putThread(taskId, taskThread);
-        taskThread.start();
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void close() {
-        ConcurrentMap<Long, TaskThread> taskThreadMap = TaskThreadHolder.getTaskThreadMap();
-        if (taskThreadMap.size() > 0) {
-            for (Map.Entry<Long, TaskThread> item: taskThreadMap.entrySet()) {
-                TaskThread oldJobThread = TaskThreadHolder.removeThread(item.getKey());
-                // wait for thread do something
-                if (oldJobThread != null) {
-                    try {
-                      oldJobThread.join();
-                    } catch (InterruptedException e) {
-                      log.error("JobThread destroy(join) error, jobId:{}", item.getKey(), e);
-                    }
-                }
-            }
-            TaskThreadHolder.clear();
+    public <T extends ThreadQueueNode> void execute(T node, Executor<T> executor) {
+        TaskThread<T> taskThread = TaskThreadHolder.getThread(node.getTaskId());
+        if (taskThread == null) {
+            taskThread = createTaskThread(node, executor);
         }
+        taskThread.offer(node);
     }
 
+    @Override
+    public void shutdown() {
+        TaskThreadHolder.shutdown();
+    }
+
+    private <T extends ThreadQueueNode> TaskThread<T> createTaskThread(T node, Executor<T> executor){
+        Integer timeout = properties.getTimeout();
+        Integer maxIdleTimes = properties.getMaxIdleTimes();
+        TaskThread<T> taskThread = new TaskThread<>(node.getTaskId(), timeout, maxIdleTimes, executor);
+        taskThread.start();
+        TaskThreadHolder.putThread(node.getTaskId(), taskThread);
+        return taskThread;
+    }
 }

@@ -22,10 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class TaskThread extends Thread{
-
-    /* What will be run. */
-    private Runnable target;
+public class TaskThread<T extends ThreadQueueNode> extends Thread{
 
     private final Long taskId;
 
@@ -33,48 +30,56 @@ public class TaskThread extends Thread{
 
     private volatile boolean stop = false;
 
-    private final LinkedBlockingQueue<Task> queue;
+    private final Integer timeout;
 
-    public TaskThread(Long taskId, Runnable runnable) {
+    private final Integer maxIdleTimes;
+
+    private final Executor<T> executor;
+
+    private final LinkedBlockingQueue<T> workQueue;
+
+    public TaskThread(Long taskId, Integer timeout, Integer maxIdleTimes, Executor<T> executor) {
         this.taskId = taskId;
-        this.target = runnable;
-        this.queue = new LinkedBlockingQueue<>();
+        this.timeout = timeout;
+        this.maxIdleTimes = maxIdleTimes;
+        this.executor = executor;
+        this.workQueue = new LinkedBlockingQueue<>();
     }
 
     @Override
     public void run() {
         while (!stop){
             idleTimes++;
-            Task task = null;
+            T queueNode = null;
 
             try {
-                task = queue.poll(3L, TimeUnit.SECONDS);
+                queueNode = workQueue.poll(timeout, TimeUnit.SECONDS);
             }catch (Exception e){
                 log.error(e.getMessage(), e);
             }
 
-            if (Objects.nonNull(task)){
+            if (Objects.nonNull(queueNode)){
                 idleTimes = 0;
-                execute(task);
+                executor.execute(queueNode, false);
                 continue;
             }
 
-            if (idleTimes > 30 && queue.size() == 0) {
+            if (idleTimes > maxIdleTimes && workQueue.size() == 0) {
                 TaskThreadHolder.removeThread(taskId);
             }
         }
 
-        // handle job in queue when jobThread is killed
-        while(queue.size() > 0){
-            Task task = queue.poll();
-            if (task != null) {
-                // todo
+        // handle job in queue when taskThread is killed
+        while(workQueue.size() > 0){
+            T queueNode = workQueue.poll();
+            if (queueNode != null) {
+                executor.execute(queueNode, true);
             }
         }
     }
 
-    public void offer(Task task) {
-        queue.add(task);
+    public void offer(T queueNode) {
+        workQueue.add(queueNode);
     }
 
     /**

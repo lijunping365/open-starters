@@ -28,6 +28,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class TaskExecutorProperties {
 
   /**
+   * 超时时间，默认 3，单位 second
+   */
+  private Integer timeout = 3;
+
+  /**
+   * 最大心跳次数，默认 30
+   */
+  private Integer maxIdleTimes = 30;
+
+  /**
    * 核心线程数
    */
   private Integer corePoolSize = 5;

@@ -15,28 +15,35 @@
  */
 package com.saucesubfresh.starter.executor;
 
-import java.io.Closeable;
-import java.util.concurrent.Executor;
+import com.saucesubfresh.starter.executor.per.Executor;
+import com.saucesubfresh.starter.executor.per.ThreadQueueNode;
 
 /**
  * 任务的执行器接口
  *
  * @author lijunping
  */
-public interface TaskExecutor extends Executor, Closeable {
+public interface TaskExecutor {
 
     /**
-     * Executes the given command at some time in the future.  The command
-     * may execute in a new thread, in a pooled thread, or in the calling
-     * thread, at the discretion of the {@code Executor} implementation.
+     * The task execute by {@link ThreadPoolTaskExecutor}
+     * @param command
      */
-    @Override
     void execute(Runnable command);
 
     /**
-     * 关闭执行器
+     * The task execute by {@link ThreadPerTaskExecutor}
+     * @param node
+     * @param executor
      */
-    @Override
-    void close();
+    <T extends ThreadQueueNode> void execute(T node, Executor<T> executor);
+
+    /**
+     * This method will wait for previously submitted tasks to
+     * complete execution. Use {@link ThreadPerTaskExecutor}
+     * This method does not wait for previously submitted tasks to
+     * complete execution. Use {@link ThreadPoolTaskExecutor}
+     */
+    void shutdown();
 
 }

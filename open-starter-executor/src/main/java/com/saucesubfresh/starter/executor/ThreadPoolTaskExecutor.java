@@ -15,6 +15,8 @@
  */
 package com.saucesubfresh.starter.executor;
 
+import com.saucesubfresh.starter.executor.per.Executor;
+import com.saucesubfresh.starter.executor.per.ThreadQueueNode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -34,8 +36,12 @@ public class ThreadPoolTaskExecutor implements TaskExecutor {
     }
 
     @Override
-    public void close() {
-        log.info("即将关闭线程池，会等队列中的任务完全执行之后才会关闭线程池");
+    public void execute(ThreadQueueNode node, Executor executor) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void shutdown() {
         executor.shutdown();
     }
 

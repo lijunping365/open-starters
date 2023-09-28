@@ -15,5 +15,18 @@
  */
 package com.saucesubfresh.starter.executor.per;
 
-public class Task {
+/**
+ * Executor
+ *
+ * @author lijunping
+ */
+@FunctionalInterface
+public interface Executor<T> {
+
+    /**
+     * execute task
+     * @param node
+     * @param isStop true stopped
+     */
+    void execute(T node, boolean isStop);
 }
