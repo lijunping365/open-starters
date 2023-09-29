@@ -60,7 +60,7 @@ public class TaskThread<T extends ThreadQueueNode> extends Thread{
 
             if (Objects.nonNull(queueNode)){
                 idleTimes = 0;
-                executor.execute(queueNode, false);
+                executor.execute(queueNode, stop);
                 continue;
             }
 
@@ -73,7 +73,7 @@ public class TaskThread<T extends ThreadQueueNode> extends Thread{
         while(workQueue.size() > 0){
             T queueNode = workQueue.poll();
             if (queueNode != null) {
-                executor.execute(queueNode, true);
+                executor.execute(queueNode, stop);
             }
         }
     }
