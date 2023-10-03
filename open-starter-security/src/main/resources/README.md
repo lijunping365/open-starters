@@ -29,7 +29,7 @@ HandlerInterceptor 的方法有一个handler参数。而 handler 可以进行强
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-security</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
@@ -92,7 +92,9 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 
 ```
 
-### 高阶使用-用户鉴权功能
+## 常见问题
+
+###1. 如何实现权限访问控制？
 
 常见的权限访问控制做法有如下两种
 
@@ -108,7 +110,7 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 
 这种做法的好处是代码的入侵性不高，不需要再每个接口上加注解。但相对来说，显得不那么直观。
 
-具体实现可以参考 Open-Admin
+具体实现可以参考 `Open-Admin`
 
 #### 2、使用注解的方式
 
@@ -118,7 +120,7 @@ public class OpenJobServiceImpl extends ServiceImpl<OpenJobMapper, OpenJobDO> im
 
 该默认实现适合简单的权限管理系统，如系统中只有一种角色，比如只有 admin 角色，而某些接口只有拥有 admin 角色才能访问。
 
-参考 Open-Crawler
+参考 `Open-Crawler`
 
 ```java
 @Validated
@@ -129,34 +131,6 @@ public class CrawlerUserController {
   @Autowired
   private CrawlerUserService crawlerUserService;
 
-  @GetMapping("/currentUser")
-  public Result<CrawlerUserRespDTO> getCurrentUser() {
-    Long userId = UserSecurityContextHolder.getUserId();
-    return Result.succeed(crawlerUserService.loadUserByUserId(userId));
-  }
-
-  @GetMapping("/page")
-  public Result<PageResult<CrawlerUserRespDTO>> page(CrawlerUserReqDTO crawlerUserReqDTO) {
-    return Result.succeed(crawlerUserService.selectPage(crawlerUserReqDTO));
-  }
-
-  @GetMapping("/info/{id}")
-  public Result<CrawlerUserRespDTO> info(@PathVariable("id") Long id) {
-    return Result.succeed(crawlerUserService.getById(id));
-  }
-
-  @PostMapping("/save")
-  @PreAuthorization(value = "admin")
-  public Result<Boolean> save(@RequestBody @Valid CrawlerUserCreateDTO crawlerUserCreateDTO) {
-    return Result.succeed(crawlerUserService.save(crawlerUserCreateDTO));
-  }
-
-  @PutMapping("/update")
-  @PreAuthorization(value = "admin")
-  public Result<Boolean> update(@RequestBody @Valid CrawlerUserUpdateDTO crawlerUserUpdateDTO) {
-    return Result.succeed(crawlerUserService.updateById(crawlerUserUpdateDTO));
-  }
-
   @DeleteMapping("/delete")
   @PreAuthorization(value = "admin")
   public Result<Boolean> delete(@RequestBody @Valid DeleteDTO deleteDTO) {
@@ -166,9 +140,9 @@ public class CrawlerUserController {
 }
 ```
 
-注意：
+## 注意事项
 
-HandlerInterceptor 搭配注解使用时，注解只能用在 Controller 中, 也就是说我们的自定义注解 PreAuthorization 只能用在 Controller 中
+1. `HandlerInterceptor` 搭配注解使用时，注解只能用在 `Controller` 中, 也就是说我们的自定义注解 `PreAuthorization` 只能用在 `Controller` 中
 
 ## 版本更新说明
 
