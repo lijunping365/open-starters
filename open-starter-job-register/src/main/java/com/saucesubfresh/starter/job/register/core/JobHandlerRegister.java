@@ -15,6 +15,11 @@
  */
 package com.saucesubfresh.starter.job.register.core;
 
+import com.saucesubfresh.starter.job.register.annotation.JobHandler;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author lijunping
  */
@@ -26,4 +31,16 @@ public interface JobHandlerRegister {
      * @return OpenJobHandler
      */
     OpenJobHandler getJobHandler(String handlerName);
+
+    /**
+     * 根据 handlerName 获取 OpenJobHandler
+     * @return OpenJobHandler
+     */
+    List<OpenJobHandler> getAllJobHandler();
+
+    /**
+     * 根据 handlerName 获取 OpenJobHandler
+     * @return OpenJobHandler
+     */
+    List<JobHandler> getAllJobHandlerAnnotation();
 }

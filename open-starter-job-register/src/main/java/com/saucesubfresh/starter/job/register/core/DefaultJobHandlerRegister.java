@@ -39,6 +39,8 @@ public class DefaultJobHandlerRegister implements JobHandlerRegister, Applicatio
 
     protected final ConcurrentMap<String, OpenJobHandler> handlerMap = new ConcurrentHashMap<>();
 
+    protected final ConcurrentMap<String, JobHandler> annotationMap = new ConcurrentHashMap<>();
+
     private ApplicationContext applicationContext;
 
     @Override
@@ -65,6 +67,7 @@ public class DefaultJobHandlerRegister implements JobHandlerRegister, Applicatio
             beans.forEach((k,v)->{
                 JobHandler annotation = v.getClass().getAnnotation(JobHandler.class);
                 handlerMap.put(annotation.name(), (OpenJobHandler) v);
+                annotationMap.put(annotation.name(), annotation);
             });
         }
     }
@@ -114,5 +117,6 @@ public class DefaultJobHandlerRegister implements JobHandlerRegister, Applicatio
         }
         executeMethod.setAccessible(true);
         handlerMap.put(name, new MethodJobHandler(bean, executeMethod));
+        annotationMap.put(name, jobHandler);
     }
 }
