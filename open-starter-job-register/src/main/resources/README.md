@@ -78,3 +78,7 @@ public class OpenJobHandlerMethodOne{
 ### 1.0.4
 
 执行接口增加分片参数
+
+### 1.0.5
+
+增加 JobHandler 管理器

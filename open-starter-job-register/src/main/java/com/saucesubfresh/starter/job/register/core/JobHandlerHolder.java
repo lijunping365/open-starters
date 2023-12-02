@@ -17,13 +17,35 @@ package com.saucesubfresh.starter.job.register.core;
 
 import com.saucesubfresh.starter.job.register.annotation.JobHandler;
 
+import java.util.List;
+
 /**
  * @author lijunping
  */
-public interface JobHandlerRegister {
+public interface JobHandlerHolder {
 
     /**
-     * scan {@link JobHandler} annotations and register {@link OpenJobHandler}
+     * 设置 OpenJobHandler
      */
-    void scanAndRegister();
+    void putJobHandler(String handlerName, OpenJobHandler jobHandler);
+
+    /**
+     * 根据 handlerName 获取 OpenJobHandler
+     */
+    OpenJobHandler getJobHandler(String handlerName);
+
+    /**
+     * 获取全部 OpenJobHandler
+     */
+    List<OpenJobHandler> getAllJobHandler();
+
+    /**
+     * 设置 JobHandler 注解
+     */
+    void putJobHandlerAnnotation(String handlerName, JobHandler annotation);
+
+    /**
+     * 获取全部 JobHandler 注解
+     */
+    List<JobHandler> getAllJobHandlerAnnotation();
 }

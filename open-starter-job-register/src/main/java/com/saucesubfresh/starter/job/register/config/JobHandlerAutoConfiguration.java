@@ -15,7 +15,9 @@
  */
 package com.saucesubfresh.starter.job.register.config;
 
+import com.saucesubfresh.starter.job.register.core.DefaultJobHandlerHolder;
 import com.saucesubfresh.starter.job.register.core.DefaultJobHandlerRegister;
+import com.saucesubfresh.starter.job.register.core.JobHandlerHolder;
 import com.saucesubfresh.starter.job.register.core.JobHandlerRegister;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +31,13 @@ public class JobHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public JobHandlerRegister jobHandlerRegister(){
-        return new DefaultJobHandlerRegister();
+    public JobHandlerHolder jobHandlerHolder(){
+        return new DefaultJobHandlerHolder();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public JobHandlerRegister jobHandlerRegister(JobHandlerHolder jobHandlerHolder){
+        return new DefaultJobHandlerRegister(jobHandlerHolder);
     }
 }

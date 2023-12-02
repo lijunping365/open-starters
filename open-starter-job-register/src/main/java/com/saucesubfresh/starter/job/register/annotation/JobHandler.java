@@ -15,8 +15,6 @@
  */
 package com.saucesubfresh.starter.job.register.annotation;
 
-import org.springframework.core.annotation.AliasFor;
-
 import java.lang.annotation.*;
 
 /**
@@ -27,9 +25,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface JobHandler {
 
-    @AliasFor("name")
-    String value() default "";
+    String value();
 
-    @AliasFor("value")
     String name() default "";
 }

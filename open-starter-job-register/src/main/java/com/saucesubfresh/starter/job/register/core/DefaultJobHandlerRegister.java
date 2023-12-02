@@ -28,8 +28,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author lijunping
@@ -37,21 +35,23 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public class DefaultJobHandlerRegister implements JobHandlerRegister, ApplicationContextAware, SmartInitializingSingleton {
 
-    protected final ConcurrentMap<String, OpenJobHandler> handlerMap = new ConcurrentHashMap<>();
-
-    protected final ConcurrentMap<String, JobHandler> annotationMap = new ConcurrentHashMap<>();
-
     private ApplicationContext applicationContext;
 
+    private final JobHandlerHolder jobHandlerHolder;
+
+    public DefaultJobHandlerRegister(JobHandlerHolder jobHandlerHolder) {
+        this.jobHandlerHolder = jobHandlerHolder;
+    }
+
     @Override
-    public OpenJobHandler getJobHandler(String handlerName){
-        return handlerMap.get(handlerName);
+    public void scanAndRegister() {
+        this.registerClazzJobHandler();
+        this.registerMethodJobHandler();
     }
 
     @Override
     public void afterSingletonsInstantiated() {
-        this.registerClazzJobHandler();
-        this.registerMethodJobHandler();
+        scanAndRegister();
     }
 
     @Override
@@ -66,8 +66,8 @@ public class DefaultJobHandlerRegister implements JobHandlerRegister, Applicatio
         }else {
             beans.forEach((k,v)->{
                 JobHandler annotation = v.getClass().getAnnotation(JobHandler.class);
-                handlerMap.put(annotation.name(), (OpenJobHandler) v);
-                annotationMap.put(annotation.name(), annotation);
+                jobHandlerHolder.putJobHandler(annotation.value(), (OpenJobHandler) v);
+                jobHandlerHolder.putJobHandlerAnnotation(annotation.value(), annotation);
             });
         }
     }
@@ -96,27 +96,21 @@ public class DefaultJobHandlerRegister implements JobHandlerRegister, Applicatio
             for (Map.Entry<Method, JobHandler> methodJobHandlerEntry : annotatedMethods.entrySet()) {
                 Method executeMethod = methodJobHandlerEntry.getKey();
                 JobHandler annotation = methodJobHandlerEntry.getValue();
-                buildJobHandler(annotation, bean, executeMethod);
+                OpenJobHandler openJobHandler = buildJobHandler(bean, executeMethod);
+                jobHandlerHolder.putJobHandler(annotation.value(), openJobHandler);
+                jobHandlerHolder.putJobHandlerAnnotation(annotation.value(), annotation);
             }
         }
     }
 
-    private void buildJobHandler(JobHandler jobHandler, Object bean, Method executeMethod){
-        if (jobHandler == null) {
-            return;
-        }
-
-        String name = jobHandler.value();
+    private OpenJobHandler buildJobHandler(Object bean, Method executeMethod){
         Class<?> clazz = bean.getClass();
         String methodName = executeMethod.getName();
-        if (StringUtils.isBlank(name)) {
+        if (StringUtils.isBlank(methodName)) {
             throw new RuntimeException("open-job method-jobHandler name invalid, for[" + clazz + "#" + methodName + "] .");
         }
-        if (handlerMap.get(name) != null) {
-            throw new RuntimeException("open-job jobHandler[" + name + "] naming conflicts.");
-        }
+
         executeMethod.setAccessible(true);
-        handlerMap.put(name, new MethodJobHandler(bean, executeMethod));
-        annotationMap.put(name, jobHandler);
+        return new MethodJobHandler(bean, executeMethod);
     }
 }
