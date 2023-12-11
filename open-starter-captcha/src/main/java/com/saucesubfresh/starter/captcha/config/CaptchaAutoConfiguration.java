@@ -27,13 +27,11 @@ import com.saucesubfresh.starter.captcha.processor.CaptchaVerifyProcessor;
 import com.saucesubfresh.starter.captcha.processor.DefaultCaptchaVerifyProcessor;
 import com.saucesubfresh.starter.captcha.properties.CaptchaProperties;
 import com.saucesubfresh.starter.captcha.repository.CaptchaRepository;
-import com.saucesubfresh.starter.captcha.repository.redis.RedisCaptchaRepository;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import com.saucesubfresh.starter.captcha.repository.LocalCaptchaRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * @author lijunping
@@ -44,9 +42,8 @@ public class CaptchaAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  @ConditionalOnBean(StringRedisTemplate.class)
-  public CaptchaRepository captchaRepository(StringRedisTemplate stringRedisTemplate){
-    return new RedisCaptchaRepository(stringRedisTemplate);
+  public CaptchaRepository captchaRepository(){
+    return new LocalCaptchaRepository();
   }
 
   @Bean

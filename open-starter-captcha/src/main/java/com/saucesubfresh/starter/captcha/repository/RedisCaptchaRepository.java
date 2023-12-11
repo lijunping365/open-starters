@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.captcha.repository.redis;
+package com.saucesubfresh.starter.captcha.repository;
 
 import com.saucesubfresh.starter.captcha.core.sms.ValidateCode;
-import com.saucesubfresh.starter.captcha.repository.CaptchaRepository;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import java.util.concurrent.TimeUnit;
 

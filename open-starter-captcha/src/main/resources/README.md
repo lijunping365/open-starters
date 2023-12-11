@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-captcha</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
@@ -164,3 +164,9 @@ public class XxxCaptchaRepository implements CaptchaRepository {
 ### 1.0.3 
 
 1. 细化异常分类，可以针对不同的异常做出不同的处理
+
+
+### 1.0.4
+
+1. 增加本地验证码存储策略
+2. 调整验证码存储策略默认为本地存储
