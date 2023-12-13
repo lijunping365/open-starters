@@ -58,7 +58,7 @@ public class LocalCaptchaRepository implements CaptchaRepository{
     static class CaffeineExpiry implements Expiry<String, ValidateCode> {
         @Override
         public long expireAfterCreate(@NonNull String key, @NonNull ValidateCode validateCode, long currentTime) {
-            return TimeUnit.MINUTES.toMinutes(validateCode.getExpireTime());
+            return TimeUnit.MINUTES.toNanos(validateCode.getExpireTime());
         }
 
         @Override
