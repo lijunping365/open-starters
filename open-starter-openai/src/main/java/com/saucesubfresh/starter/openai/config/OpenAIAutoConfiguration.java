@@ -15,7 +15,9 @@
  */
 package com.saucesubfresh.starter.openai.config;
 
+import com.saucesubfresh.starter.openai.OpenAIClient;
 import com.saucesubfresh.starter.openai.annotation.EnableOpenAI;
+import com.saucesubfresh.starter.openai.interceptor.OpenAiAuthInterceptor;
 import com.saucesubfresh.starter.openai.properties.OpenAIProperties;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -49,7 +51,13 @@ public class OpenAIAutoConfiguration {
                 .connectTimeout(properties.getTimeOut(), TimeUnit.SECONDS)
                 .writeTimeout(properties.getTimeOut(), TimeUnit.SECONDS)
                 .readTimeout(properties.getTimeOut(), TimeUnit.SECONDS)
+                .addInterceptor(new OpenAiAuthInterceptor(properties))
                 .build();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public OpenAIClient openAIClient(OkHttpClient okHttpClient, OpenAIProperties properties){
+        return new OpenAIClient(okHttpClient, properties);
+    }
 }
