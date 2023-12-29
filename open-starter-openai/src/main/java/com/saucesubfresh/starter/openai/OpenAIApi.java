@@ -23,24 +23,18 @@ import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.CompletionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
-import com.theokanning.openai.edit.EditRequest;
-import com.theokanning.openai.edit.EditResult;
 import com.theokanning.openai.embedding.EmbeddingRequest;
 import com.theokanning.openai.embedding.EmbeddingResult;
 import com.theokanning.openai.file.File;
 import com.theokanning.openai.image.CreateImageRequest;
 import com.theokanning.openai.image.ImageResult;
 import com.theokanning.openai.model.Model;
-import com.theokanning.openai.moderation.ModerationRequest;
-import com.theokanning.openai.moderation.ModerationResult;
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
-
-import java.util.Map;
 
 /**
  * @author lijunping
@@ -53,7 +47,7 @@ public interface OpenAIApi {
      * @return Single ModelResponse
      */
     @GET("v1/models")
-    Single<OpenAiResponse<Model>> listModels();
+    Single<OpenAiResponse<Model>> models();
 
     /**
      * models 返回的数据id
@@ -103,16 +97,6 @@ public interface OpenAIApi {
     @Streaming
     @POST("v1/chat/completions")
     Call<ResponseBody> createChatCompletionStream(@Body ChatCompletionRequest request);
-
-    /**
-     * Creates a new edit for the provided input, instruction, and parameters.
-     * 文本修复
-     *
-     * @param request 编辑参数
-     * @return Single EditResponse
-     */
-    @POST("v1/edits")
-    Single<EditResult> createEdit(@Body EditRequest request);
 
     /**
      * 文本向量计算
@@ -174,54 +158,36 @@ public interface OpenAIApi {
      * Creates an edited or extended image given an original image and a prompt.
      * 根据描述修改图片
      *
-     * @param image          图片对象
-     * @param mask           图片对象
-     * @param requestBodyMap 请求参数
+     * @param requestBody 请求参数
      * @return Single ImageResponse
      */
-    @Multipart
     @POST("v1/images/edits")
-    Single<ImageResult> createImageEdit(@Part() MultipartBody.Part image, @Part() MultipartBody.Part mask, @PartMap() Map<String, RequestBody> requestBodyMap);
+    Single<ImageResult> createImageEdit(@Body RequestBody requestBody);
 
     /**
      * Creates a variation of a given image.
      *
-     * @param image          图片对象
-     * @param requestBodyMap 请求参数
+     * @param requestBody 请求参数
      * @return Single ImageResponse
      */
-    @Multipart
     @POST("v1/images/variations")
-    Single<ImageResult> createImageVariation(@Part() MultipartBody.Part image, @PartMap() Map<String, RequestBody> requestBodyMap);
+    Single<ImageResult> createImageVariation(@Body RequestBody requestBody);
 
     /**
      * 语音转文字
      *
-     * @param file           语音文件
-     * @param requestBodyMap 参数
+     * @param requestBody 参数
      * @return 文本
      */
-    @Multipart
     @POST("v1/audio/transcriptions")
-    Single<TranscriptionResult> speechToTextTranscriptions(@Part MultipartBody.Part file, @PartMap() Map<String, RequestBody> requestBodyMap);
+    Single<TranscriptionResult> speechToTextTranscriptions(@Body RequestBody requestBody);
 
     /**
      * 语音翻译：目前仅支持翻译为英文
      *
-     * @param file           语音文件
-     * @param requestBodyMap 参数
+     * @param requestBody 参数
      * @return 文本
      */
-    @Multipart
     @POST("v1/audio/translations")
-    Single<TranslationResult> speechToTextTranslations(@Part MultipartBody.Part file, @PartMap() Map<String, RequestBody> requestBodyMap);
-
-    /**
-     * 文本审核
-     *
-     * @param request 文本审核参数
-     * @return Single ModerationResponse
-     */
-    @POST("v1/moderations")
-    Single<ModerationResult> createModeration(@Body ModerationRequest request);
+    Single<TranslationResult> speechToTextTranslations(@Body RequestBody requestBody);
 }

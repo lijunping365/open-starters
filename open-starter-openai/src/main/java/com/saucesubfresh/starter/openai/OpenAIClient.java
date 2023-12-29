@@ -15,32 +15,39 @@
  */
 package com.saucesubfresh.starter.openai;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.saucesubfresh.starter.openai.properties.OpenAIProperties;
-import com.saucesubfresh.starter.openai.serialize.ChatCompletionRequestMixIn;
-import com.theokanning.openai.OpenAiError;
-import com.theokanning.openai.OpenAiHttpException;
+import com.theokanning.openai.DeleteResult;
+import com.theokanning.openai.OpenAiResponse;
+import com.theokanning.openai.audio.CreateTranscriptionRequest;
+import com.theokanning.openai.audio.CreateTranslationRequest;
+import com.theokanning.openai.audio.TranscriptionResult;
+import com.theokanning.openai.audio.TranslationResult;
+import com.theokanning.openai.completion.CompletionRequest;
+import com.theokanning.openai.completion.CompletionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatFunction;
-import com.theokanning.openai.completion.chat.ChatFunctionCall;
+import com.theokanning.openai.completion.chat.ChatCompletionResult;
+import com.theokanning.openai.embedding.EmbeddingRequest;
+import com.theokanning.openai.embedding.EmbeddingResult;
+import com.theokanning.openai.file.File;
+import com.theokanning.openai.image.CreateImageEditRequest;
+import com.theokanning.openai.image.CreateImageRequest;
+import com.theokanning.openai.image.CreateImageVariationRequest;
+import com.theokanning.openai.image.ImageResult;
+import com.theokanning.openai.model.Model;
 import io.reactivex.Single;
-import okhttp3.OkHttpClient;
-import retrofit2.HttpException;
+import okhttp3.*;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import java.io.IOException;
+import java.util.List;
 
 /**
  * @author lijunping
  */
 public class OpenAIClient {
-
-    private static final ObjectMapper mapper = defaultObjectMapper();
 
     private final OpenAIApi openAIApi;
 
@@ -54,33 +61,260 @@ public class OpenAIClient {
     }
 
     /**
-     * Calls the Open AI api, returns the response, and parses error messages if the request fails
+     * openAi模型列表
+     *
+     * @return Model  list
      */
-    public static <T> T execute(Single<T> apiCall) {
-        try {
-            return apiCall.blockingGet();
-        } catch (HttpException e) {
-            try {
-                if (e.response() == null || e.response().errorBody() == null) {
-                    throw e;
-                }
-                String errorBody = e.response().errorBody().string();
+    public List<Model> models() {
+        Single<OpenAiResponse<Model>> models = this.openAIApi.models();
+        return models.blockingGet().getData();
+    }
 
-                OpenAiError error = mapper.readValue(errorBody, OpenAiError.class);
-                throw new OpenAiHttpException(error, e, e.code());
-            } catch (IOException ex) {
-                // couldn't parse OpenAI error
-                throw e;
-            }
+
+    /**
+     * openAi模型详细信息
+     *
+     * @param id 模型主键
+     * @return Model    模型类
+     */
+    public Model model(String id) {
+        Single<Model> model = this.openAIApi.getModel(id);
+        return model.blockingGet();
+    }
+
+
+    /**
+     * 问答接口
+     *
+     * @param request 问答参数
+     * @return CompletionResponse
+     */
+    public CompletionResult completions(CompletionRequest request) {
+        Single<CompletionResult> completions = this.openAIApi.createCompletion(request);
+        return completions.blockingGet();
+    }
+
+    /**
+     * 问答接口 - 流式
+     *
+     * @param request 问答参数
+     * @return CompletionResponse
+     */
+    public void completionStream(CompletionRequest request ,Callback callback) {
+        Call<ResponseBody> responseBodyCall = this.openAIApi.createCompletionStream(request);
+        responseBodyCall.enqueue(callback);
+    }
+
+    /**
+     * 最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型
+     *
+     * @param request 问答参数
+     * @return 答案
+     */
+    public ChatCompletionResult chatCompletion(ChatCompletionRequest request) {
+        Single<ChatCompletionResult> chatCompletionResponse = this.openAIApi.createChatCompletion(request);
+        return chatCompletionResponse.blockingGet();
+    }
+
+    /**
+     * 最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型 - 流式
+     *
+     * @param request 问答参数
+     * @return 答案
+     */
+    public void chatCompletionStream(ChatCompletionRequest request ,Callback callback) {
+        Call<ResponseBody> responseBodyCall = this.openAIApi.createChatCompletionStream(request);
+        responseBodyCall.enqueue(callback);
+    }
+
+    /**
+     * 文本转换向量
+     *
+     * @param request 入参
+     * @return EmbeddingResponse
+     */
+    public EmbeddingResult embeddings(EmbeddingRequest request) {
+        Single<EmbeddingResult> embeddings = this.openAIApi.createEmbeddings(request);
+        return embeddings.blockingGet();
+    }
+
+    /**
+     * 获取文件列表
+     *
+     * @return File  list
+     */
+    public List<File> files() {
+        Single<OpenAiResponse<File>> files = this.openAIApi.listFiles();
+        return files.blockingGet().getData();
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param purpose purpose
+     * @param file    文件对象
+     * @return UploadFileResponse
+     */
+    public File uploadFile(String purpose, java.io.File file) {
+        // 创建 RequestBody，用于封装构建RequestBody
+        RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
+
+        RequestBody purposeBody = RequestBody.create(MediaType.parse("multipart/form-data"), purpose);
+        Single<File> uploadFileResponse = this.openAIApi.uploadFile(purposeBody, multipartBody);
+        return uploadFileResponse.blockingGet();
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param fileId 文件id
+     * @return DeleteResponse
+     */
+    public DeleteResult deleteFile(String fileId) {
+        Single<DeleteResult> deleteFile = this.openAIApi.deleteFile(fileId);
+        return deleteFile.blockingGet();
+    }
+
+    /**
+     * 检索文件
+     *
+     * @param fileId 文件id
+     * @return File
+     */
+    public File retrieveFile(String fileId) {
+        Single<File> fileContent = this.openAIApi.retrieveFile(fileId);
+        return fileContent.blockingGet();
+    }
+
+    /**
+     * 根据描述生成图片
+     *
+     * @param request 图片参数
+     * @return ImageResponse
+     */
+    public ImageResult genImages(CreateImageRequest request) {
+        Single<ImageResult> edits = this.openAIApi.createImage(request);
+        return edits.blockingGet();
+    }
+
+    /**
+     * Creates an edited or extended image given an original image and a prompt.
+     * 根据描述修改图片
+     *
+     * @param image     png格式的图片，最大4MB
+     * @param mask      png格式的图片，最大4MB
+     * @param request 图片参数
+     * @return Item list
+     */
+    public ImageResult createImageEdit(CreateImageEditRequest request, java.io.File image, java.io.File mask) {
+        RequestBody imageBody = RequestBody.create(MediaType.parse("image"), image);
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MediaType.get("multipart/form-data"))
+                .addFormDataPart("prompt", request.getPrompt())
+                .addFormDataPart("size", request.getSize())
+                .addFormDataPart("response_format", request.getResponseFormat())
+                .addFormDataPart("image", "image", imageBody);
+
+        if (request.getN() != null) {
+            builder.addFormDataPart("n", request.getN().toString());
         }
+
+        if (mask != null) {
+            RequestBody maskBody = RequestBody.create(MediaType.parse("image"), mask);
+            builder.addFormDataPart("mask", "mask", maskBody);
+        }
+        Single<ImageResult> imageEdit = this.openAIApi.createImageEdit(builder.build());
+
+        return imageEdit.blockingGet();
     }
 
-    public static ObjectMapper defaultObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-        mapper.addMixIn(ChatCompletionRequest.class, ChatCompletionRequestMixIn.class);
-        return mapper;
+    /**
+     * Creates a variation of a given image.
+     * <p>
+     * 变化图片，类似ai重做图片
+     *
+     * @param image           图片对象
+     * @param request 图片参数
+     * @return ImageResponse
+     */
+    public ImageResult createImageVariation(CreateImageVariationRequest request, java.io.File image) {
+        RequestBody imageBody = RequestBody.create(MediaType.parse("image"), image);
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MediaType.get("multipart/form-data"))
+                .addFormDataPart("size", request.getSize())
+                .addFormDataPart("response_format", request.getResponseFormat())
+                .addFormDataPart("image", "image", imageBody);
+
+        if (request.getN() != null) {
+            builder.addFormDataPart("n", request.getN().toString());
+        }
+
+        Single<ImageResult> imageVariation = this.openAIApi.createImageVariation(builder.build());
+        return imageVariation.blockingGet();
     }
+
+    /**
+     * 语音转文字
+     *
+     * @param request 参数
+     * @param audio           语音文件 最大支持25MB mp3, mp4, mpeg, mpga, m4a, wav, webm
+     * @return 语音文本
+     */
+    public TranscriptionResult createTranscription(CreateTranscriptionRequest request, java.io.File audio) {
+        RequestBody audioBody = RequestBody.create(MediaType.parse("audio"), audio);
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MediaType.get("multipart/form-data"))
+                .addFormDataPart("model", request.getModel())
+                .addFormDataPart("file", audio.getName(), audioBody);
+
+        if (request.getPrompt() != null) {
+            builder.addFormDataPart("prompt", request.getPrompt());
+        }
+        if (request.getResponseFormat() != null) {
+            builder.addFormDataPart("response_format", request.getResponseFormat());
+        }
+        if (request.getTemperature() != null) {
+            builder.addFormDataPart("temperature", request.getTemperature().toString());
+        }
+        if (request.getLanguage() != null) {
+            builder.addFormDataPart("language", request.getLanguage());
+        }
+
+        Single<TranscriptionResult> transcriptionResultSingle = this.openAIApi.speechToTextTranscriptions(builder.build());
+        return transcriptionResultSingle.blockingGet();
+    }
+
+    /**
+     * 语音翻译：目前仅支持翻译为英文
+     *
+     * @param request 参数
+     * @param audio         语音文件 最大支持25MB mp3, mp4, mpeg, mpga, m4a, wav, webm
+     * @return 翻译后文本
+     */
+    public TranslationResult createTranslation(CreateTranslationRequest request, java.io.File audio) {
+        RequestBody audioBody = RequestBody.create(MediaType.parse("audio"), audio);
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MediaType.get("multipart/form-data"))
+                .addFormDataPart("model", request.getModel())
+                .addFormDataPart("file", audio.getName(), audioBody);
+
+        if (request.getResponseFormat() != null) {
+            builder.addFormDataPart("response_format", request.getResponseFormat());
+        }
+        if (request.getPrompt() != null) {
+            builder.addFormDataPart("prompt", request.getPrompt());
+        }
+        if (request.getTemperature() != null) {
+            builder.addFormDataPart("temperature", request.getTemperature().toString());
+        }
+
+        Single<TranslationResult> translationResultSingle = this.openAIApi.speechToTextTranslations(builder.build());
+        return translationResultSingle.blockingGet();
+    }
+
 }
