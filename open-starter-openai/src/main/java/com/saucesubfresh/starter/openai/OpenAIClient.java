@@ -82,29 +82,6 @@ public class OpenAIClient {
         return model.blockingGet();
     }
 
-
-    /**
-     * 问答接口
-     *
-     * @param request 问答参数
-     * @return CompletionResponse
-     */
-    public CompletionResult completions(CompletionRequest request) {
-        Single<CompletionResult> completions = this.openAIApi.createCompletion(request);
-        return completions.blockingGet();
-    }
-
-    /**
-     * 问答接口 - 流式
-     *
-     * @param request 问答参数
-     * @return CompletionResponse
-     */
-    public void completionStream(CompletionRequest request ,Callback callback) {
-        Call<ResponseBody> responseBodyCall = this.openAIApi.createCompletionStream(request);
-        responseBodyCall.enqueue(callback);
-    }
-
     /**
      * 最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型
      *

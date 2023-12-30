@@ -19,8 +19,6 @@ import com.theokanning.openai.DeleteResult;
 import com.theokanning.openai.OpenAiResponse;
 import com.theokanning.openai.audio.TranscriptionResult;
 import com.theokanning.openai.audio.TranslationResult;
-import com.theokanning.openai.completion.CompletionRequest;
-import com.theokanning.openai.completion.CompletionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.embedding.EmbeddingRequest;
@@ -57,27 +55,6 @@ public interface OpenAIApi {
      */
     @GET("v1/models/{model_id}")
     Single<Model> getModel(@Path("model_id") String modelId);
-
-    /**
-     * 文本问答
-     * Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position.
-     *
-     * @param request 问答参数
-     * @return Single CompletionResponse
-     */
-    @POST("v1/completions")
-    Single<CompletionResult> createCompletion(@Body CompletionRequest request);
-
-    /**
-     * 文本问答-流式
-     * Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position.
-     *
-     * @param request 问答参数
-     * @return Single CompletionResponse
-     */
-    @Streaming
-    @POST("v1/completions")
-    Call<ResponseBody> createCompletionStream(@Body CompletionRequest request);
 
     /**
      * 最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型
