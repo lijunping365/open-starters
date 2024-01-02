@@ -66,16 +66,6 @@ public interface OpenAIApi {
     Single<ChatCompletionResult> createChatCompletion(@Body ChatCompletionRequest request);
 
     /**
-     * 最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型 - 流式
-     *
-     * @param request chat completion
-     * @return 返回答案
-     */
-    @Streaming
-    @POST("v1/chat/completions")
-    Call<ResponseBody> createChatCompletionStream(@Body ChatCompletionRequest request);
-
-    /**
      * 文本向量计算
      *
      * @param request 向量参数

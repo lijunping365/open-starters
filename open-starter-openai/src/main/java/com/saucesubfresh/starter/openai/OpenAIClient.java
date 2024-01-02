@@ -15,7 +15,9 @@
  */
 package com.saucesubfresh.starter.openai;
 
+import com.saucesubfresh.starter.openai.exception.OpenAIException;
 import com.saucesubfresh.starter.openai.properties.OpenAIProperties;
+import com.saucesubfresh.starter.openai.utils.JSON;
 import com.theokanning.openai.DeleteResult;
 import com.theokanning.openai.OpenAiResponse;
 import com.theokanning.openai.audio.CreateTranscriptionRequest;
@@ -34,8 +36,9 @@ import com.theokanning.openai.image.ImageResult;
 import com.theokanning.openai.model.Model;
 import io.reactivex.Single;
 import okhttp3.*;
-import retrofit2.Call;
-import retrofit2.Callback;
+import okhttp3.sse.EventSource;
+import okhttp3.sse.EventSourceListener;
+import okhttp3.sse.EventSources;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -48,8 +51,12 @@ import java.util.List;
 public class OpenAIClient {
 
     private final OpenAIApi openAIApi;
+    private final OkHttpClient okHttpClient;
+    private final OpenAIProperties properties;
 
     public OpenAIClient(OkHttpClient okHttpClient, OpenAIProperties properties) {
+        this.okHttpClient = okHttpClient;
+        this.properties = properties;
         this.openAIApi = new Retrofit.Builder()
             .baseUrl(properties.getBaseUrl())
             .client(okHttpClient)
@@ -94,12 +101,21 @@ public class OpenAIClient {
     /**
      * 最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型 - 流式
      *
-     * @param request 问答参数
+     * @param completion 问答参数
      * @return 答案
      */
-    public void chatCompletionStream(ChatCompletionRequest request ,Callback callback) {
-        Call<ResponseBody> responseBodyCall = this.openAIApi.createChatCompletionStream(request);
-        responseBodyCall.enqueue(callback);
+    public void chatCompletionStream(ChatCompletionRequest completion, EventSourceListener eventSourceListener) {
+        try {
+            EventSource.Factory factory = EventSources.createFactory(this.okHttpClient);
+            String requestBody = JSON.toJSON(completion);
+            Request request = new Request.Builder()
+                    .url(properties.getBaseUrl() + "v1/chat/completions")
+                    .post(RequestBody.create(MediaType.parse("application/json"), requestBody))
+                    .build();
+            factory.newEventSource(request, eventSourceListener);
+        } catch (Exception e) {
+            throw new OpenAIException(e.getMessage());
+        }
     }
 
     /**

@@ -53,6 +53,7 @@
             <artifactId>adapter-rxjava2</artifactId>
             <version>${retrofit2.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>converter-jackson</artifactId>
