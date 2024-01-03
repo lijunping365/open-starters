@@ -110,7 +110,7 @@ public class OpenAIClient {
             String requestBody = JSON.toJSON(completion);
             Request request = new Request.Builder()
                     .url(properties.getBaseUrl() + "v1/chat/completions")
-                    .post(RequestBody.create(MediaType.parse("application/json"), requestBody))
+                    .post(RequestBody.create(requestBody, MediaType.parse("application/json")))
                     .build();
             factory.newEventSource(request, eventSourceListener);
         } catch (Exception e) {
