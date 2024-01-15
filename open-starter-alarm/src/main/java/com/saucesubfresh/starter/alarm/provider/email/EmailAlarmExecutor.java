@@ -38,7 +38,7 @@ public class EmailAlarmExecutor implements AlarmExecutor<EmailRequestRequest> {
     }
 
     @Override
-    public void doAlarm(EmailRequestRequest request) throws AlarmException {
+    public void sendAlarm(EmailRequestRequest request) throws AlarmException {
         final String alarmEmail = request.getToEmail();
         Set<String> emailSet = new HashSet<>(Arrays.asList(alarmEmail.split(",")));
         emailSet.forEach(email->{
