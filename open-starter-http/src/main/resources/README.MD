@@ -102,3 +102,9 @@ public class CustomizeDownloadPipeline extends AbstractDownloadPipeline {
 ### 1.0.4 版本更新说明
 
 1. post 请求添加 data 字段，用来承载 post 请求体
+
+### 1.0.5 版本更新说明
+
+1. 实现不管使用什么请求工具，我的外壳是通用的
+
+2. 提供线程池、超时时间，结果处理等的自定义
