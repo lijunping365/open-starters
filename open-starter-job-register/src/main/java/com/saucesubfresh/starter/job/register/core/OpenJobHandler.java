@@ -15,16 +15,16 @@
  */
 package com.saucesubfresh.starter.job.register.core;
 
-import com.saucesubfresh.starter.job.register.param.JobParam;
+import com.saucesubfresh.starter.job.register.param.HandlerParam;
 
 /**
  * @author lijunping on 2022/1/19
  */
-public interface OpenJobHandler {
+public interface OpenJobHandler<T extends HandlerParam> {
     /**
      * Execute jobHandler
      *
      * @param params params
      */
-    void handler(JobParam params) throws Exception;
+    void handler(T params) throws Exception;
 }

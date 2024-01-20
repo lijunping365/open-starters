@@ -25,7 +25,15 @@ import java.lang.annotation.*;
 @Documented
 public @interface JobHandler {
 
+    /**
+     * The job handler name
+     * @return
+     */
     String value();
 
+    /**
+     * The job handler description
+     * @return
+     */
     String name() default "";
 }

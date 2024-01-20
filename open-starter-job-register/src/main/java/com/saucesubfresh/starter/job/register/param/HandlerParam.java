@@ -15,43 +15,15 @@
  */
 package com.saucesubfresh.starter.job.register.param;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author lijunping
  */
 @Data
-@Builder
-@Accessors(chain = true)
-@AllArgsConstructor
-@NoArgsConstructor
-public class JobParam implements Serializable {
+public class HandlerParam implements Serializable {
     private static final long serialVersionUID = 1135284528376646225L;
-    /**
-     * The Id of job
-     */
-    private Long jobId;
-    /**
-     * The params of job
-     */
-    private String params;
-    /**
-     * The script of job
-     */
-    private String script;
-    /**
-     * The update time of script
-     */
-    private String scriptUpdateTime;
-    /**
-     * 任务分片节点列表
-     */
-    private List<String> shardingNodes;
+
 }

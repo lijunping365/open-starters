@@ -11,7 +11,7 @@
 
     <artifactId>open-starter-job-register</artifactId>
     <description>用于扫描 Open-Job 处理器</description>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
     <dependencies>
         <dependency>
