@@ -18,7 +18,7 @@ package com.saucesubfresh.starter.http.executor.support;
 
 import com.saucesubfresh.starter.http.exception.HttpException;
 import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
-import com.saucesubfresh.starter.http.executor.OkHttpExecutor;
+import com.saucesubfresh.starter.http.executor.HttpExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -30,11 +30,11 @@ import java.util.Objects;
  * @author lijunping
  **/
 @Slf4j
-public class DefaultOkHttpExecutor extends AbstractHttpExecutor implements OkHttpExecutor {
+public class OkHttpExecutor extends AbstractHttpExecutor implements HttpExecutor {
 
     private final OkHttpClient client;
 
-    public DefaultOkHttpExecutor(OkHttpClient client) {
+    public OkHttpExecutor(OkHttpClient client) {
         this.client = client;
     }
 

@@ -17,7 +17,7 @@ package com.saucesubfresh.starter.http.executor.support;
 
 import com.saucesubfresh.starter.http.exception.HttpException;
 import com.saucesubfresh.starter.http.executor.AbstractHttpExecutor;
-import com.saucesubfresh.starter.http.executor.HttpClientExecutor;
+import com.saucesubfresh.starter.http.executor.HttpExecutor;
 import com.saucesubfresh.starter.http.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,11 +42,11 @@ import java.util.Map;
  * @author lijunping
  */
 @Slf4j
-public class DefaultHttpClientExecutor extends AbstractHttpExecutor implements HttpClientExecutor {
+public class HttpClientExecutor extends AbstractHttpExecutor implements HttpExecutor {
 
     private final CloseableHttpClient client;
 
-    public DefaultHttpClientExecutor(CloseableHttpClient client) {
+    public HttpClientExecutor(CloseableHttpClient client) {
         this.client = client;
     }
 
@@ -79,21 +79,11 @@ public class DefaultHttpClientExecutor extends AbstractHttpExecutor implements H
     }
 
     private String execute(HttpRequestBase httpRequestBase) throws HttpException{
-        CloseableHttpResponse response = null;
-        try {
-            response = client.execute(httpRequestBase);
+        try (CloseableHttpResponse response = client.execute(httpRequestBase)) {
             return handlerResponse(response);
         } catch (IOException e) {
             log.error("HttpClient_execute_exception",e);
             throw new HttpException(e.getMessage());
-        } finally {
-            try {
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                log.error("HttpClient_CloseableHttpResponse关闭失败", e);
-            }
         }
     }
 
@@ -121,9 +111,10 @@ public class DefaultHttpClientExecutor extends AbstractHttpExecutor implements H
     }
 
     private String handlerResponse(CloseableHttpResponse response) throws IOException {
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK){
-            return null;
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+            return EntityUtils.toString(response.getEntity(), Charset.defaultCharset());
         }
-        return EntityUtils.toString(response.getEntity(), Charset.defaultCharset());
+        log.error("httpClient execute error >> statusCode = {}", response.getStatusLine().getStatusCode());
+        throw new HttpException(e.getMessage());
     }
 }
