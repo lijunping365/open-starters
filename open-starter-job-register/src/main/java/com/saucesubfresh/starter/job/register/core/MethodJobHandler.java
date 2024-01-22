@@ -15,14 +15,14 @@
  */
 package com.saucesubfresh.starter.job.register.core;
 
-import com.saucesubfresh.starter.job.register.param.JobParam;
+import com.saucesubfresh.starter.job.register.param.HandlerParam;
 
 import java.lang.reflect.Method;
 
 /**
  * @author lijunping
  */
-public class MethodJobHandler implements OpenJobHandler{
+public class MethodJobHandler<T extends HandlerParam> implements OpenJobHandler<T>{
 
     private final Object target;
     private final Method method;
@@ -33,7 +33,7 @@ public class MethodJobHandler implements OpenJobHandler{
     }
 
     @Override
-    public void handler(JobParam params) throws Exception{
+    public void handler(T params) throws Exception{
         Class<?>[] paramTypes = method.getParameterTypes();
         if (paramTypes.length > 0) {
             method.invoke(target, params);

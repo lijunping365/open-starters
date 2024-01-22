@@ -82,3 +82,7 @@ public class OpenJobHandlerMethodOne{
 ### 1.0.5
 
 增加 JobHandler 管理器
+
+### 1.0.6
+
+JobHandler 接口支持泛型，这样 handler 方法的参数类型可由外部自定义
