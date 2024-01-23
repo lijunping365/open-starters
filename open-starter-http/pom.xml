@@ -17,13 +17,11 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <!-- 包含很多与自动配置相关的注解的定义，必须要引入 -->
