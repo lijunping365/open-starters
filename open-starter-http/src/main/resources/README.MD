@@ -105,6 +105,4 @@ public class CustomizeDownloadPipeline extends AbstractDownloadPipeline {
 
 ### 1.0.5 版本更新说明
 
-1. 实现不管使用什么请求工具，我的外壳是通用的
-
-2. 提供线程池、超时时间，结果处理等的自定义
+1. 优化响应处理

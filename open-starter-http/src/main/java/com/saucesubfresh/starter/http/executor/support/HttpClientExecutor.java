@@ -114,7 +114,6 @@ public class HttpClientExecutor extends AbstractHttpExecutor implements HttpExec
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
             return EntityUtils.toString(response.getEntity(), Charset.defaultCharset());
         }
-        log.error("httpClient execute error >> statusCode = {}", response.getStatusLine().getStatusCode());
-        throw new HttpException(e.getMessage());
+        throw new HttpException(response.getStatusLine().getReasonPhrase(), response.getStatusLine().getStatusCode());
     }
 }

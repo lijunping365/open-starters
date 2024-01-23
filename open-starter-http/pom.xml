@@ -11,7 +11,7 @@
 
     <artifactId>open-starter-http</artifactId>
     <description>一个简单封装了 httpClient 和 okHttp 的工具</description>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 
     <dependencies>
         <dependency>

@@ -15,12 +15,22 @@
  */
 package com.saucesubfresh.starter.http.exception;
 
+import lombok.Data;
+
 /**
  * @author lijunping
  */
+@Data
 public class HttpException extends RuntimeException{
+
+    private Integer code;
 
     public HttpException(String msg) {
         super(msg);
+    }
+
+    public HttpException(String msg, Integer code) {
+        super(msg);
+        this.code = code;
     }
 }

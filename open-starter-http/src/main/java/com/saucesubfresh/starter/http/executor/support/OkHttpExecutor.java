@@ -23,6 +23,7 @@ import com.saucesubfresh.starter.http.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,7 +63,7 @@ public class OkHttpExecutor extends AbstractHttpExecutor implements HttpExecutor
 
     private String execNewCall(Request request) throws HttpException{
         try (Response response = client.newCall(request).execute()) {
-            return Objects.nonNull(response.body()) && response.isSuccessful() ? response.body().string() : null;
+            return handlerResponse(response);
         } catch (Exception e) {
             log.error("okhttp3 execute error >> ex = {}", e.getMessage());
             throw new HttpException(e.getMessage());
@@ -83,5 +84,12 @@ public class OkHttpExecutor extends AbstractHttpExecutor implements HttpExecutor
             }
         }
         return sb;
+    }
+
+    private String handlerResponse(Response response) throws IOException {
+        if (response.isSuccessful()){
+            return Objects.requireNonNull(response.body()).string();
+        }
+        throw new HttpException(response.message(), response.code());
     }
 }

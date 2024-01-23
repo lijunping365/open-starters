@@ -16,7 +16,7 @@
 package com.saucesubfresh.starter.http.config;
 
 import com.saucesubfresh.starter.http.constants.HttpConstant;
-import com.saucesubfresh.starter.http.executor.support.HttpClientExecutor;
+import com.saucesubfresh.starter.http.executor.HttpExecutor;
 import com.saucesubfresh.starter.http.executor.support.OkHttpExecutor;
 import com.saucesubfresh.starter.http.properties.HttpProperties;
 import okhttp3.ConnectionPool;
@@ -29,6 +29,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,12 +58,6 @@ public class HttpAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OkHttpExecutor okHttpExecutor(OkHttpClient okHttpClient){
-        return new OkHttpExecutor(okHttpClient);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
     public PoolingHttpClientConnectionManager connectionManager(HttpProperties properties){
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setDefaultMaxPerRoute(properties.getMaxPerRoute());
@@ -87,5 +82,11 @@ public class HttpAutoConfiguration {
                 .setUserAgent(HttpConstant.UserAgent.USER_AGENT_CHROME)
                 .disableAutomaticRetries()
                 .build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public HttpExecutor httpExecutor(OkHttpClient okHttpClient){
+        return new OkHttpExecutor(okHttpClient);
     }
 }
