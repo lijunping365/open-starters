@@ -73,3 +73,7 @@ com:
 ## 1.1.2 版本更新说明
 
 修复round 判断的bug
+
+## 1.2.0 版本更新说明
+
+添加启用注解 EnableOpenScheduler
