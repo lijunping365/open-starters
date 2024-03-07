@@ -25,12 +25,6 @@ import java.util.Collection;
 public interface ScheduleTaskService {
 
     /**
-     * 获取即将被调度的任务
-     * @return 调度任务集合
-     */
-    ScheduleTask get(Long taskId);
-
-    /**
      * 获取任务池中存在的全部任务
      * @return 任务池中存在的全部任务
      */

@@ -15,46 +15,51 @@
  */
 package com.saucesubfresh.starter.schedule;
 
-import com.saucesubfresh.starter.schedule.trigger.ScheduleTaskTrigger;
+import com.saucesubfresh.starter.schedule.executor.ScheduleTaskExecutor;
+import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author lijunping
  */
 @Slf4j
-public class DefaultTaskJobScheduler implements TaskJobScheduler {
+public class OpenJobTriggerScheduler extends AbstractOpenJobScheduler {
 
     private Thread scheduleThread;
-    private final ScheduleTaskTrigger scheduleTaskTrigger;
+    private final TimeWheel timeWheel;
+    private final ScheduleTaskExecutor executor;
     private volatile boolean scheduleThreadToStop = false;
 
-    public DefaultTaskJobScheduler(ScheduleTaskTrigger scheduleTaskTrigger) {
-        this.scheduleTaskTrigger = scheduleTaskTrigger;
+    public OpenJobTriggerScheduler(TimeWheel timeWheel, ScheduleTaskExecutor executor) {
+        this.timeWheel = timeWheel;
+        this.executor = executor;
     }
-
 
     @Override
     public void start() {
         scheduleThread = new Thread(()->{
             while (!scheduleThreadToStop) {
-                scheduleTaskTrigger.trigger();
-                threadSleep();
+                this.threadSleep();
+                this.trigger();
             }
-            log.info("scheduleThread stop");
+            log.info("triggerScheduleThread stop");
         });
         scheduleThread.setDaemon(true);
-        scheduleThread.setName("scheduleThread");
+        scheduleThread.setName("triggerScheduleThread");
         scheduleThread.start();
-        log.info("scheduleThread start success");
+        log.info("triggerScheduleThread start success");
     }
 
     @Override
     public void stop() {
         scheduleThreadToStop = true;
         stopThread(scheduleThread);
-        log.info("scheduleThread stop success");
+        log.info("triggerScheduleThread stop success");
     }
 
 
@@ -68,27 +73,18 @@ public class DefaultTaskJobScheduler implements TaskJobScheduler {
         }
     }
 
-    /**
-     * 停止线程
-     * @param thread 要停止的线程
-     */
-    private void stopThread(Thread thread){
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
-
-        if (thread.getState() == Thread.State.TERMINATED){
+    public void trigger() {
+        int slot = Calendar.getInstance().get(Calendar.SECOND);
+        List<Long> taskList = timeWheel.take(slot);
+        if (CollectionUtils.isEmpty(taskList)){
             return;
         }
 
-        // interrupt and wait
-        thread.interrupt();
         try {
-            thread.join();
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
+            executor.execute(taskList);
+        }catch (Exception e){
+            log.error("Execute task error:{}", e.getMessage(), e);
         }
     }
+
 }

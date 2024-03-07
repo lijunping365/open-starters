@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.saucesubfresh.starter.schedule.domain;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.saucesubfresh.starter.schedule;
 
 /**
+ * 定时器
+ *
  * @author lijunping
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class WheelEntity {
+public interface OpenJobScheduler {
 
-    private Long taskId;
+    /**
+     * 启动定时器
+     */
+    void start();
 
-    private Long round;
-
-    private String cron;
+    /**
+     * 停止定时器
+     */
+    void stop();
 }

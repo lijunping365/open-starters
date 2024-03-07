@@ -16,14 +16,13 @@
 package com.saucesubfresh.starter.schedule.wheel;
 
 import com.saucesubfresh.starter.schedule.cron.CronHelper;
-import com.saucesubfresh.starter.schedule.domain.WheelEntity;
 import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
-import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * 哈希时间轮实现
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 public class HashedTimeWheel implements TimeWheel {
 
     private final long tickDuration;
-    private static final Map<Integer, List<WheelEntity>> timeWheel = new ConcurrentHashMap<>();
+    private static final Map<Integer, List<Long>> timeWheel = new ConcurrentHashMap<>();
 
     public HashedTimeWheel(ScheduleProperties scheduleProperties){
         long tickDuration = scheduleProperties.getTickDuration();
@@ -55,36 +54,17 @@ public class HashedTimeWheel implements TimeWheel {
         long round = diff / tickDuration;
         int tick = (int) (nextTime % tickDuration);
 
-        List<WheelEntity> taskList = timeWheel.getOrDefault(tick, new ArrayList<>());
-        WheelEntity wheelEntity = new WheelEntity(taskId, round, cron);
-        taskList.add(wheelEntity);
+        if (round > 0L){
+            return;
+        }
+
+        List<Long> taskList = timeWheel.getOrDefault(tick, new ArrayList<>());
+        taskList.add(taskId);
         timeWheel.put(tick, taskList);
     }
 
     @Override
-    public List<WheelEntity> take(int slot) {
-        List<WheelEntity> entities = timeWheel.get(slot);
-
-        if (CollectionUtils.isEmpty(entities)){
-            return Collections.emptyList();
-        }
-
-        List<WheelEntity> tasks = entities.stream()
-                .filter(e -> Objects.equals(e.getRound(), 0L) || Objects.equals(e.getRound() -1, 0L))
-                .collect(Collectors.toList());
-
-        entities.removeAll(tasks);
-        updateRound(slot, entities);
-        return tasks;
-    }
-
-    private void updateRound(int tick, List<WheelEntity> entities){
-        if (!CollectionUtils.isEmpty(entities)){
-            for (WheelEntity entity : entities) {
-                entity.setRound(entity.getRound() - 1L);
-            }
-
-            timeWheel.put(tick, entities);
-        }
+    public List<Long> take(int slot) {
+        return timeWheel.get(slot);
     }
 }

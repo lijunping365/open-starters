@@ -25,11 +25,6 @@ import java.util.Collection;
 public class DefaultScheduleTaskService implements ScheduleTaskService {
 
     @Override
-    public ScheduleTask get(Long taskId) {
-        return null;
-    }
-
-    @Override
     public Collection<ScheduleTask> loadTask() {
         return null;
     }

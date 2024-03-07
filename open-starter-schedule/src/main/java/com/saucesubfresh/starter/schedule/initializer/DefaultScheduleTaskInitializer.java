@@ -15,16 +15,12 @@
  */
 package com.saucesubfresh.starter.schedule.initializer;
 
-import com.saucesubfresh.starter.schedule.TaskJobScheduler;
-import com.saucesubfresh.starter.schedule.domain.ScheduleTask;
-import com.saucesubfresh.starter.schedule.service.ScheduleTaskService;
-import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
+import com.saucesubfresh.starter.schedule.OpenJobScheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author lijunping
@@ -32,22 +28,18 @@ import java.util.Collection;
 @Slf4j
 public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, InitializingBean, DisposableBean {
 
-    private final TimeWheel timeWheel;
-    private final ScheduleTaskService scheduleTaskService;
-    private final TaskJobScheduler taskJobScheduler;
+    private final List<OpenJobScheduler> openJobSchedulerList;
 
-    public DefaultScheduleTaskInitializer(TimeWheel timeWheel,
-                                          ScheduleTaskService scheduleTaskService,
-                                          TaskJobScheduler taskJobScheduler) {
-        this.timeWheel = timeWheel;
-        this.scheduleTaskService = scheduleTaskService;
-        this.taskJobScheduler = taskJobScheduler;
+    public DefaultScheduleTaskInitializer(List<OpenJobScheduler> openJobSchedulerList) {
+        this.openJobSchedulerList = openJobSchedulerList;
     }
+
 
     @Override
     public void initialize() {
-        loadTask();
-        taskJobScheduler.start();
+        for (OpenJobScheduler openJobScheduler : openJobSchedulerList) {
+            openJobScheduler.start();
+        }
     }
 
     @Override
@@ -62,17 +54,8 @@ public class DefaultScheduleTaskInitializer implements ScheduleTaskInitializer, 
 
     @Override
     public void destroy() throws Exception {
-        taskJobScheduler.stop();
-    }
-
-    private void loadTask(){
-        Collection<ScheduleTask> scheduleTasks = scheduleTaskService.loadTask();
-        if (CollectionUtils.isEmpty(scheduleTasks)){
-            return;
-        }
-
-        for (ScheduleTask task : scheduleTasks) {
-            timeWheel.put(task.getTaskId(), task.getCronExpression());
+        for (OpenJobScheduler openJobScheduler : openJobSchedulerList) {
+            openJobScheduler.stop();
         }
     }
 }

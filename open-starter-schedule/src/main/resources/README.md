@@ -76,4 +76,8 @@ com:
 
 ## 1.2.0 版本更新说明
 
-添加启用注解 EnableOpenScheduler
+此次改动较大：
+
+1. 添加启用注解 EnableOpenScheduler，如果项目添加了 EnableOpenScheduler 这个注解则会启动定时器，否则不会启动定时器
+2. 时间轮去掉圈数，只放入 round 为 0 的任务
+3. 定时器采用两个线程，一个线程专门负责往时间轮里放任务，另一个线程专门负责消费任务

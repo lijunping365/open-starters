@@ -15,8 +15,6 @@
  */
 package com.saucesubfresh.starter.schedule.wheel;
 
-import com.saucesubfresh.starter.schedule.domain.WheelEntity;
-
 import java.util.List;
 
 /**
@@ -33,9 +31,9 @@ public interface TimeWheel {
     void put(Long taskId, String cron);
 
     /**
-     * 获取时间轮指定槽位的任务
+     * 获取时间轮指定槽位的任务并删除
      *
      * @return
      */
-    List<WheelEntity> take(int slot);
+    List<Long> take(int slot);
 }
