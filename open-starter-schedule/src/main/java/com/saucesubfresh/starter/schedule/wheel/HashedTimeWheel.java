@@ -18,10 +18,9 @@ package com.saucesubfresh.starter.schedule.wheel;
 import com.saucesubfresh.starter.schedule.cron.CronHelper;
 import com.saucesubfresh.starter.schedule.exception.ScheduleException;
 import com.saucesubfresh.starter.schedule.properties.ScheduleProperties;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -29,10 +28,11 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author lijunping
  */
+@Slf4j
 public class HashedTimeWheel implements TimeWheel {
 
     private final long tickDuration;
-    private static final Map<Integer, List<Long>> timeWheel = new ConcurrentHashMap<>();
+    private static final Map<Integer, Set<Long>> timeWheel = new ConcurrentHashMap<>();
 
     public HashedTimeWheel(ScheduleProperties scheduleProperties){
         long tickDuration = scheduleProperties.getTickDuration();
@@ -58,13 +58,15 @@ public class HashedTimeWheel implements TimeWheel {
             return;
         }
 
-        List<Long> taskList = timeWheel.getOrDefault(tick, new ArrayList<>());
+        Set<Long> taskList = timeWheel.getOrDefault(tick, new HashSet<>());
         taskList.add(taskId);
         timeWheel.put(tick, taskList);
+
+        log.debug("HashedTimeWheel.timeWheel {}", timeWheel);
     }
 
     @Override
-    public List<Long> take(int slot) {
-        return timeWheel.get(slot);
+    public Set<Long> take(int slot) {
+        return timeWheel.remove(slot);
     }
 }

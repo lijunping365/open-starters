@@ -15,7 +15,7 @@
  */
 package com.saucesubfresh.starter.schedule.wheel;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author lijunping
@@ -35,5 +35,5 @@ public interface TimeWheel {
      *
      * @return
      */
-    List<Long> take(int slot);
+    Set<Long> take(int slot);
 }

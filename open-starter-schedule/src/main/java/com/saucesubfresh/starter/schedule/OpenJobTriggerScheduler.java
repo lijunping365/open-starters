@@ -20,8 +20,9 @@ import com.saucesubfresh.starter.schedule.wheel.TimeWheel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,13 +76,13 @@ public class OpenJobTriggerScheduler extends AbstractOpenJobScheduler {
 
     public void trigger() {
         int slot = Calendar.getInstance().get(Calendar.SECOND);
-        List<Long> taskList = timeWheel.take(slot);
+        Set<Long> taskList = timeWheel.take(slot);
         if (CollectionUtils.isEmpty(taskList)){
             return;
         }
 
         try {
-            executor.execute(taskList);
+            executor.execute(new ArrayList<>(taskList));
         }catch (Exception e){
             log.error("Execute task error:{}", e.getMessage(), e);
         }
