@@ -29,4 +29,9 @@ public class ScheduleProperties {
      * 时间轮槽数
      */
     private long tickDuration = 60;
+
+    /**
+     * This value should be greater than the preparation time
+     */
+    private long threshold = 5;
 }

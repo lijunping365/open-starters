@@ -31,14 +31,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class HashedTimeWheel implements TimeWheel {
 
+    private final long threshold;
     private final long tickDuration;
     private static final Map<Integer, Set<Long>> timeWheel = new ConcurrentHashMap<>();
 
     public HashedTimeWheel(ScheduleProperties scheduleProperties){
+        long threshold = scheduleProperties.getThreshold();
         long tickDuration = scheduleProperties.getTickDuration();
         if (tickDuration <= 0){
-            throw new ScheduleException("The tickDuration must more than zero");
+            throw new ScheduleException("The tickDuration must greater than zero");
         }
+        if (threshold <= 0 || threshold >= tickDuration){
+            throw new ScheduleException("The threshold must greater than zero and less than tickDuration");
+        }
+        this.threshold = threshold;
         this.tickDuration = tickDuration;
     }
 
@@ -54,7 +60,7 @@ public class HashedTimeWheel implements TimeWheel {
         long round = diff / tickDuration;
         int tick = (int) (nextTime % tickDuration);
 
-        if (round > 0L){
+        if (round > 0L || diff > threshold){
             return;
         }
 
