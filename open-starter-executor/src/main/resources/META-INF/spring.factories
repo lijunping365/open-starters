@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.saucesubfresh.starter.executor.config.TaskExecutorAutoConfiguration
+com.openbytecode.starter.executor.config.TaskExecutorAutoConfiguration

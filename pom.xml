@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.saucesubfresh</groupId>
-    <artifactId>Open-Starter-Store</artifactId>
-    <version>1.0.2</version>
+    <groupId>com.openbytecode</groupId>
+    <artifactId>open-starters</artifactId>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
     <description>A Open Starter Store.</description>
-    <url>https://github.com/lijunping365/Open-Starter-Store</url>
+    <url>https://github.com/lijunping365/open-starters</url>
 
     <modules>
         <module>open-starter-captcha</module>
@@ -38,15 +38,10 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/lijunping365/Open-Starter-Store.git</url>
-        <connection>scm:git:https://github.com/lijunping365/Open-Starter-Store.git</connection>
-        <developerConnection>scm:git:git@github.com:lijunping365/Open-Starter-Store.git</developerConnection>
+        <url>https://github.com/lijunping365/open-starters.git</url>
+        <connection>scm:git:https://github.com/lijunping365/open-starters.git</connection>
+        <developerConnection>scm:git:git@github.com:lijunping365/open-starters.git</developerConnection>
     </scm>
-
-    <organization>
-        <name>酱子生鲜团队</name>
-        <url>https://github.com/fresh-cloud-team</url>
-    </organization>
 
     <developers>
         <developer>

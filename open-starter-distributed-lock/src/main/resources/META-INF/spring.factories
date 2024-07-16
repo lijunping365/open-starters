@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.saucesubfresh.starter.lock.config.DistributedLockAutoConfiguration
+com.openbytecode.starter.lock.config.DistributedLockAutoConfiguration

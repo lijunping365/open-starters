@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.saucesubfresh.starter.cache.config.CacheAutoConfiguration
+ com.openbytecode.starter.cache.config.CacheAutoConfiguration

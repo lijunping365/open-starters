@@ -16,7 +16,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-lock</artifactId>
     <version>1.0.3</version>
 </dependency>

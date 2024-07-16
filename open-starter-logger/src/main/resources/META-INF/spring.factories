@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.saucesubfresh.starter.logger.config.LoggerAutoConfiguration
+ com.openbytecode.starter.logger.config.LoggerAutoConfiguration

@@ -1,289 +1,289 @@
 {
   "groups": [
     {
-      "name": "com.saucesubfresh.captcha",
-      "type": "com.saucesubfresh.starter.captcha.properties.CaptchaProperties",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.CaptchaProperties"
+      "name": "com.openbytecode.captcha",
+      "type": "com.openbytecode.starter.captcha.properties.CaptchaProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.CaptchaProperties"
     },
     {
-      "name": "com.saucesubfresh.captcha.image",
-      "type": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.CaptchaProperties"
+      "name": "com.openbytecode.captcha.image",
+      "type": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.CaptchaProperties"
     },
     {
-      "name": "com.saucesubfresh.captcha.math",
-      "type": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.CaptchaProperties"
+      "name": "com.openbytecode.captcha.math",
+      "type": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.CaptchaProperties"
     },
     {
-      "name": "com.saucesubfresh.captcha.scan",
-      "type": "com.saucesubfresh.starter.captcha.properties.ScanCodeProperties",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.CaptchaProperties"
+      "name": "com.openbytecode.captcha.scan",
+      "type": "com.openbytecode.starter.captcha.properties.ScanCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.CaptchaProperties"
     },
     {
-      "name": "com.saucesubfresh.captcha.sms",
-      "type": "com.saucesubfresh.starter.captcha.properties.SmsCodeProperties",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.CaptchaProperties"
+      "name": "com.openbytecode.captcha.sms",
+      "type": "com.openbytecode.starter.captcha.properties.SmsCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.CaptchaProperties"
     }
   ],
   "properties": [
     {
-      "name": "com.saucesubfresh.captcha.image.background-clear-from",
+      "name": "com.openbytecode.captcha.image.background-clear-from",
       "type": "java.lang.String",
       "description": "背景颜色渐变，开始颜色，默认值lightGray\/192,193,193",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "255,255,255"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.background-clear-to",
+      "name": "com.openbytecode.captcha.image.background-clear-to",
       "type": "java.lang.String",
       "description": "背景颜色渐变， 结束颜色，默认值white",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "white"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.border",
+      "name": "com.openbytecode.captcha.image.border",
       "type": "java.lang.Boolean",
       "description": "边框，默认无",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": false
     },
     {
-      "name": "com.saucesubfresh.captcha.image.border-color",
+      "name": "com.openbytecode.captcha.image.border-color",
       "type": "java.lang.String",
       "description": "边框颜色，合法值rgb(and optional alpha)或者 white,black,blue，默认值 black",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "blue"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.border-thickness",
+      "name": "com.openbytecode.captcha.image.border-thickness",
       "type": "java.lang.Integer",
       "description": "边框厚度，合法值>0,默认值为 2",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": 2
     },
     {
-      "name": "com.saucesubfresh.captcha.image.char-space",
+      "name": "com.openbytecode.captcha.image.char-space",
       "type": "java.lang.Integer",
       "description": "文字间隔，默认值为 6",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": 6
     },
     {
-      "name": "com.saucesubfresh.captcha.image.expire-time",
+      "name": "com.openbytecode.captcha.image.expire-time",
       "type": "java.lang.Integer",
       "description": "验证码过期时间，单位分钟",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": 1
     },
     {
-      "name": "com.saucesubfresh.captcha.image.font-color",
+      "name": "com.openbytecode.captcha.image.font-color",
       "type": "java.lang.String",
       "description": "字体颜色，合法值： r,g,b 或者 white,black,blue，默认值black",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "black"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.font-names",
+      "name": "com.openbytecode.captcha.image.font-names",
       "type": "java.lang.String",
       "description": "字体,默认值Arial, Courier(如果使用中文验证码，则必须使用中文的字体，否则出现乱码)",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "Arial"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.font-size",
+      "name": "com.openbytecode.captcha.image.font-size",
       "type": "java.lang.Integer",
       "description": "字体大小，默认值为40px",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": 40
     },
     {
-      "name": "com.saucesubfresh.captcha.image.height",
+      "name": "com.openbytecode.captcha.image.height",
       "type": "java.lang.Integer",
       "description": "图片高度",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": 23
     },
     {
-      "name": "com.saucesubfresh.captcha.image.image-format",
+      "name": "com.openbytecode.captcha.image.image-format",
       "type": "java.lang.String",
       "description": "图片格式",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "JPEG"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.length",
+      "name": "com.openbytecode.captcha.image.length",
       "type": "java.lang.Integer",
       "description": "验证码的位数",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": 6
     },
     {
-      "name": "com.saucesubfresh.captcha.image.noise-color",
+      "name": "com.openbytecode.captcha.image.noise-color",
       "type": "java.lang.String",
       "description": "干扰 颜色，合法值： r,g,b 或者 white,black,blue，默认值black",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "black"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.resource-text",
+      "name": "com.openbytecode.captcha.image.resource-text",
       "type": "java.lang.String",
       "description": "文本集合，验证码值从此集合中获取,默认值 1234567890",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": "1234567890"
     },
     {
-      "name": "com.saucesubfresh.captcha.image.width",
+      "name": "com.openbytecode.captcha.image.width",
       "type": "java.lang.Integer",
       "description": "图片宽度",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ImageCodeProperties",
       "defaultValue": 67
     },
     {
-      "name": "com.saucesubfresh.captcha.math.background-clear-from",
+      "name": "com.openbytecode.captcha.math.background-clear-from",
       "type": "java.lang.String",
       "description": "背景颜色渐变，开始颜色，默认值lightGray\/192,193,193",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "255,255,255"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.background-clear-to",
+      "name": "com.openbytecode.captcha.math.background-clear-to",
       "type": "java.lang.String",
       "description": "背景颜色渐变， 结束颜色，默认值white",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "white"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.border",
+      "name": "com.openbytecode.captcha.math.border",
       "type": "java.lang.Boolean",
       "description": "边框，默认无",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": false
     },
     {
-      "name": "com.saucesubfresh.captcha.math.border-color",
+      "name": "com.openbytecode.captcha.math.border-color",
       "type": "java.lang.String",
       "description": "边框颜色，合法值rgb(and optional alpha)或者 white,black,blue，默认值 black",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "blue"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.border-thickness",
+      "name": "com.openbytecode.captcha.math.border-thickness",
       "type": "java.lang.Integer",
       "description": "边框厚度，合法值>0,默认值为 2",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": 2
     },
     {
-      "name": "com.saucesubfresh.captcha.math.char-space",
+      "name": "com.openbytecode.captcha.math.char-space",
       "type": "java.lang.Integer",
       "description": "文字间隔，默认值为 6",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": 6
     },
     {
-      "name": "com.saucesubfresh.captcha.math.expire-time",
+      "name": "com.openbytecode.captcha.math.expire-time",
       "type": "java.lang.Integer",
       "description": "验证码过期时间，单位分钟",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": 1
     },
     {
-      "name": "com.saucesubfresh.captcha.math.font-color",
+      "name": "com.openbytecode.captcha.math.font-color",
       "type": "java.lang.String",
       "description": "字体颜色，合法值： r,g,b 或者 white,black,blue，默认值black",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "black"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.font-names",
+      "name": "com.openbytecode.captcha.math.font-names",
       "type": "java.lang.String",
       "description": "字体,默认值Arial, Courier(如果使用中文验证码，则必须使用中文的字体，否则出现乱码)",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "Arial"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.font-size",
+      "name": "com.openbytecode.captcha.math.font-size",
       "type": "java.lang.Integer",
       "description": "字体大小，默认值为40px",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": 40
     },
     {
-      "name": "com.saucesubfresh.captcha.math.height",
+      "name": "com.openbytecode.captcha.math.height",
       "type": "java.lang.Integer",
       "description": "图片高度",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": 23
     },
     {
-      "name": "com.saucesubfresh.captcha.math.image-format",
+      "name": "com.openbytecode.captcha.math.image-format",
       "type": "java.lang.String",
       "description": "图片格式",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "JPEG"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.length",
+      "name": "com.openbytecode.captcha.math.length",
       "type": "java.lang.Integer",
       "description": "验证码的位数",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": 6
     },
     {
-      "name": "com.saucesubfresh.captcha.math.noise-color",
+      "name": "com.openbytecode.captcha.math.noise-color",
       "type": "java.lang.String",
       "description": "干扰 颜色，合法值： r,g,b 或者 white,black,blue，默认值black",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "black"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.resource-text",
+      "name": "com.openbytecode.captcha.math.resource-text",
       "type": "java.lang.String",
       "description": "文本集合，验证码值从此集合中获取,默认值 123456789",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": "123456789"
     },
     {
-      "name": "com.saucesubfresh.captcha.math.width",
+      "name": "com.openbytecode.captcha.math.width",
       "type": "java.lang.Integer",
       "description": "图片宽度",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.MathImageCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.MathImageCodeProperties",
       "defaultValue": 67
     },
     {
-      "name": "com.saucesubfresh.captcha.scan.height",
+      "name": "com.openbytecode.captcha.scan.height",
       "type": "java.lang.Integer",
       "description": "二维码高度",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ScanCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ScanCodeProperties",
       "defaultValue": 300
     },
     {
-      "name": "com.saucesubfresh.captcha.scan.margin",
+      "name": "com.openbytecode.captcha.scan.margin",
       "type": "java.lang.Integer",
       "description": "二维码外边距，0到4",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ScanCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ScanCodeProperties",
       "defaultValue": 1
     },
     {
-      "name": "com.saucesubfresh.captcha.scan.width",
+      "name": "com.openbytecode.captcha.scan.width",
       "type": "java.lang.Integer",
       "description": "二维码宽度",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.ScanCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.ScanCodeProperties",
       "defaultValue": 300
     },
     {
-      "name": "com.saucesubfresh.captcha.sms.expire-time",
+      "name": "com.openbytecode.captcha.sms.expire-time",
       "type": "java.lang.Integer",
       "description": "验证码过期时间，单位分钟",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.SmsCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.SmsCodeProperties",
       "defaultValue": 1
     },
     {
-      "name": "com.saucesubfresh.captcha.sms.length",
+      "name": "com.openbytecode.captcha.sms.length",
       "type": "java.lang.Integer",
       "description": "验证码的位数",
-      "sourceType": "com.saucesubfresh.starter.captcha.properties.SmsCodeProperties",
+      "sourceType": "com.openbytecode.starter.captcha.properties.SmsCodeProperties",
       "defaultValue": 6
     }
   ],

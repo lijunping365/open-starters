@@ -18,7 +18,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-oauth</artifactId>
     <version>1.0.5</version>
 </dependency>
@@ -28,7 +28,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     oauth:
       token:
         # token 有效期，单位 秒

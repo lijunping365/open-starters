@@ -18,9 +18,9 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-alarm</artifactId>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -28,7 +28,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     alarm:
       ding-ding:
         # 这里的 {xxxxxx} 替换成你的钉钉机器人的 secret

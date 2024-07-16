@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.saucesubfresh.starter.security.config.SecurityAutoConfiguration
+ com.openbytecode.starter.security.config.SecurityAutoConfiguration

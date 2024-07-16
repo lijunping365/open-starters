@@ -27,7 +27,7 @@ HandlerInterceptor 的方法有一个handler参数。而 handler 可以进行强
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-security</artifactId>
     <version>1.0.4</version>
 </dependency>
@@ -52,7 +52,7 @@ public class JobAdminApplication {
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     security:
       # 配置白名单
       ignore-paths: "/login"

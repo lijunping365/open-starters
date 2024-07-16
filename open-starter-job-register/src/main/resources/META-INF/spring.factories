@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.saucesubfresh.starter.job.register.config.JobHandlerAutoConfiguration
+ com.openbytecode.starter.job.register.config.JobHandlerAutoConfiguration

@@ -16,7 +16,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-http</artifactId>
     <version>1.0.3</version>
 </dependency>
@@ -26,7 +26,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     http:
       # 存活时长，单位 min
       keep-alive: 5

@@ -14,7 +14,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-executor</artifactId>
     <version>1.0.5</version>
 </dependency>
@@ -24,7 +24,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     executor:
       timeout: 3 #超时时间
 ```

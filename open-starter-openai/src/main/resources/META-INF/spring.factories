@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.saucesubfresh.starter.openai.config.OpenAIAutoConfiguration
+ com.openbytecode.starter.openai.config.OpenAIAutoConfiguration

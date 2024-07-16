@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.saucesubfresh.starter.limiter.config.LimiterAutoConfiguration
+com.openbytecode.starter.limiter.config.LimiterAutoConfiguration

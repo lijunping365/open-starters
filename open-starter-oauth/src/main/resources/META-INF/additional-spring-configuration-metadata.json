@@ -1,241 +1,241 @@
 {
   "groups": [
     {
-      "name": "com.saucesubfresh.oauth",
-      "type": "com.saucesubfresh.starter.oauth.properties.OAuthProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.OAuthProperties"
+      "name": "com.openbytecode.oauth",
+      "type": "com.openbytecode.starter.oauth.properties.OAuthProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.OAuthProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.SocialProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.OAuthProperties"
+      "name": "com.openbytecode.oauth.social",
+      "type": "com.openbytecode.starter.oauth.properties.social.SocialProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.OAuthProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.app",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.app.AppSocialProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.SocialProperties"
+      "name": "com.openbytecode.oauth.social.app",
+      "type": "com.openbytecode.starter.oauth.properties.social.app.AppSocialProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.SocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.app.wx",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.app.WxSocialProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.app.AppSocialProperties"
+      "name": "com.openbytecode.oauth.social.app.wx",
+      "type": "com.openbytecode.starter.oauth.properties.social.app.WxSocialProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.app.AppSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.mini.MiniSocialProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.SocialProperties"
+      "name": "com.openbytecode.oauth.social.mini",
+      "type": "com.openbytecode.starter.oauth.properties.social.mini.MiniSocialProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.SocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.alipay",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.mini.AliPayProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.MiniSocialProperties"
+      "name": "com.openbytecode.oauth.social.mini.alipay",
+      "type": "com.openbytecode.starter.oauth.properties.social.mini.AliPayProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.MiniSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.tt",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.mini.ByteDanceProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.MiniSocialProperties"
+      "name": "com.openbytecode.oauth.social.mini.tt",
+      "type": "com.openbytecode.starter.oauth.properties.social.mini.ByteDanceProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.MiniSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.weapp",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.mini.WeAppProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.MiniSocialProperties"
+      "name": "com.openbytecode.oauth.social.mini.weapp",
+      "type": "com.openbytecode.starter.oauth.properties.social.mini.WeAppProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.MiniSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.web.WebSocialProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.SocialProperties"
+      "name": "com.openbytecode.oauth.social.web",
+      "type": "com.openbytecode.starter.oauth.properties.social.web.WebSocialProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.SocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.alipay",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.web.AliPayProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WebSocialProperties"
+      "name": "com.openbytecode.oauth.social.web.alipay",
+      "type": "com.openbytecode.starter.oauth.properties.social.web.AliPayProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WebSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.qq",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.web.QQProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WebSocialProperties"
+      "name": "com.openbytecode.oauth.social.web.qq",
+      "type": "com.openbytecode.starter.oauth.properties.social.web.QQProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WebSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.we-chat",
-      "type": "com.saucesubfresh.starter.oauth.properties.social.web.WeChatProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WebSocialProperties"
+      "name": "com.openbytecode.oauth.social.web.we-chat",
+      "type": "com.openbytecode.starter.oauth.properties.social.web.WeChatProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WebSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.token",
-      "type": "com.saucesubfresh.starter.oauth.properties.token.TokenProperties",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.OAuthProperties"
+      "name": "com.openbytecode.oauth.token",
+      "type": "com.openbytecode.starter.oauth.properties.token.TokenProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.OAuthProperties"
     }
   ],
   "properties": [
     {
-      "name": "com.saucesubfresh.oauth.social.app.wx.app-id",
+      "name": "com.openbytecode.oauth.social.app.wx.app-id",
       "type": "java.lang.String",
       "description": "Application id.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.app.WxSocialProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.app.WxSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.app.wx.app-secret",
+      "name": "com.openbytecode.oauth.social.app.wx.app-secret",
       "type": "java.lang.String",
       "description": "Application secret.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.app.WxSocialProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.app.WxSocialProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.app.wx.provider-id",
+      "name": "com.openbytecode.oauth.social.app.wx.provider-id",
       "type": "java.lang.String",
       "description": "第三方 id，用来决定发起第三方登录的 url，默认是 mini",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.app.WxSocialProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.app.WxSocialProperties",
       "defaultValue": "wx"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.alipay.app-id",
+      "name": "com.openbytecode.oauth.social.mini.alipay.app-id",
       "type": "java.lang.String",
       "description": "Application id.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.AliPayProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.AliPayProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.alipay.app-secret",
+      "name": "com.openbytecode.oauth.social.mini.alipay.app-secret",
       "type": "java.lang.String",
       "description": "Application secret.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.AliPayProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.AliPayProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.alipay.provider-id",
+      "name": "com.openbytecode.oauth.social.mini.alipay.provider-id",
       "type": "java.lang.String",
       "description": "第三方 id，用来决定发起第三方登录的 url，默认是 mini",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.AliPayProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.AliPayProperties",
       "defaultValue": "alipay"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.tt.app-id",
+      "name": "com.openbytecode.oauth.social.mini.tt.app-id",
       "type": "java.lang.String",
       "description": "Application id.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.ByteDanceProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.ByteDanceProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.tt.app-secret",
+      "name": "com.openbytecode.oauth.social.mini.tt.app-secret",
       "type": "java.lang.String",
       "description": "Application secret.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.ByteDanceProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.ByteDanceProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.tt.provider-id",
+      "name": "com.openbytecode.oauth.social.mini.tt.provider-id",
       "type": "java.lang.String",
       "description": "第三方 id，用来决定发起第三方登录的 url，默认是 mini",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.ByteDanceProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.ByteDanceProperties",
       "defaultValue": "tt"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.weapp.app-id",
+      "name": "com.openbytecode.oauth.social.mini.weapp.app-id",
       "type": "java.lang.String",
       "description": "Application id.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.WeAppProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.WeAppProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.weapp.app-secret",
+      "name": "com.openbytecode.oauth.social.mini.weapp.app-secret",
       "type": "java.lang.String",
       "description": "Application secret.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.WeAppProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.WeAppProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.mini.weapp.provider-id",
+      "name": "com.openbytecode.oauth.social.mini.weapp.provider-id",
       "type": "java.lang.String",
       "description": "第三方 id，用来决定发起第三方登录的 url，默认是 mini",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.mini.WeAppProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.mini.WeAppProperties",
       "defaultValue": "weapp"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.alipay.app-id",
+      "name": "com.openbytecode.oauth.social.web.alipay.app-id",
       "type": "java.lang.String",
       "description": "Application id.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.AliPayProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.AliPayProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.alipay.app-secret",
+      "name": "com.openbytecode.oauth.social.web.alipay.app-secret",
       "type": "java.lang.String",
       "description": "Application secret.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.AliPayProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.AliPayProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.alipay.provider-id",
+      "name": "com.openbytecode.oauth.social.web.alipay.provider-id",
       "type": "java.lang.String",
       "description": "第三方 id，用来决定发起第三方登录的 url，默认是 mini",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.AliPayProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.AliPayProperties",
       "defaultValue": "alipay"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.qq.app-id",
+      "name": "com.openbytecode.oauth.social.web.qq.app-id",
       "type": "java.lang.String",
       "description": "Application id.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.QQProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.QQProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.qq.app-secret",
+      "name": "com.openbytecode.oauth.social.web.qq.app-secret",
       "type": "java.lang.String",
       "description": "Application secret.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.QQProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.QQProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.qq.provider-id",
+      "name": "com.openbytecode.oauth.social.web.qq.provider-id",
       "type": "java.lang.String",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.QQProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.QQProperties",
       "defaultValue": "qq\/callback"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.we-chat.app-id",
+      "name": "com.openbytecode.oauth.social.web.we-chat.app-id",
       "type": "java.lang.String",
       "description": "Application id.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WeChatProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WeChatProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.we-chat.app-secret",
+      "name": "com.openbytecode.oauth.social.web.we-chat.app-secret",
       "type": "java.lang.String",
       "description": "Application secret.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WeChatProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WeChatProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.we-chat.provider-id",
+      "name": "com.openbytecode.oauth.social.web.we-chat.provider-id",
       "type": "java.lang.String",
       "description": "第三方 id，用来决定发起第三方登录的 url，默认是 weChat",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WeChatProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WeChatProperties",
       "defaultValue": "wechat\/callback"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.we-chat.redirect-url",
+      "name": "com.openbytecode.oauth.social.web.we-chat.redirect-url",
       "type": "java.lang.String",
       "description": "扫码成功重定向地址",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WeChatProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WeChatProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.social.web.we-chat.scope",
+      "name": "com.openbytecode.oauth.social.web.we-chat.scope",
       "type": "java.lang.String",
       "description": "用授权作用域，拥有多个作用域用逗号（,）分隔，网页应用目前仅填写snsapi_login即可",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.social.web.WeChatProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.social.web.WeChatProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.token.access-token-expires-in",
+      "name": "com.openbytecode.oauth.token.access-token-expires-in",
       "type": "java.lang.Long",
       "description": "accessToken 有效期，单位秒，默认 1 天",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.token.TokenProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.token.TokenProperties",
       "defaultValue": 0
     },
     {
-      "name": "com.saucesubfresh.oauth.token.secret-key",
+      "name": "com.openbytecode.oauth.token.secret-key",
       "type": "java.lang.String",
       "description": "jwt 加密密钥 key，注意我们使用的是 SignatureAlgorithm.HS256，所以 secretKeyBytes.length * 8 必须大于 256",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.token.TokenProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.token.TokenProperties",
       "defaultValue": "ThisIsKeyThisIsKeyThisIsKeyThisIsKeyThisIsKeyThisIsKey"
     },
     {
-      "name": "com.saucesubfresh.oauth.token.secret-key-bytes",
+      "name": "com.openbytecode.oauth.token.secret-key-bytes",
       "type": "java.lang.Byte[]",
       "description": "secret key byte array.",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.token.TokenProperties"
+      "sourceType": "com.openbytecode.starter.oauth.properties.token.TokenProperties"
     },
     {
-      "name": "com.saucesubfresh.oauth.token.token-prefix",
+      "name": "com.openbytecode.oauth.token.token-prefix",
       "type": "java.lang.String",
       "description": "redis token key 前缀",
-      "sourceType": "com.saucesubfresh.starter.oauth.properties.token.TokenProperties",
+      "sourceType": "com.openbytecode.starter.oauth.properties.token.TokenProperties",
       "defaultValue": "access_token:"
     }
   ],

@@ -18,7 +18,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-logger</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -28,7 +28,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     logger:
       path: /data/server/open-job/logs
 ```

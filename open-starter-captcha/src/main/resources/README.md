@@ -20,7 +20,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-captcha</artifactId>
     <version>1.0.4</version>
 </dependency>
@@ -30,7 +30,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     captcha:
       image:
         length: 4 #图形验证码的位数为6，将覆盖默认配置中的4

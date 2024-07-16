@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.saucesubfresh.starter.http.config.HttpAutoConfiguration
+com.openbytecode.starter.http.config.HttpAutoConfiguration

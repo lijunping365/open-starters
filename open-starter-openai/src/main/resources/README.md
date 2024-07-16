@@ -24,7 +24,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-openai</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -34,7 +34,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     openai:
       token: sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```

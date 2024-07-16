@@ -28,9 +28,9 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-cache</artifactId>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -38,7 +38,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     cache:
       # 一级缓存配置文件地址
       config-location: classpath:/open-cache-config.yaml

@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://search.maven.org/search?q=g:com.saucesubfresh%20a:open-starter-*">
+  <a href="https://search.maven.org/search?q=g:com.openbytecode%20a:open-starter-*">
     <img alt="maven" src="https://img.shields.io/github/v/release/lijunping365/Open-Starter-Store?include_prereleases&logo=Open-Starter-Store&style=plastic">
   </a>
 
@@ -24,7 +24,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-alarm</artifactId>
     <version>1.0.4</version>
 </dependency>
@@ -36,7 +36,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-cache</artifactId>
     <version>1.0.4</version>
 </dependency>
@@ -48,7 +48,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-captcha</artifactId>
     <version>1.0.4</version>
 </dependency>
@@ -61,7 +61,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-crawler</artifactId>
     <version>1.0.6</version>
 </dependency>
@@ -73,7 +73,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-distributed-limiter</artifactId>
     <version>1.0.2</version>
 </dependency>
@@ -85,7 +85,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-distributed-lock</artifactId>
     <version>1.0.3</version>
 </dependency>
@@ -97,7 +97,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-executor</artifactId>
     <version>1.0.5</version>
 </dependency>
@@ -109,7 +109,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-http</artifactId>
     <version>1.0.3</version>
 </dependency>
@@ -122,7 +122,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-job-register</artifactId>
     <version>1.0.6</version>
 </dependency>
@@ -134,7 +134,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-logger</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -146,7 +146,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-oauth</artifactId>
     <version>1.0.5</version>
 </dependency>
@@ -158,7 +158,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-openai</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -171,7 +171,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-schedule</artifactId>
     <version>1.2.0</version>
 </dependency>
@@ -184,7 +184,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-security</artifactId>
     <version>1.0.4</version>
 </dependency>
@@ -197,7 +197,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-security</artifactId>
     <version>1.0.4</version>
 </dependency>

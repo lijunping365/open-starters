@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
- com.saucesubfresh.starter.crawler.config.CrawlerAutoConfiguration
+ com.openbytecode.starter.crawler.config.CrawlerAutoConfiguration

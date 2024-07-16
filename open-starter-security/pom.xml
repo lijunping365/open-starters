@@ -3,15 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>Open-Starter-Store</artifactId>
-        <groupId>com.saucesubfresh</groupId>
-        <version>1.0.2</version>
+        <artifactId>open-starters</artifactId>
+        <groupId>com.openbytecode</groupId>
+        <version>2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>open-starter-security</artifactId>
     <description>简单的安全插件</description>
-    <version>1.0.4</version>
 
     <properties>
         <jjwt.version>0.11.2</jjwt.version>

@@ -1,50 +1,50 @@
 {
   "groups": [
     {
-      "name": "com.saucesubfresh.alarm",
-      "type": "com.saucesubfresh.starter.alarm.properties.AlarmProperties",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.AlarmProperties"
+      "name": "com.openbytecode.alarm",
+      "type": "com.openbytecode.starter.alarm.properties.AlarmProperties",
+      "sourceType": "com.openbytecode.starter.alarm.properties.AlarmProperties"
     },
     {
-      "name": "com.saucesubfresh.alarm.ding-ding",
-      "type": "com.saucesubfresh.starter.alarm.properties.DingDingRobotAlarmProperties",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.AlarmProperties"
+      "name": "com.openbytecode.alarm.ding-ding",
+      "type": "com.openbytecode.starter.alarm.properties.DingDingRobotAlarmProperties",
+      "sourceType": "com.openbytecode.starter.alarm.properties.AlarmProperties"
     },
     {
-      "name": "com.saucesubfresh.alarm.fei-shu",
-      "type": "com.saucesubfresh.starter.alarm.properties.FeiShuRobotAlarmProperties",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.AlarmProperties"
+      "name": "com.openbytecode.alarm.fei-shu",
+      "type": "com.openbytecode.starter.alarm.properties.FeiShuRobotAlarmProperties",
+      "sourceType": "com.openbytecode.starter.alarm.properties.AlarmProperties"
     },
     {
-      "name": "com.saucesubfresh.alarm.we-chat",
-      "type": "com.saucesubfresh.starter.alarm.properties.WeChatRobotAlarmProperties",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.AlarmProperties"
+      "name": "com.openbytecode.alarm.we-chat",
+      "type": "com.openbytecode.starter.alarm.properties.WeChatRobotAlarmProperties",
+      "sourceType": "com.openbytecode.starter.alarm.properties.AlarmProperties"
     }
   ],
   "properties": [
     {
-      "name": "com.saucesubfresh.alarm.ding-ding.secret",
+      "name": "com.openbytecode.alarm.ding-ding.secret",
       "type": "java.lang.String",
       "description": "钉钉机器人密钥",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.DingDingRobotAlarmProperties"
+      "sourceType": "com.openbytecode.starter.alarm.properties.DingDingRobotAlarmProperties"
     },
     {
-      "name": "com.saucesubfresh.alarm.ding-ding.webhook",
+      "name": "com.openbytecode.alarm.ding-ding.webhook",
       "type": "java.lang.String",
       "description": "自定义群机器人中的 webhook",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.DingDingRobotAlarmProperties"
+      "sourceType": "com.openbytecode.starter.alarm.properties.DingDingRobotAlarmProperties"
     },
     {
-      "name": "com.saucesubfresh.alarm.fei-shu.webhook",
+      "name": "com.openbytecode.alarm.fei-shu.webhook",
       "type": "java.lang.String",
       "description": "自定义群机器人中的 webhook",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.FeiShuRobotAlarmProperties"
+      "sourceType": "com.openbytecode.starter.alarm.properties.FeiShuRobotAlarmProperties"
     },
     {
-      "name": "com.saucesubfresh.alarm.we-chat.webhook",
+      "name": "com.openbytecode.alarm.we-chat.webhook",
       "type": "java.lang.String",
       "description": "自定义群机器人中的 webhook",
-      "sourceType": "com.saucesubfresh.starter.alarm.properties.WeChatRobotAlarmProperties"
+      "sourceType": "com.openbytecode.starter.alarm.properties.WeChatRobotAlarmProperties"
     }
   ],
   "hints": []

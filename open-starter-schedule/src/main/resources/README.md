@@ -24,7 +24,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.saucesubfresh</groupId>
+    <groupId>com.openbytecode</groupId>
     <artifactId>open-starter-schedule</artifactId>
     <version>1.2.0</version>
 </dependency>
@@ -34,7 +34,7 @@
 
 ```yaml
 com:
-  saucesubfresh:
+  openbytecode:
     schedule:
       # 配置时间轮槽数
       tick-duration: 60
