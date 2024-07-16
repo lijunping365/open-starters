@@ -18,8 +18,192 @@
   </a>
 </p>
 
-每个 starter 都有各自的 README 文件，欢迎 star，欢迎提交 pr
+## 快速开始
 
-1.0.1 版本已上传到 maven 中央仓库
+### open-starter-alarm
 
-1.0.2 版本已上传到 maven 中央仓库
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-alarm</artifactId>
+    <version>1.0.4</version>
+</dependency>
+```
+
+[README.MD](open-starter-alarm/src/main/resources/README.md)
+
+### open-starter-cache
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-cache</artifactId>
+    <version>1.0.4</version>
+</dependency>
+```
+
+[README.MD](open-starter-cache/src/main/resources/README.md)
+
+### open-starter-captcha
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-captcha</artifactId>
+    <version>1.0.4</version>
+</dependency>
+```
+
+[README.MD](open-starter-captcha/src/main/resources/README.md)
+
+
+### open-starter-crawler
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-crawler</artifactId>
+    <version>1.0.6</version>
+</dependency>
+```
+
+[README.MD](open-starter-crawler/src/main/resources/README.md)
+
+### open-starter-distributed-limiter
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-distributed-limiter</artifactId>
+    <version>1.0.2</version>
+</dependency>
+```
+
+[README.MD](open-starter-distributed-limiter/src/main/resources/README.md)
+
+### open-starter-distributed-lock
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-distributed-lock</artifactId>
+    <version>1.0.3</version>
+</dependency>
+```
+
+[README.MD](open-starter-distributed-lock/src/main/resources/README.md)
+
+### open-starter-executor
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-executor</artifactId>
+    <version>1.0.5</version>
+</dependency>
+```
+
+[README.MD](open-starter-executor/src/main/resources/README.md)
+
+### open-starter-http
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-http</artifactId>
+    <version>1.0.3</version>
+</dependency>
+```
+
+[README.MD](open-starter-http/src/main/resources/README.md)
+
+
+### open-starter-job-register
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-job-register</artifactId>
+    <version>1.0.6</version>
+</dependency>
+```
+
+[README.MD](open-starter-job-register/src/main/resources/README.md)
+
+### open-starter-logger
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-logger</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+[README.MD](open-starter-logger/src/main/resources/README.md)
+
+### open-starter-oauth
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-oauth</artifactId>
+    <version>1.0.5</version>
+</dependency>
+```
+
+[README.MD](open-starter-oauth/src/main/resources/README.md)
+
+### open-starter-openai
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-openai</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+[README.MD](open-starter-openai/src/main/resources/README.md)
+
+
+### open-starter-schedule
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-schedule</artifactId>
+    <version>1.2.0</version>
+</dependency>
+```
+
+[README.MD](open-starter-schedule/src/main/resources/README.md)
+
+
+### open-starter-security
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-security</artifactId>
+    <version>1.0.4</version>
+</dependency>
+```
+
+[README.MD](open-starter-security/src/main/resources/README.md)
+
+
+### open-starter-security
+
+```xml
+<dependency>
+    <groupId>com.saucesubfresh</groupId>
+    <artifactId>open-starter-security</artifactId>
+    <version>1.0.4</version>
+</dependency>
+```
+
+[README.MD](open-starter-security/src/main/resources/README.md)
+
+
+

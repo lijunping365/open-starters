@@ -18,7 +18,7 @@ Open-Job 之 jobHandler 扫描注册插件
 <dependency>
     <groupId>com.saucesubfresh</groupId>
     <artifactId>open-starter-job-register</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.6</version>
 </dependency>
 ```
 
