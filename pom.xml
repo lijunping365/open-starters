@@ -110,7 +110,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>central</id>
             <build>
                 <plugins>
                     <!-- Source -->
@@ -149,9 +149,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>${maven-gpg-plugin.version}</version>
-                        <configuration>
-                            <useAgent>false</useAgent>
-                        </configuration>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
@@ -161,17 +158,24 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!--将组件部署到OSSRH并将其发布到Central Repository-->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.5.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>release</id>
-                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                    <id>central</id>
+                    <url>https://central.sonatype.com/</url>
                 </snapshotRepository>
-                <repository>
-                    <id>release</id>
-                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
             </distributionManagement>
         </profile>
     </profiles>
